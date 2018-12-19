@@ -46,7 +46,7 @@ namespace JetKarmaBot
         public IReadOnlyDictionary<byte, AwardType> AwardTypes => m_AwardTypes;
         public IReadOnlyDictionary<string, AwardType> AwardTypesByCommandName { get; private set; }
 
-        public int CountAwards(long userId, byte awardTypeId)
+        public int CountUserAwards(long userId, byte awardTypeId)
         {
             return Conn.QuerySingle<int?>
             (
@@ -54,6 +54,27 @@ namespace JetKarmaBot
                 new { userId, awardTypeId }
             ) ?? 0;
         }
+
+        public struct UserAwardsReport
+        {
+            public int Amount { get; private set; }
+            public byte AwardTypeId { get; private set; }
+        }
+
+        public IEnumerable<UserAwardsReport> CountAllUserAwards(long userId)
+        {
+            return Conn.Query<UserAwardsReport>
+            (
+                @"SELECT SUM(amount) AS amount, t.awardtypeid
+                FROM award a
+                JOIN awardtype t on a.awardtypeid = t.awardtypeid
+                WHERE toid = @userId
+                GROUP BY awardtypeid;",
+                new { userId }
+            );
+        }
+
+
 
         public byte GetAwardTypeId(string name)
             => AwardTypesByCommandName.GetOrDefault(name)?.AwardTypeId ?? DefaultAwardTypeId;

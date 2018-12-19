@@ -62,6 +62,7 @@ namespace JetKarmaBot
             Commands = new ChatCommandRouter(Me);
             Commands.Add(c.ResolveObject(new StartCommand()));
             Commands.Add(c.ResolveObject(new AwardCommand(Me)));
+            Commands.Add(c.ResolveObject(new StatusCommand()));
         }
 
         #endregion

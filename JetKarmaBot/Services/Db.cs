@@ -57,7 +57,7 @@ namespace JetKarmaBot
         public byte GetAwardTypeId(string name)
             => AwardTypesByCommandName.GetOrDefault(name)?.AwardTypeId ?? DefaultAwardTypeId;
 
-        public bool AddAward(byte awardTypeId, long fromId, long toId, long chatId)
+        public bool AddAward(byte awardTypeId, long fromId, long toId, long chatId, int amount)
         {
             AddChat(new Chat() {  ChatId = chatId });
             AddUser(new User() {  UserId = fromId});
@@ -67,8 +67,8 @@ namespace JetKarmaBot
                 @"INSERT INTO award
                 (chatid, fromid, toid, awardtypeid, amount)
                 VALUES
-                (@chatId, @fromId, @toId, @awardTypeId, 1)",
-                new { awardTypeId, fromId, toId, chatId });
+                (@chatId, @fromId, @toId, @awardTypeId, @amount)",
+                new { awardTypeId, fromId, toId, chatId, amount });
             return affected == 1;
         }
 

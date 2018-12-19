@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
 using Telegram.Bot.Args;
+using Perfusion;
 
 namespace JetKarmaBot.Commands
 {
     public class StartCommand : IChatCommand
     {
-        Db Db;
-
-        public StartCommand(Db db)
-        {
-            Db = db;
-        }
+        [Inject(true)]Db Db;
 
         public IReadOnlyCollection<string> Names => new[] { "start" };
 

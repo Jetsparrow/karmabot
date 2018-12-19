@@ -18,7 +18,7 @@ namespace JetKarmaBot
             Config = cfg;
             Db = new Db(Config);
             Watcher = new JetKarmaBot(Config, Db);
-            Console.WriteLine("JatKarmaBot started!");
+            Console.WriteLine("JetKarmaBot started!");
         }
 
         Config Config { get; }

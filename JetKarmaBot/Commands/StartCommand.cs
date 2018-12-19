@@ -10,7 +10,7 @@ namespace JetKarmaBot.Commands
 
         public IReadOnlyCollection<string> Names => new[] { "start" };
 
-        public bool Execute(object sender, MessageEventArgs args)
+        public bool Execute(CommandString cmd, MessageEventArgs args)
         {
             Db.AddChat(new Db.Chat { ChatId = args.Message.Chat.Id });
             Db.AddUser(new Db.User { UserId = args.Message.From.Id });

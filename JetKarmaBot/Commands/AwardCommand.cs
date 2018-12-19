@@ -14,7 +14,7 @@ namespace JetKarmaBot.Commands
     {
         public IReadOnlyCollection<string> Names => new[] { "award", "revoke"};
 
-        public bool Execute(object sender, MessageEventArgs args)
+        public bool Execute(CommandString cmd, MessageEventArgs args)
         {
             if (args.Message.ReplyToMessage == null)
             {
@@ -60,7 +60,7 @@ namespace JetKarmaBot.Commands
         }
 
         
-        [Inject(true)]Db Db { get; set; }
+        [Inject(true)] Db Db { get; set; }
         [Inject(true)] TelegramBotClient Client { get; set; }
         User Me { get; }
 

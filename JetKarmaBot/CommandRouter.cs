@@ -20,13 +20,13 @@ namespace JetKarmaBot
         {
             var text = args.Message.Text;
             
-            if (CommandString.TryParse(text, out var cs))
+            if (CommandString.TryParse(text, out var cmd))
             {
-                if (cs.UserName != null && cs.UserName != BotUser.Username) // directed not at us!
+                if (cmd.UserName != null && cmd.UserName != BotUser.Username) // directed not at us!
                     return false;
 
-                if (commands.ContainsKey(cs.Command))
-                    return commands[cs.Command].Execute(sender,args);
+                if (commands.ContainsKey(cmd.Command))
+                    return commands[cmd.Command].Execute(cmd, args);
             }
 
             return false;

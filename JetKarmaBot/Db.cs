@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
 using MySql.Data.MySqlClient;
+using Perfusion;
 
 namespace JetKarmaBot
 {
@@ -105,7 +106,7 @@ namespace JetKarmaBot
         #endregion
 
         #region service
-        public Db(Config cfg)
+        public Db([Inject(true)]Config cfg)
         {
             Log("Initializing...");
             Conn = new MySqlConnection(cfg.ConnectionString);

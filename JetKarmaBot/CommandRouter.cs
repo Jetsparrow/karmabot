@@ -3,20 +3,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 
 namespace JetKarmaBot
 {
     class ChatCommandRouter
     {
-        Dictionary<string, IChatCommand> commands = new Dictionary<string, IChatCommand>();
+        User BotUser { get; }
+
+        public ChatCommandRouter(User botUser)
+        {
+            BotUser = botUser;
+        }
+
         public bool Execute(object sender, MessageEventArgs args)
         {
             var text = args.Message.Text;
-
+            
             if (CommandString.TryParse(text, out var cs))
             {
-                if (commands.ContainsKey(cs.Name))
-                    return commands[cs.Name].Execute(sender,args);
+                if (cs.UserName != null && cs.UserName != BotUser.Username) // directed not at us!
+                    return false;
+
+                if (commands.ContainsKey(cs.Command))
+                    return commands[cs.Command].Execute(sender,args);
             }
 
             return false;
@@ -32,5 +42,6 @@ namespace JetKarmaBot
             }
         }
 
+        Dictionary<string, IChatCommand> commands = new Dictionary<string, IChatCommand>();
     }
 }

@@ -6,6 +6,7 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Perfusion;
 
 namespace JetKarmaBot.Commands
 {
@@ -59,14 +60,12 @@ namespace JetKarmaBot.Commands
         }
 
         
-        Db Db { get; }
-        TelegramBotClient Client { get; }
+        [Inject(true)]Db Db { get; set; }
+        [Inject(true)] TelegramBotClient Client { get; set; }
         User Me { get; }
 
-        public AwardCommand(Db db, TelegramBotClient client, User me)
+        public AwardCommand(User me)
         {
-            Db = db;
-            Client = client;
             Me = me;
         }
     }

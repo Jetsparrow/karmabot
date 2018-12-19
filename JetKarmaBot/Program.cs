@@ -1,4 +1,5 @@
 ﻿using System;
+using Perfusion;
 
 namespace JetKarmaBot
 {
@@ -6,23 +7,20 @@ namespace JetKarmaBot
     {
         public static void Main(string[] args)
         {
-            Current = new App(new Config("karma.cfg.json"));
-
+            Container c = new Container();
+            c.AddInstance(new Config("karma.cfg.json"));
+            Current = c.GetInstance(typeof(App)) as App;
             Console.ReadKey();
         }
 
         public static App Current { get; private set; }
-
-        public App(Config cfg)
+        [Inject(true)]
+        public void Run(Container c)
         {
-            Config = cfg;
-            Db = new Db(Config);
-            Watcher = new JetKarmaBot(Config, Db);
+            Watcher = c.GetInstance<JetKarmaBot>();
             Console.WriteLine("JetKarmaBot started!");
         }
 
-        Config Config { get; }
-        Db Db { get; }
-        JetKarmaBot Watcher { get; }
+        JetKarmaBot Watcher { get; set; }
     }
 }

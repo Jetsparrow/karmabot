@@ -1,4 +1,5 @@
 ﻿using JetKarmaBot.Commands;
+using Perfusion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,19 +22,19 @@ namespace JetKarmaBot
             foreach (var u in db.Chats)
                 client.SendTextMessageAsync(u.Value.ChatId, message);
         }
-        
-        public JetKarmaBot(Config cfg, Db db)
+
+        public JetKarmaBot([Inject(true)]Config cfg, [Inject(true)] Container container)
         {
-            this.db = db;
             var httpProxy = new WebProxy($"{cfg.ProxyUrl}:{cfg.ProxyPort}")
             {
                 Credentials = new NetworkCredential(cfg.ProxyLogin, cfg.ProxyPassword)
             };
             var botClient = new TelegramBotClient(cfg.ApiKey, httpProxy);
+            container.AddInstance(botClient);
             var cred = new NetworkCredential(cfg.ProxyLogin, cfg.ProxyPassword);
             client = new TelegramBotClient(cfg.ApiKey, httpProxy);
             me = client.GetMeAsync().Result;
-            InitCommands();
+            InitCommands(container);
             client.OnMessage += BotOnMessageReceived;
             client.StartReceiving();
         }
@@ -46,7 +47,7 @@ namespace JetKarmaBot
         #endregion
 
         #region service
-        Db db { get; }
+        [Inject(true)] Db db { get; set; }
         TelegramBotClient client { get; }
         User me { get; }
 
@@ -62,11 +63,11 @@ namespace JetKarmaBot
             long from = message.From.Id;
             Task.Run(() => commands.Execute(sender, messageEventArgs));
         }
-        void InitCommands()
+        void InitCommands(Container c)
         {
             commands = new ChatCommandRouter();
-            commands.Add(new StartCommand(db));
-            commands.Add(new AwardCommand(db, client, me));
+            commands.Add(c.ResolveObject(new StartCommand()));
+            commands.Add(c.ResolveObject(new AwardCommand(me)));
         }
 
         #endregion

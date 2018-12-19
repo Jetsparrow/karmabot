@@ -1,11 +1,7 @@
 ﻿using JetKarmaBot.Commands;
 using Perfusion;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
@@ -17,41 +13,38 @@ namespace JetKarmaBot
 {
     public class JetKarmaBot : IDisposable
     {
-        public void Broadcast(string message)
-        {
-            foreach (var u in db.Chats)
-                client.SendTextMessageAsync(u.Value.ChatId, message);
-        }
+        [Inject(true)] Config Config { get; set; }
+        [Inject(true)] Container Container { get; set; }
+        [Inject(true)] Db Db { get; set; }
 
-        public JetKarmaBot([Inject(true)]Config cfg, [Inject(true)] Container container)
+        TelegramBotClient Client { get; set; }
+        ChatCommandRouter Commands;
+        User Me { get; set; }
+
+        public async Task Init()
         {
-            var httpProxy = new WebProxy($"{cfg.ProxyUrl}:{cfg.ProxyPort}")
+            var httpProxy = new WebProxy($"{Config.Proxy.Url}:{Config.Proxy.Port}")
             {
-                Credentials = new NetworkCredential(cfg.ProxyLogin, cfg.ProxyPassword)
+                Credentials = new NetworkCredential(Config.Proxy.Login, Config.Proxy.Password)
             };
-            var botClient = new TelegramBotClient(cfg.ApiKey, httpProxy);
-            container.AddInstance(botClient);
-            var cred = new NetworkCredential(cfg.ProxyLogin, cfg.ProxyPassword);
-            client = new TelegramBotClient(cfg.ApiKey, httpProxy);
-            me = client.GetMeAsync().Result;
-            InitCommands(container);
-            client.OnMessage += BotOnMessageReceived;
-            client.StartReceiving();
+
+            Client = new TelegramBotClient(Config.ApiKey, httpProxy);
+            Container.AddInstance(Client);
+            Me = await Client.GetMeAsync();
+
+            InitCommands(Container);
+
+            Client.OnMessage += BotOnMessageReceived;
+            Client.StartReceiving();
         }
 
-        #region IDisposable
-        public void Dispose()
+        public async Task Stop()
         {
-            client.StopReceiving();
+            Dispose();
         }
-        #endregion
 
         #region service
-        [Inject(true)] Db db { get; set; }
-        TelegramBotClient client { get; }
-        User me { get; }
 
-        ChatCommandRouter commands;
         void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var message = messageEventArgs.Message;
@@ -61,15 +54,25 @@ namespace JetKarmaBot
             string s = message.Text;
             long id = message.Chat.Id;
             long from = message.From.Id;
-            Task.Run(() => commands.Execute(sender, messageEventArgs));
+            Task.Run(() => Commands.Execute(sender, messageEventArgs));
         }
+
         void InitCommands(Container c)
         {
             commands = new ChatCommandRouter();
-            commands.Add(c.ResolveObject(new StartCommand()));
-            commands.Add(c.ResolveObject(new AwardCommand(me)));
+            Commands.Add(c.ResolveObject(new StartCommand()));
+            Commands.Add(c.ResolveObject(new AwardCommand(Me)));
         }
 
+        #endregion
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            Client.StopReceiving();
+        }
+        
         #endregion
     }
 }

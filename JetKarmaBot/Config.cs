@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Newtonsoft.Json;
 using JsonNet.PrivateSettersContractResolvers;
 using Newtonsoft.Json.Linq;
@@ -12,10 +11,16 @@ namespace JetKarmaBot
 
         public string ApiKey { get; private set; }
         public string ConnectionString { get; private set; }
-        public string ProxyUrl { get; private set; }
-        public int ProxyPort { get; private set; }
-        public string ProxyLogin { get; private set; }
-        public string ProxyPassword { get; private set; }
+
+        public class ProxySettings
+        {
+            public string Url { get; private set; }
+            public int Port { get; private set; }
+            public string Login { get; private set; }
+            public string Password { get; private set; }
+        }
+
+        public ProxySettings Proxy { get; private set; }
     }
 
     public abstract class ConfigBase

@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JetKarmaBot.Commands
 {
     public class CommandString
     {
-        public CommandString(string name, params string[] parameters)
+        public CommandString(string command, params string[] parameters)
         {
-            Name = name;
+            Command = command;
             Parameters = parameters;
         }
 
-        public string Name { get; }
+        public string Command { get; }
+        public string UserName { get; set; } = null;
         public string[] Parameters { get; }
+
+        public static readonly char[] WS_CHARS = new[] { ' ', '\r', '\n', '\n' };
 
         public static bool TryParse(string s, out CommandString result)
         {
@@ -21,11 +26,21 @@ namespace JetKarmaBot.Commands
             if (string.IsNullOrWhiteSpace(s) || s[0] != '/')
                 return false;
 
-            int space = s.IndexOf(' ');
-            if (space < 0)
-                result = new CommandString(s.Substring(1));
-            else
-                result = new CommandString(s.Substring(1, space - 1), s.Substring(space).Split(' ', StringSplitOptions.RemoveEmptyEntries));
+            string[] words = s.Split(WS_CHARS, StringSplitOptions.RemoveEmptyEntries);
+
+            if (!words.Any())
+                return false;
+
+            var cmdRegex = new Regex(@"/(?<cmd>\w+)(@(?<name>\w+))?");
+            var match = cmdRegex.Match(words.First());
+            if (!match.Success)
+                return false;
+
+            string cmd = match.Groups["cmd"].Captures.First().Value;
+            string username = match.Groups["name"].Captures.FirstOrDefault()?.Value;
+            string[] parameters = words.Skip(1).ToArray();
+
+            result = new CommandString(cmd, parameters) { UserName = username};
             return true;
         }
 

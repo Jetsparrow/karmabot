@@ -11,31 +11,34 @@ namespace JetKarmaBot.Commands
 {
     class AwardCommand : IChatCommand
     {
-        public IReadOnlyCollection<string> Names => new[] { "award"};
+        public IReadOnlyCollection<string> Names => new[] { "award", "revoke"};
 
         public bool Execute(object sender, MessageEventArgs args)
         {
-            //var mentions = args.Message.Entities.Where(e => e.Type == MessageEntityType.Mention).ToArray();
-            if (args.Message.ReplyToMessage == null)// && !mentions.Any())
+            if (args.Message.ReplyToMessage == null)
             {
-                Client.SendTextMessageAsync(args.Message.Chat.Id, "Please use this command in reply to another user, or use a mention.");
+                Client.SendTextMessageAsync(args.Message.Chat.Id, "Please use this command in reply to another user.");
                 return true;
             }
 
             var awarder = args.Message.From;
-            //var members = Client.get(,).Result;
-            //var recipient = mentions.FirstOrDefault()?.User ?? args.Message.ReplyToMessage.From;
             var recipient = args.Message.ReplyToMessage.From;
 
             if (awarder.Id == recipient.Id)
             {
-                Client.SendTextMessageAsync(args.Message.Chat.Id, "Please stop playing with yourself.");
+                Client.SendTextMessageAsync(
+                    args.Message.Chat.Id,
+                    "Please stop playing with yourself.",
+                    replyToMessageId: args.Message.MessageId);
                 return true;
             }
 
             if (Me.Id == recipient.Id)
             {
-                Client.SendTextMessageAsync(args.Message.Chat.Id, "I am a bot, and have no use for your foolish fake internet points.");
+                Client.SendTextMessageAsync(
+                    args.Message.Chat.Id,
+                    "I am a bot, and have no use for your foolish fake internet points.",
+                    replyToMessageId: args.Message.MessageId);
                 return true;
             }
 
@@ -43,13 +46,19 @@ namespace JetKarmaBot.Commands
             var command = CommandString.Parse(text);
             var awardTypeId = Db.GetAwardTypeId(command.Parameters.FirstOrDefault());
             var awardType = Db.AwardTypes[awardTypeId];
-            Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id);
+
+            Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id, 1);
+
             var response = $"Awarded a {awardType.Name} to {recipient.Username}!\n" +
                 $"{recipient.Username} is at {Db.CountAwards(recipient.Id, awardTypeId)}{awardType.Symbol} now.";
-            Client.SendTextMessageAsync(args.Message.Chat.Id, response);
+            Client.SendTextMessageAsync(
+                args.Message.Chat.Id,
+                response,
+                replyToMessageId: args.Message.MessageId);
             return true;
         }
 
+        
         Db Db { get; }
         TelegramBotClient Client { get; }
         User Me { get; }

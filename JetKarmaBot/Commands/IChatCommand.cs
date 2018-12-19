@@ -6,7 +6,7 @@ namespace JetKarmaBot.Commands
     public interface IChatCommand
     {
         IReadOnlyCollection<string> Names { get; }
-        bool Execute(object sender, MessageEventArgs messageEventArgs);
+        bool Execute(CommandString cmd, MessageEventArgs messageEventArgs);
     }
 
 }

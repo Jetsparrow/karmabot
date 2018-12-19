@@ -66,8 +66,6 @@ namespace JetKarmaBot
         {
             commands = new ChatCommandRouter();
             commands.Add(new StartCommand(db));
-            commands.Add(new EchoCommand(client));
-            commands.Add(new DefineCommand(client));
             commands.Add(new AwardCommand(db, client, me));
         }
 

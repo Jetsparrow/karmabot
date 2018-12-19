@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 using Perfusion;
 
 namespace JetKarmaBot.Commands
@@ -24,6 +22,8 @@ namespace JetKarmaBot.Commands
 
             var awarder = args.Message.From;
             var recipient = args.Message.ReplyToMessage.From;
+
+            bool awarding = cmd.Command == "award";
 
             if (awarder.Id == recipient.Id)
             {
@@ -44,14 +44,17 @@ namespace JetKarmaBot.Commands
             }
 
             var text = args.Message.Text;
-            var command = CommandString.Parse(text);
-            var awardTypeId = Db.GetAwardTypeId(command.Parameters.FirstOrDefault());
+            var awardTypeId = Db.GetAwardTypeId(cmd.Parameters.FirstOrDefault());
             var awardType = Db.AwardTypes[awardTypeId];
 
-            Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id, 1);
+            Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id, awarding ? 1 : -1);
 
-            var response = $"Awarded a {awardType.Name} to {recipient.Username}!\n" +
-                $"{recipient.Username} is at {Db.CountAwards(recipient.Id, awardTypeId)}{awardType.Symbol} now.";
+            string message = awarding 
+                ? $"Awarded a {awardType.Name} to {recipient.Username}!" 
+                : $"Revoked a {awardType.Name} from {recipient.Username}!";
+
+            var response = message + "\n" + $"{recipient.Username} is at {Db.CountUserAwards(recipient.Id, awardTypeId)}{awardType.Symbol} now."; 
+
             Client.SendTextMessageAsync(
                 args.Message.Chat.Id,
                 response,
@@ -59,7 +62,6 @@ namespace JetKarmaBot.Commands
             return true;
         }
 
-        
         [Inject(true)] Db Db { get; set; }
         [Inject(true)] TelegramBotClient Client { get; set; }
         User Me { get; }

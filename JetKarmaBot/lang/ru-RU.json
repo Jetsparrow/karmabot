@@ -1,11 +1,11 @@
 {
-  "jetkarmabot.award.errawardnoreply": "Пожалуйста используете эту комманду в ответе к другому пользователю.",
-  "jetkarmabot.award.errawardself": "Перестань играть с собой.",
-  "jetkarmabot.award.errawardbot": "Я бот, и мне не нужны ваши глупые интернет-очки.",
+  "jetkarmabot.award.errawardnoreply": "Пожалуйста используйте эту команду в ответе другому пользователю.",
+  "jetkarmabot.award.errawardself": "Хватит с собой играться.",
+  "jetkarmabot.award.errawardbot": "Я бот, и меня ваши жалкие пузомерки не прельщают.",
   "jetkarmabot.award.errrevokebot": "ಠ_ಠ",
-  "jetkarmabot.award.awardmessage": "Наградили награду \"{0}\" пользователю {1}!",
-  "jetkarmabot.award.revokemessage": "Отозвали \"{0}\" от пользователя {1}!",
-  "jetkarmabot.award.statustext": "У пользователя {0} теперь есть {1}{2}.",
-  "jetkarmabot.status.listalltext": "У вас есть:",
-  "jetkarmabot.status.listspecifictext": "У вас {0}{1} сейчас."
+  "jetkarmabot.award.awardmessage": "Вручил \"{0}\" {1}!",
+  "jetkarmabot.award.revokemessage": "Отнял \"{0}\" у {1}!",
+  "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
+  "jetkarmabot.status.listalltext": "У вас :",
+  "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}."
 }

@@ -13,53 +13,40 @@ namespace JetKarmaBot
 {
     public class Localization
     {
-        private string currentFile;
-        private Dictionary<string, string> currentLocalization;
+        private Dictionary<string, Dictionary<string, string>> locales = new Dictionary<string, Dictionary<string, string>>();
 
         [Inject]
         public Localization(Config cfg)
         {
             Log("Initializing...");
-            currentFile = cfg.Language;
-            if (string.IsNullOrEmpty(currentFile)) currentFile = "en-US";
-            Log("Language is " + currentFile);
             if (!Directory.Exists("lang"))
                 Directory.CreateDirectory("lang");
 
-            if (!File.Exists("lang/" + currentFile + ".json") && currentFile != "en-US")
+            foreach (string lang in Directory.EnumerateFiles("lang"))
             {
-                Log("Language " + currentFile + " not found, falling back to en-US");
-                currentFile = "en-US";
-            }
-            if (!File.Exists("lang/" + currentFile + ".json"))
-            {
-                Log("Language en-US doesn't exist! Making empty localization");
-                currentLocalization = new Dictionary<string, string>();
-            }
-            else
-            {
-                currentLocalization = JObject.Parse(File.ReadAllText("lang/" + currentFile + ".json")).ToObject<Dictionary<string, string>>();
-                Log("Loaded " + currentFile);
+                string langname = Path.GetFileName(lang).Split(".")[0];
+                Log("Found " + langname);
+                locales[langname] = JObject.Parse(File.ReadAllText(lang)).ToObject<Dictionary<string, string>>();
             }
             Log("Initialized!");
         }
 
-        public string this[string name]
+        public string this[string name, string locale]
         {
-            get => GetString(name);
+            get => GetString(name, locale);
         }
-        public string GetString(string name)
+        public string GetString(string name, string locale)
         {
-            if (!currentLocalization.ContainsKey(name))
+            if (!locales[locale].ContainsKey(name))
             {
                 Log(name + " doesn't exist in this localization");
-                currentLocalization[name] = "unknown";
-                File.WriteAllText("lang/" + currentFile + ".json", JObject.FromObject(currentLocalization).ToString());
+                locales[locale][name] = "unknown";
+                File.WriteAllText("lang/" + locale + ".json", JObject.FromObject(locales[locale]).ToString());
                 return "unknown";
             }
             else
             {
-                return currentLocalization[name];
+                return locales[locale][name];
             }
         }
         void Log(string Message) => Console.WriteLine($"[{nameof(Localization)}]: {Message}");

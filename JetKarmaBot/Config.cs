@@ -11,7 +11,6 @@ namespace JetKarmaBot
 
         public string ApiKey { get; private set; }
         public string ConnectionString { get; private set; }
-        public string Language { get; private set; }
 
         public class ProxySettings
         {

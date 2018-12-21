@@ -24,7 +24,7 @@ namespace JetKarmaBot.Commands
             {
                 var awards = Db.CountAllUserAwards(asker.Id);
 
-                response = Locale["jetkarmabot.status.listalltext"] + "\n"
+                response = Locale["jetkarmabot.status.listalltext", "en-US"] + "\n"
                      + string.Join("\n", awards.Select(a => $" - {Db.AwardTypes[a.AwardTypeId].Symbol} {a.Amount}"));
 
             }
@@ -33,7 +33,7 @@ namespace JetKarmaBot.Commands
                 var awardTypeId = Db.GetAwardTypeId(cmd.Parameters.FirstOrDefault());
                 var awardType = Db.AwardTypes[awardTypeId];
 
-                response = string.Format(Locale["jetkarmabot.status.listspecifictext"], Db.CountUserAwards(asker.Id, awardTypeId), awardType.Symbol);
+                response = string.Format(Locale["jetkarmabot.status.listspecifictext", "en-US"], Db.CountUserAwards(asker.Id, awardTypeId), awardType.Symbol);
             }
 
             Client.SendTextMessageAsync(

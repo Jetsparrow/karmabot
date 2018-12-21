@@ -16,7 +16,8 @@ namespace JetKarmaBot
         private string currentFile;
         private Dictionary<string, string> currentLocalization;
 
-        public Localization([Inject(true)]Config cfg)
+        [Inject]
+        public Localization(Config cfg)
         {
             Log("Initializing...");
             currentFile = cfg.Language;

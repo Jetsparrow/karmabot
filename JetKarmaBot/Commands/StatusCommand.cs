@@ -24,7 +24,7 @@ namespace JetKarmaBot.Commands
             {
                 var awards = Db.CountAllUserAwards(asker.Id);
 
-                response = "Your badges report:\n"
+                response = Locale["jetkarmabot.status.listalltext"] + "\n"
                      + string.Join("\n", awards.Select(a => $" - {Db.AwardTypes[a.AwardTypeId].Symbol} {a.Amount}"));
 
             }
@@ -33,7 +33,7 @@ namespace JetKarmaBot.Commands
                 var awardTypeId = Db.GetAwardTypeId(cmd.Parameters.FirstOrDefault());
                 var awardType = Db.AwardTypes[awardTypeId];
 
-                response = $"You are at {Db.CountUserAwards(asker.Id, awardTypeId)}{awardType.Symbol} now.";
+                response = string.Format(Locale["jetkarmabot.status.listspecifictext"], Db.CountUserAwards(asker.Id, awardTypeId), awardType.Symbol);
             }
 
             Client.SendTextMessageAsync(
@@ -45,6 +45,7 @@ namespace JetKarmaBot.Commands
 
         [Inject(true)] Db Db { get; set; }
         [Inject(true)] TelegramBotClient Client { get; set; }
+        [Inject(true)] Localization Locale { get; set; }
 
     }
 }

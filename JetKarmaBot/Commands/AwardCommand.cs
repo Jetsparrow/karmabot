@@ -10,13 +10,13 @@ namespace JetKarmaBot.Commands
 {
     class AwardCommand : IChatCommand
     {
-        public IReadOnlyCollection<string> Names => new[] { "award", "revoke"};
+        public IReadOnlyCollection<string> Names => new[] { "award", "revoke" };
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
             if (args.Message.ReplyToMessage == null)
             {
-                Client.SendTextMessageAsync(args.Message.Chat.Id, "Please use this command in reply to another user.");
+                Client.SendTextMessageAsync(args.Message.Chat.Id, Locale["jetkarmabot.award.errawardnoreply"]);
                 return true;
             }
 
@@ -29,7 +29,7 @@ namespace JetKarmaBot.Commands
             {
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    "Please stop playing with yourself.",
+                    Locale["jetkarmabot.award.errawardself"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }
@@ -38,7 +38,9 @@ namespace JetKarmaBot.Commands
             {
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    "I am a bot, and have no use for your foolish fake internet points.",
+                    awarding
+                    ? Locale["jetkarmabot.award.errawardbot"]
+                    : Locale["jetkarmabot.award.errrevokebot"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }
@@ -49,11 +51,11 @@ namespace JetKarmaBot.Commands
 
             Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id, awarding ? 1 : -1);
 
-            string message = awarding 
-                ? $"Awarded a {awardType.Name} to {recipient.Username}!" 
-                : $"Revoked a {awardType.Name} from {recipient.Username}!";
+            string message = awarding
+                ? string.Format(Locale["jetkarmabot.award.awardmessage"], awardType.Name, recipient.Username)
+                : string.Format(Locale["jetkarmabot.award.revokemessage"], awardType.Name, recipient.Username);
 
-            var response = message + "\n" + $"{recipient.Username} is at {Db.CountUserAwards(recipient.Id, awardTypeId)}{awardType.Symbol} now."; 
+            var response = message + "\n" + String.Format(Locale["jetkarmabot.award.statustext"], recipient.Username, Db.CountUserAwards(recipient.Id, awardTypeId), awardType.Symbol);
 
             Client.SendTextMessageAsync(
                 args.Message.Chat.Id,
@@ -64,6 +66,7 @@ namespace JetKarmaBot.Commands
 
         [Inject(true)] Db Db { get; set; }
         [Inject(true)] TelegramBotClient Client { get; set; }
+        [Inject(true)] Localization Locale { get; set; }
         User Me { get; }
 
         public AwardCommand(User me)

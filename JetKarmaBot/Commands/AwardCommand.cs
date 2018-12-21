@@ -52,10 +52,10 @@ namespace JetKarmaBot.Commands
             Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id, awarding ? 1 : -1);
 
             string message = awarding
-                ? string.Format(Locale["jetkarmabot.award.awardmessage"], awardType.Name, recipient.Username)
-                : string.Format(Locale["jetkarmabot.award.revokemessage"], awardType.Name, recipient.Username);
+                ? string.Format(Locale["jetkarmabot.award.awardmessage"], awardType.Name, "@" + recipient.Username)
+                : string.Format(Locale["jetkarmabot.award.revokemessage"], awardType.Name, "@" + recipient.Username);
 
-            var response = message + "\n" + String.Format(Locale["jetkarmabot.award.statustext"], recipient.Username, Db.CountUserAwards(recipient.Id, awardTypeId), awardType.Symbol);
+            var response = message + "\n" + String.Format(Locale["jetkarmabot.award.statustext"], "@" + recipient.Username, Db.CountUserAwards(recipient.Id, awardTypeId), awardType.Symbol);
 
             Client.SendTextMessageAsync(
                 args.Message.Chat.Id,

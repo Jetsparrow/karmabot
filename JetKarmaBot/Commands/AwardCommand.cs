@@ -16,7 +16,7 @@ namespace JetKarmaBot.Commands
         {
             if (args.Message.ReplyToMessage == null)
             {
-                Client.SendTextMessageAsync(args.Message.Chat.Id, Locale["jetkarmabot.award.errawardnoreply"]);
+                Client.SendTextMessageAsync(args.Message.Chat.Id, Locale["jetkarmabot.award.errawardnoreply", "en-US"]);
                 return true;
             }
 
@@ -29,7 +29,7 @@ namespace JetKarmaBot.Commands
             {
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    Locale["jetkarmabot.award.errawardself"],
+                    Locale["jetkarmabot.award.errawardself", "en-US"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }
@@ -39,8 +39,8 @@ namespace JetKarmaBot.Commands
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
                     awarding
-                    ? Locale["jetkarmabot.award.errawardbot"]
-                    : Locale["jetkarmabot.award.errrevokebot"],
+                    ? Locale["jetkarmabot.award.errawardbot", "en-US"]
+                    : Locale["jetkarmabot.award.errrevokebot", "en-US"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }
@@ -52,10 +52,10 @@ namespace JetKarmaBot.Commands
             Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id, awarding ? 1 : -1);
 
             string message = awarding
-                ? string.Format(Locale["jetkarmabot.award.awardmessage"], awardType.Name, "@" + recipient.Username)
-                : string.Format(Locale["jetkarmabot.award.revokemessage"], awardType.Name, "@" + recipient.Username);
+                ? string.Format(Locale["jetkarmabot.award.awardmessage", "en-US"], awardType.Name, "@" + recipient.Username)
+                : string.Format(Locale["jetkarmabot.award.revokemessage", "en-US"], awardType.Name, "@" + recipient.Username);
 
-            var response = message + "\n" + String.Format(Locale["jetkarmabot.award.statustext"], "@" + recipient.Username, Db.CountUserAwards(recipient.Id, awardTypeId), awardType.Symbol);
+            var response = message + "\n" + String.Format(Locale["jetkarmabot.award.statustext", "en-US"], "@" + recipient.Username, Db.CountUserAwards(recipient.Id, awardTypeId), awardType.Symbol);
 
             Client.SendTextMessageAsync(
                 args.Message.Chat.Id,

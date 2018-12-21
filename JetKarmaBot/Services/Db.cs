@@ -127,7 +127,8 @@ namespace JetKarmaBot
         #endregion
 
         #region service
-        public Db([Inject(true)]Config cfg)
+        [Inject]
+        public Db(Config cfg)
         {
             Log("Initializing...");
             Conn = new MySqlConnection(cfg.ConnectionString);

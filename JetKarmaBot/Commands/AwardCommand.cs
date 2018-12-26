@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot;
@@ -14,9 +14,10 @@ namespace JetKarmaBot.Commands
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
+            var currentLocale = Locale[Db.Chats[args.Message.Chat.Id].Locale];
             if (args.Message.ReplyToMessage == null)
             {
-                Client.SendTextMessageAsync(args.Message.Chat.Id, Locale["jetkarmabot.award.errawardnoreply", "en-US"]);
+                Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errawardnoreply"]);
                 return true;
             }
 
@@ -29,7 +30,7 @@ namespace JetKarmaBot.Commands
             {
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    Locale["jetkarmabot.award.errawardself", "en-US"],
+                    currentLocale["jetkarmabot.award.errawardself"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }
@@ -39,8 +40,8 @@ namespace JetKarmaBot.Commands
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
                     awarding
-                    ? Locale["jetkarmabot.award.errawardbot", "en-US"]
-                    : Locale["jetkarmabot.award.errrevokebot", "en-US"],
+                    ? currentLocale["jetkarmabot.award.errawardbot"]
+                    : currentLocale["jetkarmabot.award.errrevokebot"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }
@@ -52,10 +53,10 @@ namespace JetKarmaBot.Commands
             Db.AddAward(awardTypeId, awarder.Id, recipient.Id, args.Message.Chat.Id, awarding ? 1 : -1);
 
             string message = awarding
-                ? string.Format(Locale["jetkarmabot.award.awardmessage", "en-US"], awardType.Name, "@" + recipient.Username)
-                : string.Format(Locale["jetkarmabot.award.revokemessage", "en-US"], awardType.Name, "@" + recipient.Username);
+                ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], awardType.Name, "@" + recipient.Username)
+                : string.Format(currentLocale["jetkarmabot.award.revokemessage"], awardType.Name, "@" + recipient.Username);
 
-            var response = message + "\n" + String.Format(Locale["jetkarmabot.award.statustext", "en-US"], "@" + recipient.Username, Db.CountUserAwards(recipient.Id, awardTypeId), awardType.Symbol);
+            var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], "@" + recipient.Username, Db.CountUserAwards(recipient.Id, awardTypeId), awardType.Symbol);
 
             Client.SendTextMessageAsync(
                 args.Message.Chat.Id,

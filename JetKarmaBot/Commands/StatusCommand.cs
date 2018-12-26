@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +15,7 @@ namespace JetKarmaBot.Commands
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
+            var currentLocale = Locale[Db.Chats[args.Message.Chat.Id].Locale];
             var asker = args.Message.From;
             var awardTypeName = cmd.Parameters.FirstOrDefault();
 
@@ -24,7 +25,7 @@ namespace JetKarmaBot.Commands
             {
                 var awards = Db.CountAllUserAwards(asker.Id);
 
-                response = Locale["jetkarmabot.status.listalltext", "en-US"] + "\n"
+                response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
                      + string.Join("\n", awards.Select(a => $" - {Db.AwardTypes[a.AwardTypeId].Symbol} {a.Amount}"));
 
             }
@@ -33,7 +34,7 @@ namespace JetKarmaBot.Commands
                 var awardTypeId = Db.GetAwardTypeId(cmd.Parameters.FirstOrDefault());
                 var awardType = Db.AwardTypes[awardTypeId];
 
-                response = string.Format(Locale["jetkarmabot.status.listspecifictext", "en-US"], Db.CountUserAwards(asker.Id, awardTypeId), awardType.Symbol);
+                response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], Db.CountUserAwards(asker.Id, awardTypeId), awardType.Symbol);
             }
 
             Client.SendTextMessageAsync(

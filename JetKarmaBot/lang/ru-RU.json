@@ -7,5 +7,7 @@
   "jetkarmabot.award.revokemessage": "Отнял \"{0}\" у {1}!",
   "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
   "jetkarmabot.status.listalltext": "У вас :",
-  "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}."
+  "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
+  "jetkarmabot.changelanguage.noparams": "Простите, но я не могу говорить на нуллевом языке.",
+  "jetkarmabot.changelanguage.justchanged": "хорошо"
 }

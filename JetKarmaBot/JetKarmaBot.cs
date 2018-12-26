@@ -1,4 +1,4 @@
-﻿using JetKarmaBot.Commands;
+using JetKarmaBot.Commands;
 using Perfusion;
 using System;
 using System.Net;
@@ -63,6 +63,7 @@ namespace JetKarmaBot
             Commands.Add(c.ResolveObject(new StartCommand()));
             Commands.Add(c.ResolveObject(new AwardCommand(Me)));
             Commands.Add(c.ResolveObject(new StatusCommand()));
+            Commands.Add(c.ResolveObject(new ChangeLanguageCommand()));
         }
 
         #endregion

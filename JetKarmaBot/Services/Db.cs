@@ -15,17 +15,17 @@ namespace JetKarmaBot
         public void AddChat(Chat chat)
         {
             lock (m_SyncRoot)
-            if (!m_Chats.ContainsKey(chat.ChatId))
-            {
-                Conn.Execute(@"INSERT INTO chat
-                            (chatid)
+                if (!m_Chats.ContainsKey(chat.ChatId))
+                {
+                    Conn.Execute(@"INSERT INTO chat
+                            (chatid,locale)
                             VALUES
-                            (@ChatId)",
-                            chat);
-                m_Chats.Add(chat.ChatId, chat);
-            }
+                            (@ChatId,@Locale)",
+                        chat);
+                    m_Chats.Add(chat.ChatId, chat);
+                }
         }
-        
+
         Dictionary<long, User> m_Users;
         public IReadOnlyDictionary<long, User> Users => m_Users;
         public void AddUser(User user)
@@ -37,7 +37,7 @@ namespace JetKarmaBot
                             (userid)
                             VALUES
                             (@UserId)",
-                                user);
+                        user);
                     m_Users.Add(user.UserId, user);
                 }
         }
@@ -49,10 +49,22 @@ namespace JetKarmaBot
         public int CountUserAwards(long userId, byte awardTypeId)
         {
             return Conn.QuerySingle<int?>
-            (
-                "SELECT SUM(amount) FROM award WHERE toid = @userId AND awardtypeid = @awardTypeId",
-                new { userId, awardTypeId }
-            ) ?? 0;
+                (
+                    "SELECT SUM(amount) FROM award WHERE toid = @userId AND awardtypeid = @awardTypeId",
+                    new { userId, awardTypeId }
+                ) ?? 0;
+        }
+
+        public void ChangeChatLocale(Chat chat, string locale)
+        {
+            lock (m_SyncRoot)
+            {
+                chat.Locale = locale;
+                Conn.Execute(@"UPDATE chat
+                            SET locale=@Locale
+                            WHERE chatid=@ChatID",
+                    chat);
+            }
         }
 
         public struct UserAwardsReport
@@ -64,26 +76,23 @@ namespace JetKarmaBot
         public IEnumerable<UserAwardsReport> CountAllUserAwards(long userId)
         {
             return Conn.Query<UserAwardsReport>
-            (
-                @"SELECT SUM(amount) AS amount, t.awardtypeid
+                (
+                    @"SELECT SUM(amount) AS amount, t.awardtypeid
                 FROM award a
                 JOIN awardtype t on a.awardtypeid = t.awardtypeid
                 WHERE toid = @userId
                 GROUP BY awardtypeid;",
-                new { userId }
-            );
+                    new { userId }
+                );
         }
 
-
-
-        public byte GetAwardTypeId(string name)
-            => AwardTypesByCommandName.GetOrDefault(name)?.AwardTypeId ?? DefaultAwardTypeId;
+        public byte GetAwardTypeId(string name) => AwardTypesByCommandName.GetOrDefault(name)?.AwardTypeId ?? DefaultAwardTypeId;
 
         public bool AddAward(byte awardTypeId, long fromId, long toId, long chatId, int amount)
         {
-            AddChat(new Chat() {  ChatId = chatId });
-            AddUser(new User() {  UserId = fromId});
-            AddUser(new User() {  UserId = toId });
+            AddChat(new Chat() { ChatId = chatId });
+            AddUser(new User() { UserId = fromId });
+            AddUser(new User() { UserId = toId });
 
             int affected = Conn.ExecuteScalar<int>(
                 @"INSERT INTO award
@@ -98,6 +107,7 @@ namespace JetKarmaBot
         public class Chat
         {
             public long ChatId { get; set; }
+            public string Locale { get; set; }
         }
 
         public class User
@@ -151,6 +161,6 @@ namespace JetKarmaBot
         }
         #endregion
 
-        void Log (string Message) => Console.WriteLine($"[{nameof(Db)}]: {Message}");
+        void Log(string Message) => Console.WriteLine($"[{nameof(Db)}]: {Message}");
     }
 }

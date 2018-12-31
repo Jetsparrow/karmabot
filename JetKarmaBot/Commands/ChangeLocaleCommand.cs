@@ -19,7 +19,7 @@ namespace JetKarmaBot.Commands
             {
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelocale.noparams"],
+                    currentLocale["jetkarmabot.changelocale.getlocale"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }

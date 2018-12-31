@@ -8,9 +8,9 @@ using Perfusion;
 
 namespace JetKarmaBot.Commands
 {
-    class ChangeLanguageCommand : IChatCommand
+    class ChangeLocaleCommand : IChatCommand
     {
-        public IReadOnlyCollection<string> Names => new[] { "changelanguage", "lang" };
+        public IReadOnlyCollection<string> Names => new[] { "changelocale", "locale" };
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
@@ -19,7 +19,7 @@ namespace JetKarmaBot.Commands
             {
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelanguage.noparams"],
+                    currentLocale["jetkarmabot.changelocale.noparams"],
                     replyToMessageId: args.Message.MessageId);
                 return true;
             }
@@ -27,7 +27,7 @@ namespace JetKarmaBot.Commands
             currentLocale = Locale[Db.Chats[args.Message.Chat.Id].Locale];
             Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelanguage.justchanged"],
+                    currentLocale["jetkarmabot.changelocale.justchanged"],
                     replyToMessageId: args.Message.MessageId);
             return true;
         }

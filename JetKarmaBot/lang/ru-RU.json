@@ -8,6 +8,6 @@
   "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
   "jetkarmabot.status.listalltext": "У вас :",
   "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
-  "jetkarmabot.changelanguage.noparams": "Простите, но я не могу говорить на нуллевом языке.",
-  "jetkarmabot.changelanguage.justchanged": "хорошо"
+  "jetkarmabot.changelocale.noparams": "Простите, но я не могу говорить на нуллевом языке.",
+  "jetkarmabot.changelocale.justchanged": "хорошо"
 }

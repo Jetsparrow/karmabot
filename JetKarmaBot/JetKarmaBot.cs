@@ -63,7 +63,7 @@ namespace JetKarmaBot
             Commands.Add(c.ResolveObject(new StartCommand()));
             Commands.Add(c.ResolveObject(new AwardCommand(Me)));
             Commands.Add(c.ResolveObject(new StatusCommand()));
-            Commands.Add(c.ResolveObject(new ChangeLanguageCommand()));
+            Commands.Add(c.ResolveObject(new ChangeLocaleCommand()));
         }
 
         #endregion
@@ -74,7 +74,7 @@ namespace JetKarmaBot
         {
             Client.StopReceiving();
         }
-        
+
         #endregion
     }
 }

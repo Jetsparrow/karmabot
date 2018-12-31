@@ -8,6 +8,6 @@
   "jetkarmabot.award.statustext": "{0} is at {1}{2} now.",
   "jetkarmabot.status.listalltext": "Your badges report:",
   "jetkarmabot.status.listspecifictext": "You are at {0}{1} now.",
-  "jetkarmabot.changelanguage.noparams": "Sorry, but I don't speak the null language.",
-  "jetkarmabot.changelanguage.justchanged": "good"
+  "jetkarmabot.changelocale.noparams": "Sorry, but I don't speak the null language.",
+  "jetkarmabot.changelocale.justchanged": "good"
 }

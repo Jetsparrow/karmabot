@@ -1,4 +1,5 @@
 using JetKarmaBot.Commands;
+using JetKarmaBot.Services;
 using Perfusion;
 using System;
 using System.Net;
@@ -13,9 +14,9 @@ namespace JetKarmaBot
 {
     public class JetKarmaBot : IDisposable
     {
-        [Inject(true)] Config Config { get; set; }
-        [Inject(true)] Container Container { get; set; }
-        [Inject(true)] Db Db { get; set; }
+        [Inject] Config Config { get; set; }
+        [Inject] Container Container { get; set; }
+        [Inject] KarmaContextFactory Db { get; set; }
 
         TelegramBotClient Client { get; set; }
         ChatCommandRouter Commands;

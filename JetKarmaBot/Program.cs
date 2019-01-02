@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using JetKarmaBot.Models;
+using Microsoft.EntityFrameworkCore;
 using Perfusion;
 
 namespace JetKarmaBot
@@ -23,8 +25,13 @@ namespace JetKarmaBot
         public static int Main(string[] args)
         {
             Container c = new Container();
-            c.AddInstance(new Config("karma.cfg.json"));
-            c.Add<Db>();
+            var cfg = new Config("karma.cfg.json");
+            c.AddInstance(cfg);
+
+            var dbOptions = new DbContextOptionsBuilder<KarmaContext>()
+                .UseMySql(cfg.ConnectionString);
+
+            c.Add(() => new KarmaContext(dbOptions.Options));
             c.Add<JetKarmaBot>();
 
             var bot = c.GetInstance<JetKarmaBot>();

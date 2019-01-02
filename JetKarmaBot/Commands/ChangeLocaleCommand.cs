@@ -5,6 +5,8 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Perfusion;
+using JetKarmaBot.Models;
+using JetKarmaBot.Services;
 
 namespace JetKarmaBot.Commands
 {
@@ -32,8 +34,8 @@ namespace JetKarmaBot.Commands
             return true;
         }
 
-        [Inject(true)] Db Db { get; set; }
-        [Inject(true)] TelegramBotClient Client { get; set; }
-        [Inject(true)] Localization Locale { get; set; }
+        [Inject] KarmaContextFactory Db { get; set; }
+        [Inject] TelegramBotClient Client { get; set; }
+        [Inject] Localization Locale { get; set; }
     }
 }

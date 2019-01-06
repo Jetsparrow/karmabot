@@ -7,12 +7,12 @@ namespace JetKarmaBot.Models
     {
         public Chat()
         {
-            Award = new HashSet<Award>();
+            Awards = new HashSet<Award>();
         }
 
-        public long Chatid { get; set; }
+        public long ChatId { get; set; }
         public string Locale { get; set; }
 
-        public ICollection<Award> Award { get; set; }
+        public virtual ICollection<Award> Awards { get; set; }
     }
 }

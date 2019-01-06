@@ -17,33 +17,45 @@ namespace JetKarmaBot.Commands
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
-            var currentLocale = Locale[Db.Chats[args.Message.Chat.Id].Locale];
-            var asker = args.Message.From;
-            var awardTypeName = cmd.Parameters.FirstOrDefault();
-
-            string response;
-
-            if (string.IsNullOrWhiteSpace(awardTypeName))
+            using (var db = Db.GetContext())
             {
-                var awards = Db.CountAllUserAwards(asker.Id);
+                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                var asker = args.Message.From;
+                var awardTypeName = cmd.Parameters.FirstOrDefault();
 
-                response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
-                     + string.Join("\n", awards.Select(a => $" - {Db.AwardTypes[a.AwardTypeId].Symbol} {a.Amount}"));
+                string response;
 
+                if (string.IsNullOrWhiteSpace(awardTypeName))
+                {
+                    // var awards = db.Awards.Where(x => x.ToId == asker.Id)
+                    // .GroupBy(x => x.AwardTypeId)
+                    // .Select(x => new { AwardTypeId = x.Key, Amount = x.Sum(y => y.Amount) });
+                    var awardsQuery = from award in db.Awards
+                                      where award.ToId == asker.Id
+                                      group award by award.AwardTypeId into g
+                                      select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
+
+                    response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
+                         + string.Join("\n", awardsQuery.Select(a => $" - {db.AwardTypes.Find(a.AwardTypeId).Symbol} {a.Amount}"));
+
+                }
+                else
+                {
+                    var awardTypeIdQuery = from awt in db.AwardTypes
+                                           where awt.CommandName == awardTypeName
+                                           select awt.AwardTypeId;
+                    var awardTypeId = awardTypeIdQuery.First();
+                    var awardType = db.AwardTypes.Find(awardTypeId);
+
+                    response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], db.Awards.Where(x => x.AwardTypeId == awardTypeId && x.ToId == asker.Id).Sum(x => x.Amount), awardType.Symbol);
+                }
+
+                Client.SendTextMessageAsync(
+                    args.Message.Chat.Id,
+                    response,
+                    replyToMessageId: args.Message.MessageId);
+                return true;
             }
-            else
-            {
-                var awardTypeId = Db.GetAwardTypeId(cmd.Parameters.FirstOrDefault());
-                var awardType = Db.AwardTypes[awardTypeId];
-
-                response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], Db.CountUserAwards(asker.Id, awardTypeId), awardType.Symbol);
-            }
-
-            Client.SendTextMessageAsync(
-                args.Message.Chat.Id,
-                response,
-                replyToMessageId: args.Message.MessageId);
-            return true;
         }
 
         [Inject] KarmaContextFactory Db { get; set; }

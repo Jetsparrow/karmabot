@@ -16,22 +16,26 @@ namespace JetKarmaBot.Commands
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
-            var currentLocale = Locale[Db.Chats[args.Message.Chat.Id].Locale];
-            if (cmd.Parameters.Length < 1)
+            using (var db = Db.GetContext())
             {
+                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                if (cmd.Parameters.Length < 1)
+                {
+                    Client.SendTextMessageAsync(
+                        args.Message.Chat.Id,
+                        currentLocale["jetkarmabot.changelocale.getlocale"],
+                        replyToMessageId: args.Message.MessageId);
+                    return true;
+                }
+                db.Chats.Find(args.Message.Chat.Id).Locale = cmd.Parameters[0];
+                currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
                 Client.SendTextMessageAsync(
-                    args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelocale.getlocale"],
-                    replyToMessageId: args.Message.MessageId);
+                        args.Message.Chat.Id,
+                        currentLocale["jetkarmabot.changelocale.justchanged"],
+                        replyToMessageId: args.Message.MessageId);
+                db.SaveChanges();
                 return true;
             }
-            Db.ChangeChatLocale(Db.Chats[args.Message.Chat.Id], cmd.Parameters[0]);
-            currentLocale = Locale[Db.Chats[args.Message.Chat.Id].Locale];
-            Client.SendTextMessageAsync(
-                    args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelocale.justchanged"],
-                    replyToMessageId: args.Message.MessageId);
-            return true;
         }
 
         [Inject] KarmaContextFactory Db { get; set; }

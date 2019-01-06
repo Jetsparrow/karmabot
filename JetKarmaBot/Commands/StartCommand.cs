@@ -15,8 +15,8 @@ namespace JetKarmaBot.Commands
         {
             using (var db = Db.GetContext())
             {
-                db.Chat.Add(new Models.Chat { Chatid = args.Message.Chat.Id });
-                db.User.Add(new Models.User { Userid = args.Message.From.Id });
+                db.Chats.Add(new Models.Chat { ChatId = args.Message.Chat.Id });
+                db.Users.Add(new Models.User { UserId = args.Message.From.Id });
                 db.SaveChanges();
                 return true;
             }

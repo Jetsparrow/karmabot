@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JetKarmaBot.Models
 {
@@ -7,14 +8,15 @@ namespace JetKarmaBot.Models
     {
         public User()
         {
-            AwardFrom = new HashSet<Award>();
-            AwardTo = new HashSet<Award>();
+            AwardsFrom = new HashSet<Award>();
+            AwardsTo = new HashSet<Award>();
         }
 
-        public long Userid { get; set; }
+        public int UserId { get; set; }
         public string Username { get; set; }
-
-        public ICollection<Award> AwardFrom { get; set; }
-        public ICollection<Award> AwardTo { get; set; }
+        [InverseProperty("From")]
+        public virtual ICollection<Award> AwardsFrom { get; set; }
+        [InverseProperty("To")]
+        public virtual ICollection<Award> AwardsTo { get; set; }
     }
 }

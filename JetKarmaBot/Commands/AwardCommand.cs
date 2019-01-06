@@ -17,7 +17,7 @@ namespace JetKarmaBot.Commands
         {
             using (var db = Db.GetContext())
             {
-                var currentLocale = Locale[db.Chat.Find(args.Message.Chat.Id).Locale];
+                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
                 if (args.Message.ReplyToMessage == null)
                 {
                     Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errawardnoreply"]);
@@ -52,16 +52,16 @@ namespace JetKarmaBot.Commands
                 var text = args.Message.Text;
                 var awardTypeText = cmd.Parameters.FirstOrDefault();
                 var awardType = awardTypeText != null
-                    ? db.Awardtype.First(at => at.Commandname == awardTypeText)
-                    : db.Awardtype.Find(1);
+                    ? db.AwardTypes.First(at => at.CommandName == awardTypeText)
+                    : db.AwardTypes.Find((sbyte)1);
 
-                db.Award.Add(new Models.Award()
+                db.Awards.Add(new Models.Award()
                 {
-                    Awardtypeid = awardType.Awardtypeid,
+                    AwardTypeId = awardType.AwardTypeId,
                     Amount = (sbyte)(awarding ? 1 : -1),
-                    Fromid = awarder.Id,
-                    Toid = recipient.Id,
-                    Chatid = args.Message.Chat.Id
+                    FromId = awarder.Id,
+                    ToId = recipient.Id,
+                    ChatId = args.Message.Chat.Id
                 });
 
                 db.SaveChanges();
@@ -70,8 +70,8 @@ namespace JetKarmaBot.Commands
                     ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], awardType.Name, "@" + recipient.Username)
                     : string.Format(currentLocale["jetkarmabot.award.revokemessage"], awardType.Name, "@" + recipient.Username);
 
-                var currentCount = db.Award
-                    .Where(aw => aw.Toid == recipient.Id && aw.Awardtypeid == awardType.Awardtypeid)
+                var currentCount = db.Awards
+                    .Where(aw => aw.ToId == recipient.Id && aw.AwardTypeId == awardType.AwardTypeId)
                     .Sum(aw => aw.Amount);
 
                 var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], "@" + recipient.Username, currentCount, awardType.Symbol);

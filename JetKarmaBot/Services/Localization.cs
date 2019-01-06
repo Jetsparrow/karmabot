@@ -9,7 +9,7 @@ namespace JetKarmaBot
 {
     public class Localization
     {
-        private Dictionary<string, Dictionary<string, string>> locales = new Dictionary<string, Dictionary<string, string>>();
+        private Dictionary<string, Locale> locales = new Dictionary<string, Locale>();
 
         [Inject]
         public Localization(Config cfg)
@@ -25,7 +25,7 @@ namespace JetKarmaBot
                 {
                     string langName = Path.GetFileNameWithoutExtension(langFilePath);
                     string langKey = langName.ToLowerInvariant();
-                    locales[langKey] = JObject.Parse(File.ReadAllText(langFilePath)).ToObject<Dictionary<string, string>>();
+                    locales[langKey] = new Locale(JObject.Parse(File.ReadAllText(langFilePath)), langKey);
                     Log("Found " + langName);
                 }
                 catch (Exception e)
@@ -46,8 +46,19 @@ namespace JetKarmaBot
             get
             {
                 locale = locale.ToLowerInvariant();
-                return new Locale(locales[locale], locale);
+                return locales[locale];
             }
+        }
+        public Locale FindByCommonName(string name)
+        {
+            foreach (Locale l in locales.Values)
+            {
+                if (l.CommonNames.Contains(name))
+                {
+                    return l;
+                }
+            }
+            return null;
         }
         public bool ContainsLocale(string locale)
         {
@@ -64,11 +75,16 @@ namespace JetKarmaBot
         {
             private Dictionary<string, string> locale;
             private string localeName;
-            public Locale(Dictionary<string, string> locale, string localeName)
+            private string[] commonNames;
+
+            public Locale(JObject locale, string localeName)
             {
-                this.locale = locale;
+                this.locale = locale.Property("strings").Value.ToObject<Dictionary<string, string>>();
                 this.localeName = localeName;
+                this.commonNames = locale.Property("names").Value.ToObject<string[]>();
             }
+            public string[] CommonNames => commonNames;
+            public string Name => localeName;
             public string this[string name] => locale.ContainsKey(name) ? locale[name] : "unknown";
         }
     }

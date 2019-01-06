@@ -3,12 +3,14 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Perfusion;
 using JetKarmaBot.Services;
+using NLog;
 
 namespace JetKarmaBot.Commands
 {
     class LocaleCommand : IChatCommand
     {
         public IReadOnlyCollection<string> Names => new[] { "changelocale", "locale" };
+        private static Logger log = LogManager.GetCurrentClassLogger();
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
@@ -29,6 +31,7 @@ namespace JetKarmaBot.Commands
                 else
                     localeId = Locale.FindByCommonName(cmd.Parameters[0]).Name;
                 db.Chats.Find(args.Message.Chat.Id).Locale = localeId;
+                log.Debug($"Changed language of chat {args.Message.Chat.Id} to {localeId}");
                 db.SaveChanges();
 
                 currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];

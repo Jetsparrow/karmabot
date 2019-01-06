@@ -6,12 +6,14 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Perfusion;
 using JetKarmaBot.Services;
+using NLog;
 
 namespace JetKarmaBot.Commands
 {
     class AwardCommand : IChatCommand
     {
         public IReadOnlyCollection<string> Names => new[] { "award", "revoke" };
+        private static Logger log = LogManager.GetCurrentClassLogger();
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {
@@ -63,7 +65,7 @@ namespace JetKarmaBot.Commands
                     ToId = recipient.Id,
                     ChatId = args.Message.Chat.Id
                 });
-
+                log.Debug($"Awarded {(awarding ? 1 : -1)}{awardType.Symbol} to {recipient.Username}");
                 db.SaveChanges();
 
                 string message = awarding

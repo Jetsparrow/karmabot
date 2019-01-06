@@ -1,16 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
 using Perfusion;
-using JetKarmaBot.Models;
 using JetKarmaBot.Services;
 
 namespace JetKarmaBot.Commands
 {
-    class ChangeLocaleCommand : IChatCommand
+    class LocaleCommand : IChatCommand
     {
         public IReadOnlyCollection<string> Names => new[] { "changelocale", "locale" };
 
@@ -28,12 +24,14 @@ namespace JetKarmaBot.Commands
                     return true;
                 }
                 db.Chats.Find(args.Message.Chat.Id).Locale = cmd.Parameters[0];
+                db.SaveChanges();
+
                 currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+
                 Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.changelocale.justchanged"],
                         replyToMessageId: args.Message.MessageId);
-                db.SaveChanges();
                 return true;
             }
         }

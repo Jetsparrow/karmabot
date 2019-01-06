@@ -34,9 +34,9 @@ namespace JetKarmaBot.Commands
                                       where award.ToId == asker.Id
                                       group award by award.AwardTypeId into g
                                       select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
-
+                    var awardsByType = awardsQuery.ToList();
                     response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
-                         + string.Join("\n", awardsQuery.Select(a => $" - {db.AwardTypes.Find(a.AwardTypeId).Symbol} {a.Amount}"));
+                         + string.Join("\n", awardsByType.Select(a => $" - {db.AwardTypes.Find(a.AwardTypeId).Symbol} {a.Amount}"));
 
                 }
                 else

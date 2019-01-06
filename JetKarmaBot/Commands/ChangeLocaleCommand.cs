@@ -23,7 +23,12 @@ namespace JetKarmaBot.Commands
                         replyToMessageId: args.Message.MessageId);
                     return true;
                 }
-                db.Chats.Find(args.Message.Chat.Id).Locale = cmd.Parameters[0];
+                string localeId;
+                if (Locale.ContainsLocale(cmd.Parameters[0]))
+                    localeId = cmd.Parameters[0];
+                else
+                    localeId = Locale.FindByCommonName(cmd.Parameters[0]).Name;
+                db.Chats.Find(args.Message.Chat.Id).Locale = localeId;
                 db.SaveChanges();
 
                 currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];

@@ -1,13 +1,19 @@
 {
-  "jetkarmabot.award.errawardnoreply": "Пожалуйста используйте эту команду в ответе другому пользователю.",
-  "jetkarmabot.award.errawardself": "Хватит с собой играться.",
-  "jetkarmabot.award.errawardbot": "Я бот, и меня ваши жалкие пузомерки не прельщают.",
-  "jetkarmabot.award.errrevokebot": "ಠ_ಠ",
-  "jetkarmabot.award.awardmessage": "Вручил \"{0}\" {1}!",
-  "jetkarmabot.award.revokemessage": "Отнял \"{0}\" у {1}!",
-  "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
-  "jetkarmabot.status.listalltext": "У вас :",
-  "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
-  "jetkarmabot.changelocale.justchanged": "Так точно.",
-  "jetkarmabot.changelocale.getlocale": "Я сейчас говорю по-русски."
+  "names": [
+    "russian",
+    "русский"
+  ],
+  "strings": {
+    "jetkarmabot.award.errawardnoreply": "Пожалуйста используйте эту команду в ответе другому пользователю.",
+    "jetkarmabot.award.errawardself": "Хватит с собой играться.",
+    "jetkarmabot.award.errawardbot": "Я бот, и меня ваши жалкие пузомерки не прельщают.",
+    "jetkarmabot.award.errrevokebot": "ಠ_ಠ",
+    "jetkarmabot.award.awardmessage": "Вручил \"{0}\" {1}!",
+    "jetkarmabot.award.revokemessage": "Отнял \"{0}\" у {1}!",
+    "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
+    "jetkarmabot.status.listalltext": "У вас :",
+    "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
+    "jetkarmabot.changelocale.justchanged": "Так точно.",
+    "jetkarmabot.changelocale.getlocale": "Я сейчас говорю по-русски."
+  }
 }

@@ -19,15 +19,23 @@ namespace JetKarmaBot
         public bool Execute(object sender, MessageEventArgs args)
         {
             var text = args.Message.Text;
-            
+
             if (CommandString.TryParse(text, out var cmd))
             {
                 if (cmd.UserName != null && cmd.UserName != BotUser.Username) // directed not at us!
                     return false;
 
-                if (commands.ContainsKey(cmd.Command))
-                    return commands[cmd.Command].Execute(cmd, args);
+                try
+                {
+                    if (commands.ContainsKey(cmd.Command))
+                        return commands[cmd.Command].Execute(cmd, args);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
+
 
             return false;
         }

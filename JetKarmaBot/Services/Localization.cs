@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Perfusion;
 
@@ -18,23 +15,51 @@ namespace JetKarmaBot
         public Localization(Config cfg)
         {
             Log("Initializing...");
-            if (!Directory.Exists("lang"))
-                Directory.CreateDirectory("lang");
+            string langsFolder = "lang";
+            if (!Directory.Exists(langsFolder))
+                Directory.CreateDirectory(langsFolder);
 
-            foreach (string lang in Directory.EnumerateFiles("lang"))
+            foreach (string langFilePath in Directory.EnumerateFiles(langsFolder, "*.json"))
             {
-                string langname = Path.GetFileName(lang).Split(".")[0];
-                Log("Found " + langname);
-                locales[langname] = JObject.Parse(File.ReadAllText(lang)).ToObject<Dictionary<string, string>>();
+                try
+                {
+                    string langName = Path.GetFileNameWithoutExtension(langFilePath);
+                    string langKey = langName.ToLowerInvariant();
+                    locales[langKey] = JObject.Parse(File.ReadAllText(langFilePath)).ToObject<Dictionary<string, string>>();
+                    Log("Found " + langName);
+                }
+                catch (Exception e)
+                {
+                    Log($"Error while parsing {langFilePath}!");
+                    Log(e);
+                }
             }
-            Log("Initialized!");
+
+            if (locales.Any())
+                Log("Initialized!");
+            else
+                throw new FileNotFoundException($"No locales found in {langsFolder}!");
         }
 
         public Locale this[string locale]
         {
-            get => new Locale(locales[locale], locale);
+            get
+            {
+                locale = locale.ToLowerInvariant();
+                return new Locale(locales[locale], locale);
+            }
         }
-        void Log(string Message) => Console.WriteLine($"[{nameof(Localization)}]: {Message}");
+        public bool ContainsLocale(string locale)
+        {
+            locale = locale.ToLowerInvariant();
+            return locales.ContainsKey(locale);
+        }
+
+        void Log(string Message)
+            => Console.WriteLine($"[{nameof(Localization)}]: {Message}");
+
+        void Log(Exception e) => Console.WriteLine(e);
+
         public class Locale
         {
             private Dictionary<string, string> locale;
@@ -44,20 +69,7 @@ namespace JetKarmaBot
                 this.locale = locale;
                 this.localeName = localeName;
             }
-            public string this[string name]
-            {
-                get
-                {
-                    if (!locale.ContainsKey(name))
-                    {
-                        return "unknown";
-                    }
-                    else
-                    {
-                        return locale[name];
-                    }
-                }
-            }
+            public string this[string name] => locale.ContainsKey(name) ? locale[name] : "unknown";
         }
     }
 }

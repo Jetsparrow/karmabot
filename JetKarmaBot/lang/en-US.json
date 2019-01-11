@@ -12,6 +12,7 @@
     "jetkarmabot.award.statustext": "{0} is at {1}{2} now.",
     "jetkarmabot.status.listalltext": "Your badges report:",
     "jetkarmabot.status.listspecifictext": "You are at {0}{1} now.",
+    "jetkarmabot.status.havenothing": "You don't have anything yet.",
     "jetkarmabot.changelocale.justchanged": "Roger that.",
     "jetkarmabot.changelocale.getlocale": "I'm currently speaking English."
   }

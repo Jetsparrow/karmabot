@@ -30,14 +30,19 @@ namespace JetKarmaBot.Commands
                     // var awards = db.Awards.Where(x => x.ToId == asker.Id)
                     // .GroupBy(x => x.AwardTypeId)
                     // .Select(x => new { AwardTypeId = x.Key, Amount = x.Sum(y => y.Amount) });
-                    var awardsQuery = from award in db.Awards
-                                      where award.ToId == asker.Id
-                                      group award by award.AwardTypeId into g
-                                      select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
-                    var awardsByType = awardsQuery.ToList();
-                    response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
-                         + string.Join("\n", awardsByType.Select(a => $" - {db.AwardTypes.Find(a.AwardTypeId).Symbol} {a.Amount}"));
+                    if (!db.Awards.Any(x => x.ToId == asker.Id))
+                        response = currentLocale["jetkarmabot.status.havenothing"];
+                    else
+                    {
+                        var awardsQuery = from award in db.Awards
+                                          where award.ToId == asker.Id
+                                          group award by award.AwardTypeId into g
+                                          select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
+                        var awardsByType = awardsQuery.ToList();
+                        response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
+                             + string.Join("\n", awardsByType.Select(a => $" - {db.AwardTypes.Find(a.AwardTypeId).Symbol} {a.Amount}"));
 
+                    }
                 }
                 else
                 {

@@ -13,6 +13,7 @@
     "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
     "jetkarmabot.status.listalltext": "У вас :",
     "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
+    "jetkarmabot.status.havenothing": "У вас пока ничего нет.",
     "jetkarmabot.changelocale.justchanged": "Так точно.",
     "jetkarmabot.changelocale.getlocale": "Я сейчас говорю по-русски."
   }

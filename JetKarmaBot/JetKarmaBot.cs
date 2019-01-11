@@ -1,7 +1,9 @@
 using JetKarmaBot.Commands;
+using JetKarmaBot.Models;
 using JetKarmaBot.Services;
 using Perfusion;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -20,7 +22,7 @@ namespace JetKarmaBot
 
         TelegramBotClient Client { get; set; }
         ChatCommandRouter Commands;
-        User Me { get; set; }
+        Telegram.Bot.Types.User Me { get; set; }
 
         public async Task Init()
         {
@@ -51,7 +53,17 @@ namespace JetKarmaBot
             var message = messageEventArgs.Message;
             if (message == null || message.Type != MessageType.Text)
                 return;
-
+            using (KarmaContext db = Db.GetContext())
+            {
+                if (!db.Users.Any(x => x.UserId == messageEventArgs.Message.From.Id))
+                    db.Users.Add(new Models.User { UserId = messageEventArgs.Message.From.Id });
+                if (messageEventArgs.Message.ReplyToMessage != null)
+                    if (!db.Users.Any(x => x.UserId == messageEventArgs.Message.ReplyToMessage.From.Id))
+                        db.Users.Add(new Models.User { UserId = messageEventArgs.Message.ReplyToMessage.From.Id });
+                if (!db.Chats.Any(x => x.ChatId == messageEventArgs.Message.Chat.Id))
+                    db.Chats.Add(new Models.Chat { ChatId = messageEventArgs.Message.Chat.Id });
+                db.SaveChanges();
+            }
             string s = message.Text;
             long id = message.Chat.Id;
             long from = message.From.Id;

@@ -15,6 +15,8 @@
     "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
     "jetkarmabot.status.havenothing": "У вас пока ничего нет.",
     "jetkarmabot.changelocale.justchanged": "Так точно.",
-    "jetkarmabot.changelocale.getlocale": "Я сейчас говорю по-русски."
+    "jetkarmabot.changelocale.getlocale": "Я сейчас говорю по-русски.",
+    "jetkarmabot.changelocale.listalltext": "Я знаю:",
+    "jetkarmabot.changelocale.errorall": "Мне бы хотелось говорить на всех языках в то же самое время, но из-за ограничений вселенной, мне это не позволяется."
   }
 }

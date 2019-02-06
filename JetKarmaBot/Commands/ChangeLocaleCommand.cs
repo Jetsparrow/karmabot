@@ -4,6 +4,7 @@ using Telegram.Bot.Args;
 using Perfusion;
 using JetKarmaBot.Services;
 using NLog;
+using System.Linq;
 
 namespace JetKarmaBot.Commands
 {
@@ -23,6 +24,23 @@ namespace JetKarmaBot.Commands
                     Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.changelocale.getlocale"],
+                        replyToMessageId: args.Message.MessageId);
+                    return true;
+                }
+                else if (cmd.Parameters[0] == "list")
+                {
+                    Client.SendTextMessageAsync(
+                        args.Message.Chat.Id,
+                        currentLocale["jetkarmabot.changelocale.listalltext"] + "\n"
+                             + string.Join("\n", Locale.Select(a => a.Key)),
+                        replyToMessageId: args.Message.MessageId);
+                    return true;
+                }
+                else if (cmd.Parameters[0] == "all")
+                {
+                    Client.SendTextMessageAsync(
+                        args.Message.Chat.Id,
+                        currentLocale["jetkarmabot.changelocale.errorall"],
                         replyToMessageId: args.Message.MessageId);
                     return true;
                 }

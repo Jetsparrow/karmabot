@@ -13,7 +13,8 @@ namespace JetKarmaBot.Commands
     class AwardCommand : IChatCommand
     {
         public IReadOnlyCollection<string> Names => new[] { "award", "revoke" };
-        private static Logger log = LogManager.GetCurrentClassLogger();
+        [Inject]
+        private Logger log;
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {

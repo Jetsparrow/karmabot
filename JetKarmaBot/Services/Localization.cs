@@ -13,8 +13,9 @@ namespace JetKarmaBot
         private Dictionary<string, Locale> locales = new Dictionary<string, Locale>();
 
         [Inject]
-        public Localization()
+        public Localization(Container c)
         {
+            c.ResolveObject(this);
             log.Info("Initializing...");
             string langsFolder = "lang";
             if (!Directory.Exists(langsFolder))
@@ -51,7 +52,8 @@ namespace JetKarmaBot
             }
         }
 
-        private static Logger log = LogManager.GetCurrentClassLogger();
+        [Inject]
+        private Logger log;
 
         public Locale FindByCommonName(string name)
         {

@@ -1,6 +1,8 @@
 {
   "names": [
-    "english"
+    "english",
+    "английский",
+    "англійская"
   ],
   "strings": {
     "jetkarmabot.award.errawardnoreply": "Please use this command in reply to another user.",

@@ -18,6 +18,7 @@
     "jetkarmabot.changelocale.justchanged": "Так точно.",
     "jetkarmabot.changelocale.getlocale": "Я сейчас говорю по-русски.",
     "jetkarmabot.changelocale.listalltext": "Я знаю:",
-    "jetkarmabot.changelocale.errorall": "Мне бы хотелось говорить на всех языках в то же самое время, но из-за ограничений вселенной, мне это не позволяется."
+    "jetkarmabot.changelocale.errorall": "Мне бы хотелось говорить на всех языках в то же самое время, но из-за ограничений вселенной, мне это не позволяется.",
+    "jetkarmabot.changelocale.beforenote": "Внимание: "
   }
 }

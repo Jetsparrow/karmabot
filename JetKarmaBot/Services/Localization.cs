@@ -105,15 +105,20 @@ namespace JetKarmaBot
         private Dictionary<string, string> locale;
         private string localeName;
         private string[] commonNames;
+        private string note;
 
         public Locale(JObject locale, string localeName)
         {
             this.locale = locale.Property("strings").Value.ToObject<Dictionary<string, string>>();
             this.localeName = localeName;
             this.commonNames = locale.Property("names").Value.ToObject<string[]>();
+            if (locale.ContainsKey("note")) this.note = locale.Property("note").Value.ToObject<string>();
         }
         public string[] CommonNames => commonNames;
         public string Name => localeName;
+        public bool HasNote => note != null;
+
+        public string Note => note;
         public string this[string name] => locale.ContainsKey(name) ? locale[name] : "unknown";
     }
 }

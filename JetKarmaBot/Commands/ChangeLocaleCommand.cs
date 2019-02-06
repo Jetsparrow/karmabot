@@ -57,7 +57,8 @@ namespace JetKarmaBot.Commands
 
                 Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
-                        currentLocale["jetkarmabot.changelocale.justchanged"],
+(currentLocale.HasNote ? currentLocale["jetkarmabot.changelocale.beforenote"] + currentLocale.Note + "\n" : "")
+                        + currentLocale["jetkarmabot.changelocale.justchanged"],
                         replyToMessageId: args.Message.MessageId);
                 return true;
             }

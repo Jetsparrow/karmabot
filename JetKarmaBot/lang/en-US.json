@@ -18,6 +18,7 @@
     "jetkarmabot.changelocale.justchanged": "Roger that.",
     "jetkarmabot.changelocale.getlocale": "I'm currently speaking English.",
     "jetkarmabot.changelocale.listalltext": "I know:",
-    "jetkarmabot.changelocale.errorall": "I would like to speak all languages at once, but because of the rules of the universe, I am not allowed to do that."
+    "jetkarmabot.changelocale.errorall": "I would like to speak all languages at once, but because of the rules of the universe, I am not allowed to do that.",
+    "jetkarmabot.changelocale.beforenote": "Warning: "
   }
 }

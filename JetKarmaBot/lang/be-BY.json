@@ -19,6 +19,7 @@
         "jetkarmabot.changelocale.justchanged": "Так дакладна.",
         "jetkarmabot.changelocale.getlocale": "Я зараз кажу па-беларускай.",
         "jetkarmabot.changelocale.listalltext": "Я ведаю:",
-        "jetkarmabot.changelocale.errorall": "Мне б хацелася гаварыць на ўсіх мовах у той жа самы час, але з-за абмежаванняў сусвету, мне гэта не дазваляецца."
+        "jetkarmabot.changelocale.errorall": "Мне б хацелася гаварыць на ўсіх мовах у той жа самы час, але з-за абмежаванняў сусвету, мне гэта не дазваляецца.",
+        "jetkarmabot.changelocale.beforenote": "Увага: "
     }
 }

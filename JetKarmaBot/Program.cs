@@ -29,6 +29,7 @@ namespace JetKarmaBot
             var dbOptions = new DbContextOptionsBuilder<KarmaContext>()
                 .UseMySql(cfg.ConnectionString);
 
+            c.AddInfo<Logger>(new LogInfo());
             c.AddTransient(() => new KarmaContext(dbOptions.Options));
             c.Add<JetKarmaBot>();
 

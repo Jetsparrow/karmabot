@@ -1,5 +1,6 @@
 ﻿using JetKarmaBot.Commands;
 using NLog;
+using Perfusion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace JetKarmaBot
     class ChatCommandRouter
     {
         User BotUser { get; }
-        private static Logger log = LogManager.GetCurrentClassLogger();
+        [Inject]
+        private Logger log;
 
         public ChatCommandRouter(User botUser)
         {

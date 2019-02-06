@@ -10,7 +10,8 @@ namespace JetKarmaBot.Commands
     class LocaleCommand : IChatCommand
     {
         public IReadOnlyCollection<string> Names => new[] { "changelocale", "locale" };
-        private static Logger log = LogManager.GetCurrentClassLogger();
+        [Inject]
+        private Logger log;
 
         public bool Execute(CommandString cmd, MessageEventArgs args)
         {

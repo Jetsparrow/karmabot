@@ -72,7 +72,7 @@ namespace JetKarmaBot
 
         void InitCommands(Container c)
         {
-            Commands = new ChatCommandRouter(Me);
+            Commands = c.ResolveObject(new ChatCommandRouter(Me));
             Commands.Add(c.ResolveObject(new StartCommand()));
             Commands.Add(c.ResolveObject(new AwardCommand(Me)));
             Commands.Add(c.ResolveObject(new StatusCommand()));

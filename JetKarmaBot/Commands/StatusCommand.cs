@@ -67,5 +67,17 @@ namespace JetKarmaBot.Commands
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
 
+        public string Description => "Shows the amount of awards that you have";
+        public string DescriptionID => "jetkarmabot.status.help";
+
+        public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
+            new ChatCommandArgument(){
+                Name="awardtype",
+                Required=false,
+                Type=ChatCommandArgumentType.String,
+                Description="The awardtype to show. If empty shows everything.",
+                DescriptionID= "jetkarmabot.status.awardtypehelp"
+            }
+        };
     }
 }

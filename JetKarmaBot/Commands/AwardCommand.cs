@@ -54,7 +54,7 @@ namespace JetKarmaBot.Commands
 
                 var text = args.Message.Text;
                 var awardTypeText = cmd.Parameters.FirstOrDefault();
-                var awardType = awardTypeText != null
+                global::JetKarmaBot.Models.AwardType awardType = awardTypeText != null
                     ? db.AwardTypes.First(at => at.CommandName == awardTypeText)
                     : db.AwardTypes.Find((sbyte)1);
 
@@ -70,8 +70,8 @@ namespace JetKarmaBot.Commands
                 db.SaveChanges();
 
                 string message = awarding
-                    ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], awardType.Name, "@" + recipient.Username)
-                    : string.Format(currentLocale["jetkarmabot.award.revokemessage"], awardType.Name, "@" + recipient.Username);
+                    ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], getLocalizedName(awardType, currentLocale), "@" + recipient.Username)
+                    : string.Format(currentLocale["jetkarmabot.award.revokemessage"], getLocalizedName(awardType, currentLocale), "@" + recipient.Username);
 
                 var currentCount = db.Awards
                     .Where(aw => aw.ToId == recipient.Id && aw.AwardTypeId == awardType.AwardTypeId)
@@ -84,6 +84,18 @@ namespace JetKarmaBot.Commands
                     response,
                     replyToMessageId: args.Message.MessageId);
                 return true;
+            }
+        }
+
+        private string getLocalizedName(global::JetKarmaBot.Models.AwardType awardType, Locale loc)
+        {
+            if (loc.ContainsKey($"jetkarmabot.awardtypes.{awardType.CommandName}"))
+            {
+                return loc[$"jetkarmabot.awardtypes.{awardType.CommandName}"];
+            }
+            else
+            {
+                return awardType.Name;
             }
         }
 

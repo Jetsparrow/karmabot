@@ -100,7 +100,7 @@ namespace JetKarmaBot
 
 
     }
-    public class Locale
+    public class Locale : IReadOnlyDictionary<string, string>
     {
         private Dictionary<string, string> locale;
         private string localeName;
@@ -119,6 +119,33 @@ namespace JetKarmaBot
         public bool HasNote => note != null;
 
         public string Note => note;
+
+        public IEnumerable<string> Keys => ((IReadOnlyDictionary<string, string>)locale).Keys;
+
+        public IEnumerable<string> Values => ((IReadOnlyDictionary<string, string>)locale).Values;
+
+        public int Count => ((IReadOnlyDictionary<string, string>)locale).Count;
+
         public string this[string name] => locale.ContainsKey(name) ? locale[name] : "unknown";
+
+        public bool ContainsKey(string key)
+        {
+            return ((IReadOnlyDictionary<string, string>)locale).ContainsKey(key);
+        }
+
+        public bool TryGetValue(string key, out string value)
+        {
+            return ((IReadOnlyDictionary<string, string>)locale).TryGetValue(key, out value);
+        }
+
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        {
+            return ((IReadOnlyDictionary<string, string>)locale).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IReadOnlyDictionary<string, string>)locale).GetEnumerator();
+        }
     }
 }

@@ -9,7 +9,7 @@ using Telegram.Bot.Types;
 
 namespace JetKarmaBot
 {
-    class ChatCommandRouter
+    public class ChatCommandRouter
     {
         User BotUser { get; }
         [Inject]
@@ -52,6 +52,7 @@ namespace JetKarmaBot
             return false;
         }
 
+
         public void Add(IChatCommand c)
         {
             log.ConditionalTrace($"Adding command {c.GetType().Name}");
@@ -62,6 +63,37 @@ namespace JetKarmaBot
                     throw new Exception($"command collision for name {name}, commands {commands[name].GetType()} and {c.GetType()}");
                 commands[name] = c;
             }
+        }
+
+        public string GetHelpText()
+        {
+            List<string> pieces = new List<string>();
+            foreach (IChatCommand c in commands.Values.Distinct())
+            {
+                string build = "";
+                List<string> names = c.Names.ToList();
+                for (int i = 0; i < names.Count - 1; i++)
+                {
+                    build = build + "/" + names[i] + "\n";
+                }
+                build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + c.Description + "</i>";
+                pieces.Add(build);
+            }
+            return string.Join('\n', pieces);
+        }
+
+        internal string GetHelpTextFor(string commandname)
+        {
+            IChatCommand c = commands[commandname];
+            string build = "";
+            List<string> names = c.Names.ToList();
+            for (int i = 0; i < names.Count - 1; i++)
+            {
+                build = build + "/" + names[i] + "\n";
+            }
+            build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + c.Description + "</i>\n";
+            build += string.Join("\n", c.Arguments.Select(ca => (!ca.Required ? "[" : "") + ca.Name + (!ca.Required ? "]" : "") + ": <i>" + ca.Description + "</i>"));
+            return build;
         }
 
         Dictionary<string, IChatCommand> commands = new Dictionary<string, IChatCommand>();

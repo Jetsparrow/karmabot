@@ -93,13 +93,15 @@ namespace JetKarmaBot.Commands
         User Me { get; }
 
         public string Description => "Awards/revokes an award to a user.";
+        public string DescriptionID => "jetkarmabot.award.help";
 
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
             new ChatCommandArgument() {
                 Name="awardtype",
                 Required=false,
                 Type=ChatCommandArgumentType.String,
-                Description="The award to grant to/strip of the specified user"
+                Description="The award to grant to/strip of the specified user",
+                DescriptionID="jetkarmabot.award.awardtypehelp"
             }
         };
 

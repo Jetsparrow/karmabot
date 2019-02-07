@@ -16,13 +16,15 @@ namespace JetKarmaBot.Commands
         public IReadOnlyCollection<string> Names => new[] { "help" };
 
         public string Description => "Displays help text for all(one) command(s)";
+        public string DescriptionID => "jetkarmabot.help.help";
 
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
             new ChatCommandArgument() {
                 Name="command",
                 Required=false,
                 Type=ChatCommandArgumentType.String,
-                Description="The command to return help text for. If empty shows all commands"
+                Description="The command to return help text for. If empty shows all commands.",
+                DescriptionID="jetkarmabot.help.commandhelp"
             }
          };
 
@@ -35,7 +37,7 @@ namespace JetKarmaBot.Commands
                 {
                     Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
-                            Router.GetHelpText(),
+                            Router.GetHelpText(currentLocale),
                             replyToMessageId: args.Message.MessageId,
                             parseMode: ParseMode.Html);
                     return true;
@@ -44,7 +46,7 @@ namespace JetKarmaBot.Commands
                 {
                     Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
-                            Router.GetHelpTextFor(cmd.Parameters[0]),
+                            Router.GetHelpTextFor(cmd.Parameters[0], currentLocale),
                             replyToMessageId: args.Message.MessageId,
                             parseMode: ParseMode.Html);
                     return true;

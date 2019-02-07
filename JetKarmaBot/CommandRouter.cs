@@ -65,7 +65,7 @@ namespace JetKarmaBot
             }
         }
 
-        public string GetHelpText()
+        internal string GetHelpText(Locale loc)
         {
             List<string> pieces = new List<string>();
             foreach (IChatCommand c in commands.Values.Distinct())
@@ -76,13 +76,13 @@ namespace JetKarmaBot
                 {
                     build = build + "/" + names[i] + "\n";
                 }
-                build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + c.Description + "</i>";
+                build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
                 pieces.Add(build);
             }
             return string.Join('\n', pieces);
         }
 
-        internal string GetHelpTextFor(string commandname)
+        internal string GetHelpTextFor(string commandname, Locale loc)
         {
             IChatCommand c = commands[commandname];
             string build = "";
@@ -91,9 +91,20 @@ namespace JetKarmaBot
             {
                 build = build + "/" + names[i] + "\n";
             }
-            build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + c.Description + "</i>\n";
-            build += string.Join("\n", c.Arguments.Select(ca => (!ca.Required ? "[" : "") + ca.Name + (!ca.Required ? "]" : "") + ": <i>" + ca.Description + "</i>"));
+            build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>\n";
+            build += string.Join("\n", c.Arguments.Select(ca => (!ca.Required ? "[" : "") + ca.Name + (!ca.Required ? "]" : "") + ": <i>" + getLocalizedCMDArgDesc(ca, loc) + "</i>"));
             return build;
+        }
+
+        private string getLocalizedCMDDesc(IChatCommand cmd, Locale loc)
+        {
+            if (loc.ContainsKey(cmd.DescriptionID)) return loc[cmd.DescriptionID];
+            else return cmd.Description;
+        }
+        private string getLocalizedCMDArgDesc(ChatCommandArgument arg, Locale loc)
+        {
+            if (loc.ContainsKey(arg.DescriptionID)) return loc[arg.DescriptionID];
+            else return arg.Description;
         }
 
         Dictionary<string, IChatCommand> commands = new Dictionary<string, IChatCommand>();

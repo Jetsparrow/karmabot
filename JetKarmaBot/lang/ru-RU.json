@@ -20,6 +20,11 @@
     "jetkarmabot.changelocale.listalltext": "Я знаю:",
     "jetkarmabot.changelocale.errorall": "Мне бы хотелось говорить на всех языках в то же самое время, но из-за ограничений вселенной, мне это не позволяется.",
     "jetkarmabot.changelocale.beforenote": "Внимание: ",
-    "jetkarmabot.awardtypes.star": "Звездочка"
+    "jetkarmabot.awardtypes.star": "Звездочка",
+    "jetkarmabot.awardtypes.pie": "с полки пирожок",
+    "jetkarmabot.awardtypes.dream": "Мечта",
+    "jetkarmabot.awardtypes.banana": "Стикер-бананчик",
+    "jetkarmabot.awardtypes.determination": "DETERMINATION",
+    "jetkarmabot.awardtypes.raisin": "Изюм"
   }
 }

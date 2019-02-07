@@ -20,6 +20,11 @@
     "jetkarmabot.changelocale.listalltext": "I know:",
     "jetkarmabot.changelocale.errorall": "I would like to speak all languages at once, but because of the rules of the universe, I am not allowed to do that.",
     "jetkarmabot.changelocale.beforenote": "Warning: ",
-    "jetkarmabot.awardtypes.star": "Star"
+    "jetkarmabot.awardtypes.star": "Star",
+    "jetkarmabot.awardtypes.pie": "a pie from the shelf",
+    "jetkarmabot.awardtypes.dream": "Dream",
+    "jetkarmabot.awardtypes.banana": "Banana sticker",
+    "jetkarmabot.awardtypes.determination": "DETERMINATION",
+    "jetkarmabot.awardtypes.raisin": "Raisin"
   }
 }

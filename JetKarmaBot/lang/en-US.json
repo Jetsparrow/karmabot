@@ -12,14 +12,21 @@
     "jetkarmabot.award.awardmessage": "Awarded a {0} to {1}!",
     "jetkarmabot.award.revokemessage": "Revoked a {0} from {1}!",
     "jetkarmabot.award.statustext": "{0} is at {1}{2} now.",
+    "jetkarmabot.award.help": "Awards/revokes an award to a user.",
+    "jetkarmabot.award.awardtypehelp": "The award to grant to/strip of the specified user",
     "jetkarmabot.status.listalltext": "Your badges report:",
     "jetkarmabot.status.listspecifictext": "You are at {0}{1} now.",
     "jetkarmabot.status.havenothing": "You don't have anything yet.",
+    "jetkarmabot.status.help": "Shows the amount of awards that you have",
+    "jetkarmabot.status.awardtypehelp": "The awardtype to show. If empty shows everything.",
     "jetkarmabot.changelocale.justchanged": "Roger that.",
     "jetkarmabot.changelocale.getlocale": "I'm currently speaking English.",
     "jetkarmabot.changelocale.listalltext": "I know:",
     "jetkarmabot.changelocale.errorall": "I would like to speak all languages at once, but because of the rules of the universe, I am not allowed to do that.",
     "jetkarmabot.changelocale.beforenote": "Warning: ",
-    "jetkarmabot.help": "TODO TODO TODO TODO"
+    "jetkarmabot.changelocale.help": "Switches current chat locale to [locale]",
+    "jetkarmabot.changelocale.localehelp": "The locale to switch to. Can be \"list\" to list all possible locales. Also can be empty to get current locale",
+    "jetkarmabot.help.help": "Displays help text for all(one) command(s)",
+    "jetkarmabot.help.commandhelp": "The command to return help text for. If empty shows all commands."
   }
 }

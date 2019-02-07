@@ -7,6 +7,7 @@ namespace JetKarmaBot.Commands
     {
         IReadOnlyCollection<string> Names { get; }
         string Description { get; }
+        string DescriptionID { get; }
         IReadOnlyCollection<ChatCommandArgument> Arguments { get; }
 
         bool Execute(CommandString cmd, MessageEventArgs messageEventArgs);
@@ -18,6 +19,7 @@ namespace JetKarmaBot.Commands
         public bool Required;
         public ChatCommandArgumentType Type;
         public string Description;
+        public string DescriptionID;
     }
 
     public enum ChatCommandArgumentType

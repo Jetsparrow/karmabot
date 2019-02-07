@@ -13,14 +13,21 @@
         "jetkarmabot.award.awardmessage": "Ўручыў \"{0}\" {1}!",
         "jetkarmabot.award.revokemessage": "Адабраў \"{0}\" у {1}!",
         "jetkarmabot.award.statustext": "У {0} цяпер {1}{2}.",
+        "jetkarmabot.award.help": "",
+        "jetkarmabot.award.awardtypehelp": "",
         "jetkarmabot.status.listalltext": "У вас :",
         "jetkarmabot.status.listspecifictext": "У вас зараз {0}{1}.",
         "jetkarmabot.status.havenothing": "У вас пакуль нічога няма.",
+        "jetkarmabot.status.help": "",
+        "jetkarmabot.status.awardtypehelp": "",
         "jetkarmabot.changelocale.justchanged": "Так дакладна.",
         "jetkarmabot.changelocale.getlocale": "Я зараз кажу па-беларускай.",
         "jetkarmabot.changelocale.listalltext": "Я ведаю:",
         "jetkarmabot.changelocale.errorall": "Мне б хацелася гаварыць на ўсіх мовах у той жа самы час, але з-за абмежаванняў сусвету, мне гэта не дазваляецца.",
         "jetkarmabot.changelocale.beforenote": "Увага: ",
-        "jetkarmabot.help": "TODO TODO TODO TODO"
+        "jetkarmabot.changelocale.help": "",
+        "jetkarmabot.changelocale.localehelp": "",
+        "jetkarmabot.help.help": "",
+        "jetkarmabot.help.commandhelp": ""
     }
 }

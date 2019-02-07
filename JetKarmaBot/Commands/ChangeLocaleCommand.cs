@@ -69,13 +69,15 @@ namespace JetKarmaBot.Commands
         [Inject] Localization Locale { get; set; }
 
         public string Description => "Switches current chat locale to [locale]";
+        public string DescriptionID => "jetkarmabot.changelocale.help";
 
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
             new ChatCommandArgument() {
                 Name="locale",
                 Required=false,
                 Type=ChatCommandArgumentType.String,
-                Description="The locale to switch to. Can be \"list\" to list all possible locales. Also can be empty to get current locale"
+                Description="The locale to switch to. Can be \"list\" to list all possible locales. Also can be empty to get current locale.",
+                DescriptionID="jetkarmabot.changelocale.localehelp"
             }
         };
     }

@@ -67,5 +67,16 @@ namespace JetKarmaBot.Commands
         [Inject] KarmaContextFactory Db { get; set; }
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
+
+        public string Description => "Switches current chat locale to [locale]";
+
+        public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
+            new ChatCommandArgument() {
+                Name="locale",
+                Required=false,
+                Type=ChatCommandArgumentType.String,
+                Description="The locale to switch to. Can be \"list\" to list all possible locales. Also can be empty to get current locale"
+            }
+        };
     }
 }

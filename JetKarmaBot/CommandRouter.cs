@@ -76,10 +76,10 @@ namespace JetKarmaBot
                 {
                     build = build + "/" + names[i] + "\n";
                 }
-                build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
+                build += "/" + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
                 pieces.Add(build);
             }
-            return string.Join('\n', pieces);
+            return string.Join("\n", pieces);
         }
 
         internal string GetHelpTextFor(string commandname, Locale loc)
@@ -91,7 +91,7 @@ namespace JetKarmaBot
             {
                 build = build + "/" + names[i] + "\n";
             }
-            build += "/" + names[names.Count - 1] + " " + string.Join(' ', c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>\n";
+            build += "/" + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>\n";
             build += string.Join("\n", c.Arguments.Select(ca => (!ca.Required ? "[" : "") + ca.Name + (!ca.Required ? "]" : "") + ": <i>" + getLocalizedCMDArgDesc(ca, loc) + "</i>"));
             return build;
         }

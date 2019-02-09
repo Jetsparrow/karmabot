@@ -36,8 +36,8 @@ namespace JetKarmaBot.Commands
             if (!match.Success)
                 return false;
 
-            string cmd = match.Groups["cmd"].Captures.First().Value;
-            string username = match.Groups["name"].Captures.FirstOrDefault()?.Value;
+            string cmd = match.Groups["cmd"].Captures[0].Value;
+            string username = match.Groups["name"].Captures.Count > 0 ? match.Groups["name"].Captures[0].Value : null;
             string[] parameters = words.Skip(1).ToArray();
 
             result = new CommandString(cmd, parameters) { UserName = username};

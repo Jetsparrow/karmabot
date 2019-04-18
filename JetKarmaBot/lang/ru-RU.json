@@ -28,6 +28,8 @@
     "jetkarmabot.changelocale.localehelp": "Новая локаль, либо команда list - список переводов. Если пусто - показывается текущая локаль.",
     "jetkarmabot.help.help": "Показывает инструкцию к команде, или список команд.",
     "jetkarmabot.help.commandhelp": "Команда, к которой нужно показать инструкцию. Если пусто, то показывается список команд.",
+    "jetkarmabot.currencies.help": "Показывает все типы наград",
+    "jetkarmabot.currencies.listtext": "Типы наград:",
     "jetkarmabot.awardtypes.star": "звездочку",
     "jetkarmabot.awardtypes.pie": "с полки пирожок",
     "jetkarmabot.awardtypes.dream": "мечту",

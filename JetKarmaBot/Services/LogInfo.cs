@@ -7,7 +7,7 @@ namespace JetKarmaBot
 {
     public class LogInfo : ObjectInfo
     {
-        public override object GetInstance(Type requester = null)
+        public override object GetInstance(IContainer c, Type requester = null)
         {
             return LogManager.GetLogger(requester != null ? getTypeName(requester) : "<type unspecified>");
         }

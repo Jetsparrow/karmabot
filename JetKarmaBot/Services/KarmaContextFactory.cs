@@ -5,7 +5,7 @@ namespace JetKarmaBot.Services
 {
     public class KarmaContextFactory
     {
-        [Inject] Container C { get; set; }
+        [Inject] IContainer C { get; set; }
 
         public KarmaContext GetContext() => C.GetInstance<KarmaContext>();
     }

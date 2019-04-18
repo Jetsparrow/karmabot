@@ -14,7 +14,7 @@ namespace JetKarmaBot
         private Dictionary<string, Locale> locales = new Dictionary<string, Locale>();
 
         [Inject]
-        public Localization(Container c)
+        public Localization(IContainer c)
         {
             c.ResolveObject(this);
             log.Info("Initializing...");

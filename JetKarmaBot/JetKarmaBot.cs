@@ -17,7 +17,7 @@ namespace JetKarmaBot
     public class JetKarmaBot : IDisposable
     {
         [Inject] Config Config { get; set; }
-        [Inject] Container Container { get; set; }
+        [Inject] IContainer Container { get; set; }
         [Inject] KarmaContextFactory Db { get; set; }
 
         TelegramBotClient Client { get; set; }
@@ -70,7 +70,7 @@ namespace JetKarmaBot
             Task.Run(() => Commands.Execute(sender, messageEventArgs));
         }
 
-        void InitCommands(Container c)
+        void InitCommands(IContainer c)
         {
             Commands = c.ResolveObject(new ChatCommandRouter(Me));
             Commands.Add(c.ResolveObject(new HelpCommand(Commands)));

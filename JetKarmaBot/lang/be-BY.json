@@ -31,11 +31,17 @@
         "jetkarmabot.help.commandhelp": "Каманда, да якой трэба паказаць інструкцыю. Калі пуста, то паказваецца спіс каманд.",
         "jetkarmabot.currencies.help": "Паказвае ўсе тыпы узнагарод",
         "jetkarmabot.currencies.listtext": "Тыпы узнагарод:",
-        "jetkarmabot.awardtypes.star": "Зорачка",
-        "jetkarmabot.awardtypes.pie": "з паліцы піражок",
-        "jetkarmabot.awardtypes.dream": "Мара",
-        "jetkarmabot.awardtypes.banana": "Стыкер-бананчык",
-        "jetkarmabot.awardtypes.determination": "DETERMINATION",
-        "jetkarmabot.awardtypes.raisin": "Разынка"
+        "jetkarmabot.awardtypes.nominative.star": "зорачка",
+        "jetkarmabot.awardtypes.nominative.pie": "з паліцы піражок",
+        "jetkarmabot.awardtypes.nominative.dream": "мара",
+        "jetkarmabot.awardtypes.nominative.banana": "стыкер-бананчык",
+        "jetkarmabot.awardtypes.nominative.determination": "DETERMINATION",
+        "jetkarmabot.awardtypes.nominative.raisin": "разынка",
+        "jetkarmabot.awardtypes.accusative.star": "зорачку",
+        "jetkarmabot.awardtypes.accusative.pie": "з паліцы піражкі",
+        "jetkarmabot.awardtypes.accusative.dream": "мары",
+        "jetkarmabot.awardtypes.accusative.banana": "стыкера-бананчыка",
+        "jetkarmabot.awardtypes.accusative.determination": "DETERMINATION",
+        "jetkarmabot.awardtypes.accusative.raisin": "разыначкі"
     }
 }

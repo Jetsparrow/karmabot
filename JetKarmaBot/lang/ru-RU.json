@@ -30,11 +30,17 @@
     "jetkarmabot.help.commandhelp": "Команда, к которой нужно показать инструкцию. Если пусто, то показывается список команд.",
     "jetkarmabot.currencies.help": "Показывает все типы наград",
     "jetkarmabot.currencies.listtext": "Типы наград:",
-    "jetkarmabot.awardtypes.star": "звездочку",
-    "jetkarmabot.awardtypes.pie": "с полки пирожок",
-    "jetkarmabot.awardtypes.dream": "мечту",
-    "jetkarmabot.awardtypes.banana": "стикер-бананчик",
-    "jetkarmabot.awardtypes.determination": "РЕШИТЕЛЬНОСТЬ",
-    "jetkarmabot.awardtypes.raisin": "изюм"
+    "jetkarmabot.awardtypes.nominative.star": "звездочка",
+    "jetkarmabot.awardtypes.nominative.pie": "с полки пирожок",
+    "jetkarmabot.awardtypes.nominative.dream": "мечта",
+    "jetkarmabot.awardtypes.nominative.banana": "стикер-бананчик",
+    "jetkarmabot.awardtypes.nominative.determination": "РЕШИТЕЛЬНОСТЬ",
+    "jetkarmabot.awardtypes.nominative.raisin": "изюм",
+    "jetkarmabot.awardtypes.accusative.star": "звездочку",
+    "jetkarmabot.awardtypes.accusative.pie": "с полки пирожок",
+    "jetkarmabot.awardtypes.accusative.dream": "мечту",
+    "jetkarmabot.awardtypes.accusative.banana": "стикер-бананчик",
+    "jetkarmabot.awardtypes.accusative.determination": "РЕШИТЕЛЬНОСТЬ",
+    "jetkarmabot.awardtypes.accusative.raisin": "изюм"
   }
 }

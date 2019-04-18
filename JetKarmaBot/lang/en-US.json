@@ -30,11 +30,17 @@
     "jetkarmabot.help.commandhelp": "The command to return help text for. If empty shows all commands.",
     "jetkarmabot.currencies.help": "Shows all award types",
     "jetkarmabot.currencies.listtext": "Award types:",
-    "jetkarmabot.awardtypes.star": "Star",
-    "jetkarmabot.awardtypes.pie": "a pie from the shelf",
-    "jetkarmabot.awardtypes.dream": "Dream",
-    "jetkarmabot.awardtypes.banana": "Banana sticker",
-    "jetkarmabot.awardtypes.determination": "DETERMINATION",
-    "jetkarmabot.awardtypes.raisin": "Raisin"
+    "jetkarmabot.awardtypes.nominative.star": "star",
+    "jetkarmabot.awardtypes.nominative.pie": "a pie from the shelf",
+    "jetkarmabot.awardtypes.nominative.dream": "dream",
+    "jetkarmabot.awardtypes.nominative.banana": "banana sticker",
+    "jetkarmabot.awardtypes.nominative.determination": "DETERMINATION",
+    "jetkarmabot.awardtypes.nominative.raisin": "raisin",
+    "jetkarmabot.awardtypes.accusative.star": "star",
+    "jetkarmabot.awardtypes.accusative.pie": "a pie from the shelf",
+    "jetkarmabot.awardtypes.accusative.dream": "dream",
+    "jetkarmabot.awardtypes.accusative.banana": "banana sticker",
+    "jetkarmabot.awardtypes.accusative.determination": "DETERMINATION",
+    "jetkarmabot.awardtypes.accusative.raisin": "raisin"
   }
 }

@@ -89,9 +89,9 @@ namespace JetKarmaBot.Commands
 
         private string getLocalizedName(global::JetKarmaBot.Models.AwardType awardType, Locale loc)
         {
-            if (loc.ContainsKey($"jetkarmabot.awardtypes.{awardType.CommandName}"))
+            if (loc.ContainsKey($"jetkarmabot.awardtypes.accusative.{awardType.CommandName}"))
             {
-                return loc[$"jetkarmabot.awardtypes.{awardType.CommandName}"];
+                return loc[$"jetkarmabot.awardtypes.accusative.{awardType.CommandName}"];
             }
             else
             {

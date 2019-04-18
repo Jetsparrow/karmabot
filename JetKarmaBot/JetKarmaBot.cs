@@ -77,6 +77,7 @@ namespace JetKarmaBot
             Commands.Add(c.ResolveObject(new AwardCommand(Me)));
             Commands.Add(c.ResolveObject(new StatusCommand()));
             Commands.Add(c.ResolveObject(new LocaleCommand()));
+            Commands.Add(c.ResolveObject(new CurrenciesCommand()));
         }
 
         #endregion

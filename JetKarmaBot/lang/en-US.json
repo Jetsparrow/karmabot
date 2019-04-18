@@ -28,6 +28,8 @@
     "jetkarmabot.changelocale.localehelp": "The locale to switch to. Can be \"list\" to list all possible locales. Also can be empty to get current locale",
     "jetkarmabot.help.help": "Displays help text for all(one) command(s)",
     "jetkarmabot.help.commandhelp": "The command to return help text for. If empty shows all commands.",
+    "jetkarmabot.currencies.help": "Shows all award types",
+    "jetkarmabot.currencies.listtext": "Award types:",
     "jetkarmabot.awardtypes.star": "Star",
     "jetkarmabot.awardtypes.pie": "a pie from the shelf",
     "jetkarmabot.awardtypes.dream": "Dream",

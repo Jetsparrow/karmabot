@@ -27,7 +27,7 @@ namespace JetKarmaBot.Commands
             {
                 var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
                 string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",
-                db.AwardTypes.ToList().Select(x => $"{x.Symbol} ({x.CommandName}) - {currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}"));
+                db.AwardTypes.ToList().Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>"));
                 Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         resp,

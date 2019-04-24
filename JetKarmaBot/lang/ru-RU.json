@@ -25,6 +25,7 @@
     "jetkarmabot.changelocale.listalltext": "Я знаю:",
     "jetkarmabot.changelocale.errorall": "Мне бы хотелось говорить на всех языках в то же самое время, но из-за ограничений вселенной, мне это не позволяется.",
     "jetkarmabot.changelocale.beforenote": "Внимание: ",
+    "jetkarmabot.changelocale.toomany": "Не знаю, на каком диалекте хочешь, чтобы я говорил.\nЯ знаю эти:",
     "jetkarmabot.changelocale.help": "Меняет язык, на котором бот говорит в этом чате",
     "jetkarmabot.changelocale.localehelp": "Новая локаль, либо команда list - список переводов. Если пусто - показывается текущая локаль.",
     "jetkarmabot.help.help": "Показывает инструкцию к команде, или список команд.",

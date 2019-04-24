@@ -48,7 +48,18 @@ namespace JetKarmaBot.Commands
                 if (Locale.ContainsLocale(cmd.Parameters[0]))
                     localeId = cmd.Parameters[0];
                 else
-                    localeId = Locale.FindByCommonName(cmd.Parameters[0]).Name;
+                    try
+                    {
+                        localeId = Locale.FindByCommonName(cmd.Parameters[0]).Name;
+                    }
+                    catch (LocalizationException e)
+                    {
+                        Client.SendTextMessageAsync(
+                        args.Message.Chat.Id,
+                        currentLocale["jetkarmabot.changelocale.toomany"] + "\n" + string.Join("\n", (e.Data["LocaleNames"] as Locale[]).Select(x => x.Name)),
+                        replyToMessageId: args.Message.MessageId);
+                        return true;
+                    }
                 db.Chats.Find(args.Message.Chat.Id).Locale = localeId;
                 log.Debug($"Changed language of chat {args.Message.Chat.Id} to {localeId}");
                 db.SaveChanges();

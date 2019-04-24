@@ -25,6 +25,7 @@
     "jetkarmabot.changelocale.listalltext": "I know:",
     "jetkarmabot.changelocale.errorall": "I would like to speak all languages at once, but because of the rules of the universe, I am not allowed to do that.",
     "jetkarmabot.changelocale.beforenote": "Warning: ",
+    "jetkarmabot.changelocale.toomany": "I don't know what dialect you want me to speak in.\nI know these:",
     "jetkarmabot.changelocale.help": "Switches current chat locale to [locale]",
     "jetkarmabot.changelocale.localehelp": "The locale to switch to. Can be \"list\" to list all possible locales. Also can be empty to get current locale",
     "jetkarmabot.help.help": "Displays help text for all(one) command(s)",

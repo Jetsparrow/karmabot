@@ -12,6 +12,7 @@
     "jetkarmabot.award.awardmessage": "Вручил \"{0}\" {1}!",
     "jetkarmabot.award.revokemessage": "Отнял \"{0}\" у {1}!",
     "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
+    "jetkarmabot.award.ratelimit": "Помедленней, чувак!",
     "jetkarmabot.award.help": "Вручает очко пользователю (или отнимает)",
     "jetkarmabot.award.awardtypehelp": "Тип очка",
     "jetkarmabot.status.listalltext": "У вас :",

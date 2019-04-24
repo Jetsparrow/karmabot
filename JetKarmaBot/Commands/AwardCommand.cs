@@ -57,7 +57,15 @@ namespace JetKarmaBot.Commands
                 global::JetKarmaBot.Models.AwardType awardType = awardTypeText != null
                     ? db.AwardTypes.First(at => at.CommandName == awardTypeText)
                     : db.AwardTypes.Find((sbyte)1);
-
+                DateTime cutoff = DateTime.Now - TimeSpan.FromMinutes(5);
+                if (db.Awards.Where(x => x.Date > cutoff && x.FromId == awarder.Id).Count() >= 10)
+                {
+                    Client.SendTextMessageAsync(
+                    args.Message.Chat.Id,
+                    currentLocale["jetkarmabot.award.ratelimit"],
+                    replyToMessageId: args.Message.MessageId);
+                    return true;
+                }
                 db.Awards.Add(new Models.Award()
                 {
                     AwardTypeId = awardType.AwardTypeId,

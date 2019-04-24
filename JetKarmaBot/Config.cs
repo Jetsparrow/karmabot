@@ -21,6 +21,7 @@ namespace JetKarmaBot
         }
 
         public ProxySettings Proxy { get; private set; }
+        public bool SqlDebug { get; private set; }
     }
 
     public abstract class ConfigBase

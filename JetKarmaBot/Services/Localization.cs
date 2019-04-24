@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using NLog;
 using Perfusion;
@@ -67,6 +68,16 @@ namespace JetKarmaBot
                     return l;
                 }
             }
+            // Try to find as locale prefix
+            IEnumerable<Locale> matchinglocales = locales.Values.Where(x => x.Name.StartsWith(name + "-"));
+            if (matchinglocales.Count() > 1)
+            {
+                LocalizationException l = new LocalizationException("Too many locales");
+                l.Data["LocaleNames"] = matchinglocales.ToArray();
+                throw l;
+            }
+            else if (matchinglocales.Count() == 1)
+                return matchinglocales.First();
             log.Warn("Failed to find locale " + name);
             return null;
         }
@@ -147,5 +158,15 @@ namespace JetKarmaBot
         {
             return ((IReadOnlyDictionary<string, string>)locale).GetEnumerator();
         }
+    }
+    [System.Serializable]
+    public class LocalizationException : Exception
+    {
+        public LocalizationException() { }
+        public LocalizationException(string message) : base(message) { }
+        public LocalizationException(string message, Exception inner) : base(message, inner) { }
+        protected LocalizationException(
+            SerializationInfo info,
+            StreamingContext context) : base(info, context) { }
     }
 }

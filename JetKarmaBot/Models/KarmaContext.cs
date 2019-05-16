@@ -154,6 +154,11 @@ namespace JetKarmaBot.Models
                     .HasColumnName("locale")
                     .HasColumnType("varchar(10)")
                     .HasDefaultValueSql("'ru-RU'");
+
+                entity.Property(e => e.IsAdministrator)
+                    .HasColumnName("isadministrator")
+                    .HasColumnType("tinyint(1)")
+                    .HasDefaultValueSql("'0'");
             });
 
             modelBuilder.Entity<User>(entity =>

@@ -1,21 +1,23 @@
 ﻿using JetKarmaBot.Commands;
+using JetKarmaBot.Services;
 using NLog;
 using Perfusion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
 
 namespace JetKarmaBot
 {
     public class ChatCommandRouter
     {
-        User BotUser { get; }
-        [Inject]
-        private Logger log;
+        Telegram.Bot.Types.User BotUser { get; }
+        [Inject] private Logger log;
+        [Inject] private KarmaContextFactory Db;
+        [Inject] private TelegramBotClient Client { get; set; }
 
-        public ChatCommandRouter(User botUser)
+        public ChatCommandRouter(Telegram.Bot.Types.User botUser)
         {
             BotUser = botUser;
         }
@@ -45,13 +47,23 @@ namespace JetKarmaBot
                 {
                     log.Error($"Error while handling command {cmd.Command}!");
                     log.Error(e);
+                    ReportToAdministratorChats($"Error while handling command {cmd.Command}!\n{e.ToString()}");
                 }
             }
-
 
             return false;
         }
 
+        public void ReportToAdministratorChats(string text)
+        {
+            using (var db = Db.GetContext())
+            {
+                foreach (long chatid in db.Chats.Where(x => x.IsAdministrator).Select(x => x.ChatId))
+                {
+                    Client.SendTextMessageAsync(chatid, text);
+                }
+            }
+        }
 
         public void Add(IChatCommand c)
         {

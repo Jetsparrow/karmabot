@@ -12,6 +12,7 @@ namespace JetKarmaBot.Models
 
         public long ChatId { get; set; }
         public string Locale { get; set; }
+        public bool IsAdministrator { get; set; }
 
         public virtual ICollection<Award> Awards { get; set; }
     }

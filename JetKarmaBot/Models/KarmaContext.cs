@@ -69,7 +69,7 @@ namespace JetKarmaBot.Models
                 entity.Property(e => e.Date)
                     .HasColumnName("date")
                     .HasColumnType("datetime")
-                    .HasDefaultValueSql("'CURRENT_TIMESTAMP'");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.FromId)
                     .HasColumnName("fromid")

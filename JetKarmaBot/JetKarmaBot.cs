@@ -26,6 +26,8 @@ namespace JetKarmaBot
 
         public async Task Init()
         {
+            using (KarmaContext db = Db.GetContext())
+                await db.Database.EnsureCreatedAsync();
             var httpProxy = new WebProxy($"{Config.Proxy.Url}:{Config.Proxy.Port}")
             {
                 Credentials = new NetworkCredential(Config.Proxy.Login, Config.Proxy.Password)

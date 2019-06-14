@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-	<TargetFrameworks>netcoreapp2.1;</TargetFrameworks>
+	<TargetFrameworks>netcoreapp2.2;</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
-    <PackageReference Include="Telegram.Bot" Version="14.10.0" />
-    <PackageReference Include="NLog" Version="5.0.0-beta11" />
-    <PackageReference Include="NLog.Config" Version="4.5.11" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
+    <PackageReference Include="Telegram.Bot" Version="14.12.0" />
+    <PackageReference Include="NLog" Version="4.6.5" />
+    <PackageReference Include="NLog.Config" Version="4.6.5" />
     <ProjectReference Include="..\perfusion\Perfusion\Perfusion.csproj" />
   </ItemGroup>
   <ItemGroup>

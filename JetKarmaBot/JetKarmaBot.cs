@@ -58,10 +58,10 @@ namespace JetKarmaBot
             using (KarmaContext db = Db.GetContext())
             {
                 if (!db.Users.Any(x => x.UserId == messageEventArgs.Message.From.Id))
-                    db.Users.Add(new Models.User { UserId = messageEventArgs.Message.From.Id });
+                    db.Users.Add(new Models.User { UserId = messageEventArgs.Message.From.Id, Username = messageEventArgs.Message.From.Username});
                 if (messageEventArgs.Message.ReplyToMessage != null)
                     if (!db.Users.Any(x => x.UserId == messageEventArgs.Message.ReplyToMessage.From.Id))
-                        db.Users.Add(new Models.User { UserId = messageEventArgs.Message.ReplyToMessage.From.Id });
+                        db.Users.Add(new Models.User { UserId = messageEventArgs.Message.ReplyToMessage.From.Id, Username = messageEventArgs.Message.ReplyToMessage.From.Username });
                 if (!db.Chats.Any(x => x.ChatId == messageEventArgs.Message.Chat.Id))
                     db.Chats.Add(new Models.Chat { ChatId = messageEventArgs.Message.Chat.Id });
                 db.SaveChanges();
@@ -80,6 +80,7 @@ namespace JetKarmaBot
             Commands.Add(c.ResolveObject(new StatusCommand()));
             Commands.Add(c.ResolveObject(new LocaleCommand()));
             Commands.Add(c.ResolveObject(new CurrenciesCommand()));
+            Commands.Add(c.ResolveObject(new LeaderboardCommand()));
         }
 
         #endregion

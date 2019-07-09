@@ -35,7 +35,7 @@ namespace JetKarmaBot.Commands
                     else
                     {
                         var awardsQuery = from award in db.Awards
-                                          where award.ToId == asker.Id
+                                          where award.ToId == asker.Id && award.ChatId == args.Message.Chat.Id
                                           group award by award.AwardTypeId into g
                                           select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
                         var awardsByType = awardsQuery.ToList();
@@ -52,7 +52,7 @@ namespace JetKarmaBot.Commands
                     var awardTypeId = awardTypeIdQuery.First();
                     var awardType = db.AwardTypes.Find(awardTypeId);
 
-                    response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], db.Awards.Where(x => x.AwardTypeId == awardTypeId && x.ToId == asker.Id).Sum(x => x.Amount), awardType.Symbol);
+                    response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], db.Awards.Where(x => x.AwardTypeId == awardTypeId && x.ToId == asker.Id && x.ChatId == args.Message.Chat.Id).Sum(x => x.Amount), awardType.Symbol);
                 }
 
                 Client.SendTextMessageAsync(

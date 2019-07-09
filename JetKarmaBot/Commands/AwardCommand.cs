@@ -82,7 +82,7 @@ namespace JetKarmaBot.Commands
                     : string.Format(currentLocale["jetkarmabot.award.revokemessage"], getLocalizedName(awardType, currentLocale), "@" + recipient.Username);
 
                 var currentCount = db.Awards
-                    .Where(aw => aw.ToId == recipient.Id && aw.AwardTypeId == awardType.AwardTypeId)
+                    .Where(aw => aw.ToId == recipient.Id && aw.AwardTypeId == awardType.AwardTypeId && aw.ChatId == args.Message.Chat.Id)
                     .Sum(aw => aw.Amount);
 
                 var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], "@" + recipient.Username, currentCount, awardType.Symbol);

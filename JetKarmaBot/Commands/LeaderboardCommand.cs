@@ -37,7 +37,7 @@ namespace JetKarmaBot.Commands
                     var awardTypeId = awardTypeIdQuery.First();
                     var awardType = db.AwardTypes.Find(awardTypeId);
 
-                    response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join(' ', db.Awards
+                    response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n', db.Awards
                             .Where(x => x.ChatId == args.Message.Chat.Id && x.AwardTypeId == awardTypeId)
                             .GroupBy(x => x.ToId)
                             .Select(x => new {UserId = x.Key, Amount = x.Sum(y => y.Amount)})

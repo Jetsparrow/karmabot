@@ -57,11 +57,9 @@ namespace JetKarmaBot
                 return;
             using (KarmaContext db = Db.GetContext())
             {
-                if (!db.Users.Any(x => x.UserId == messageEventArgs.Message.From.Id))
-                    db.Users.Add(new Models.User { UserId = messageEventArgs.Message.From.Id, Username = messageEventArgs.Message.From.Username});
+                AddUserToDatabase(db, messageEventArgs.Message.From);
                 if (messageEventArgs.Message.ReplyToMessage != null)
-                    if (!db.Users.Any(x => x.UserId == messageEventArgs.Message.ReplyToMessage.From.Id))
-                        db.Users.Add(new Models.User { UserId = messageEventArgs.Message.ReplyToMessage.From.Id, Username = messageEventArgs.Message.ReplyToMessage.From.Username });
+                    AddUserToDatabase(db, messageEventArgs.Message.ReplyToMessage.From);
                 if (!db.Chats.Any(x => x.ChatId == messageEventArgs.Message.Chat.Id))
                     db.Chats.Add(new Models.Chat { ChatId = messageEventArgs.Message.Chat.Id });
                 db.SaveChanges();
@@ -70,6 +68,19 @@ namespace JetKarmaBot
             long id = message.Chat.Id;
             long from = message.From.Id;
             Task.Run(() => Commands.Execute(sender, messageEventArgs));
+        }
+
+        private void AddUserToDatabase(KarmaContext db, Telegram.Bot.Types.User u)
+        {
+            string un;
+            if (u.Username == null)
+                un = u.FirstName + (u.LastName != null ? " " + u.LastName : "");
+            else
+                un = "@" + u.Username;
+            if (!db.Users.Any(x => x.UserId == u.Id))
+                db.Users.Add(new Models.User { UserId = u.Id, Username = un});
+            else 
+                db.Users.Find(u.Id).Username = un;
         }
 
         void InitCommands(IContainer c)

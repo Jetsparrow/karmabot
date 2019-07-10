@@ -76,16 +76,18 @@ namespace JetKarmaBot.Commands
                 });
                 log.Debug($"Awarded {(awarding ? 1 : -1)}{awardType.Symbol} to {recipient.Username}");
                 db.SaveChanges();
+                
+                var recUserName = db.Users.Find(recipient.Id).Username;
 
                 string message = awarding
-                    ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], getLocalizedName(awardType, currentLocale), "@" + recipient.Username)
-                    : string.Format(currentLocale["jetkarmabot.award.revokemessage"], getLocalizedName(awardType, currentLocale), "@" + recipient.Username);
+                    ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], getLocalizedName(awardType, currentLocale), recUserName)
+                    : string.Format(currentLocale["jetkarmabot.award.revokemessage"], getLocalizedName(awardType, currentLocale), recUserName);
 
                 var currentCount = db.Awards
                     .Where(aw => aw.ToId == recipient.Id && aw.AwardTypeId == awardType.AwardTypeId && aw.ChatId == args.Message.Chat.Id)
                     .Sum(aw => aw.Amount);
 
-                var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], "@" + recipient.Username, currentCount, awardType.Symbol);
+                var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, currentCount, awardType.Symbol);
 
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,

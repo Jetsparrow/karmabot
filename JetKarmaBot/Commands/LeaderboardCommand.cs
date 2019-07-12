@@ -28,24 +28,22 @@ namespace JetKarmaBot.Commands
                 string response;
 
                 if (string.IsNullOrWhiteSpace(awardTypeName))
-                    response = currentLocale["jetkarmabot.leaderboard.noallawardtypes"];
-                else
-                {
-                    var awardTypeIdQuery = from awt in db.AwardTypes
-                                           where awt.CommandName == awardTypeName
-                                           select awt.AwardTypeId;
-                    var awardTypeId = awardTypeIdQuery.First();
-                    var awardType = db.AwardTypes.Find(awardTypeId);
+                    awardTypeName = "star";
 
-                    response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n', db.Awards
-                            .Where(x => x.ChatId == args.Message.Chat.Id && x.AwardTypeId == awardTypeId)
-                            .GroupBy(x => x.ToId)
-                            .Select(x => new {UserId = x.Key, Amount = x.Sum(y => y.Amount)})
-                            .OrderByDescending(x => x.Amount)
-                            .Take(5)
-                            .ToList()
-                            .Select((x,index) => $"{index+1}. {db.Users.Find(x.UserId).Username} - {x.Amount}"));
-                }
+                var awardTypeIdQuery = from awt in db.AwardTypes
+                                       where awt.CommandName == awardTypeName
+                                       select awt.AwardTypeId;
+                var awardTypeId = awardTypeIdQuery.First();
+                var awardType = db.AwardTypes.Find(awardTypeId);
+
+                response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n', db.Awards
+                        .Where(x => x.ChatId == args.Message.Chat.Id && x.AwardTypeId == awardTypeId)
+                        .GroupBy(x => x.ToId)
+                        .Select(x => new {UserId = x.Key, Amount = x.Sum(y => y.Amount)})
+                        .OrderByDescending(x => x.Amount)
+                        .Take(5)
+                        .ToList()
+                        .Select((x,index) => $"{index+1}. {db.Users.Find(x.UserId).Username} - {x.Amount}"));
 
                 Client.SendTextMessageAsync(
                     args.Message.Chat.Id,

@@ -34,7 +34,6 @@
     "jetkarmabot.currencies.listtext": "Типы наград:",
     "jetkarmabot.leaderboard.help": "Таблица лидеров по количеству наград",
     "jetkarmabot.leaderboard.awardtypehelp": "Тип награды, по которой покажется отчет.",
-    "jetkarmabot.leaderboard.noallawardtypes": "Сводные таблицы пока не поддерживаются.",
     "jetkarmabot.leaderboard.specifictext": "Передовики в номинации \"{0}\":",
     "jetkarmabot.awardtypes.nominative.star": "звездочка",
     "jetkarmabot.awardtypes.nominative.pie": "с полки пирожок",

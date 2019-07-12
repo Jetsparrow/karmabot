@@ -34,7 +34,6 @@
     "jetkarmabot.currencies.listtext": "Award types:",
     "jetkarmabot.leaderboard.help": "Shows the people with the most of a specific award.",
     "jetkarmabot.leaderboard.awardtypehelp": "The awardtype to show a leaderboard for.",
-    "jetkarmabot.leaderboard.noallawardtypes": "Sorry, but leaderboards for all award types are not implemented yet.",
     "jetkarmabot.leaderboard.specifictext": "Leaderboard for {0}:",
     "jetkarmabot.awardtypes.nominative.star": "star",
     "jetkarmabot.awardtypes.nominative.pie": "pie from the shelf",

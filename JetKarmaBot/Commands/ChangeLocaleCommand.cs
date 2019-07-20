@@ -5,6 +5,7 @@ using Perfusion;
 using JetKarmaBot.Services;
 using NLog;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace JetKarmaBot.Commands
 {
@@ -14,14 +15,14 @@ namespace JetKarmaBot.Commands
         [Inject]
         private Logger log;
 
-        public bool Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
-                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
                 if (cmd.Parameters.Length < 1)
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.changelocale.getlocale"],
                         replyToMessageId: args.Message.MessageId);
@@ -29,7 +30,7 @@ namespace JetKarmaBot.Commands
                 }
                 else if (cmd.Parameters[0] == "list")
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.changelocale.listalltext"] + "\n"
                              + string.Join("\n", Locale.Select(a => a.Key)),
@@ -38,7 +39,7 @@ namespace JetKarmaBot.Commands
                 }
                 else if (cmd.Parameters[0] == "all")
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.changelocale.errorall"],
                         replyToMessageId: args.Message.MessageId);
@@ -54,19 +55,19 @@ namespace JetKarmaBot.Commands
                     }
                     catch (LocalizationException e)
                     {
-                        Client.SendTextMessageAsync(
+                        await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.changelocale.toomany"] + "\n" + string.Join("\n", (e.Data["LocaleNames"] as Locale[]).Select(x => x.Name)),
                         replyToMessageId: args.Message.MessageId);
                         return true;
                     }
-                db.Chats.Find(args.Message.Chat.Id).Locale = localeId;
+                (await db.Chats.FindAsync(args.Message.Chat.Id)).Locale = localeId;
                 log.Debug($"Changed language of chat {args.Message.Chat.Id} to {localeId}");
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
-                currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
 
-                Client.SendTextMessageAsync(
+                await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
 (currentLocale.HasNote ? currentLocale["jetkarmabot.changelocale.beforenote"] + currentLocale.Note + "\n" : "")
                         + currentLocale["jetkarmabot.changelocale.justchanged"],

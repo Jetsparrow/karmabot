@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Telegram.Bot.Args;
 
 namespace JetKarmaBot.Commands
@@ -10,7 +11,7 @@ namespace JetKarmaBot.Commands
         string DescriptionID { get; }
         IReadOnlyCollection<ChatCommandArgument> Arguments { get; }
 
-        bool Execute(CommandString cmd, MessageEventArgs messageEventArgs);
+        Task<bool> Execute(CommandString cmd, MessageEventArgs messageEventArgs);
     }
 
     public struct ChatCommandArgument

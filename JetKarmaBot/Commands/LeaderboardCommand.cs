@@ -17,11 +17,11 @@ namespace JetKarmaBot.Commands
     {
         public IReadOnlyCollection<string> Names => new[] { "leaderboard" };
 
-        public bool Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
-                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
                 var asker = args.Message.From;
                 var awardTypeName = cmd.Parameters.FirstOrDefault();
 
@@ -33,19 +33,21 @@ namespace JetKarmaBot.Commands
                 var awardTypeIdQuery = from awt in db.AwardTypes
                                        where awt.CommandName == awardTypeName
                                        select awt.AwardTypeId;
-                var awardTypeId = awardTypeIdQuery.First();
-                var awardType = db.AwardTypes.Find(awardTypeId);
+                var awardTypeId = await awardTypeIdQuery.FirstAsync();
+                var awardType = await db.AwardTypes.FindAsync(awardTypeId);
 
-                response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n', db.Awards
+                response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n',
+                    await Task.WhenAll((await db.Awards
                         .Where(x => x.ChatId == args.Message.Chat.Id && x.AwardTypeId == awardTypeId)
                         .GroupBy(x => x.ToId)
-                        .Select(x => new {UserId = x.Key, Amount = x.Sum(y => y.Amount)})
+                        .Select(x => new { UserId = x.Key, Amount = x.Sum(y => y.Amount) })
                         .OrderByDescending(x => x.Amount)
                         .Take(5)
-                        .ToList()
-                        .Select((x,index) => $"{index+1}. {db.Users.Find(x.UserId).Username} - {x.Amount}"));
+                        .ToListAsync())
+                        .Select(async (x, index) => $"{index + 1}. {(await db.Users.FindAsync(x.UserId)).Username} - {x.Amount}"))
+                );
 
-                Client.SendTextMessageAsync(
+                await Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
                     response,
                     replyToMessageId: args.Message.MessageId);

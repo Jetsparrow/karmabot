@@ -7,6 +7,8 @@ using Telegram.Bot.Types;
 using Perfusion;
 using JetKarmaBot.Services;
 using NLog;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace JetKarmaBot.Commands
 {
@@ -16,14 +18,14 @@ namespace JetKarmaBot.Commands
         [Inject]
         private Logger log;
 
-        public bool Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
-                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
                 if (args.Message.ReplyToMessage == null)
                 {
-                    Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errawardnoreply"]);
+                    await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errawardnoreply"]);
                     return true;
                 }
 
@@ -34,7 +36,7 @@ namespace JetKarmaBot.Commands
 
                 if (awarder.Id == recipient.Id)
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.award.errawardself"],
                         replyToMessageId: args.Message.MessageId);
@@ -43,7 +45,7 @@ namespace JetKarmaBot.Commands
 
                 if (Me.Id == recipient.Id)
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         awarding
                         ? currentLocale["jetkarmabot.award.errawardbot"]
@@ -55,18 +57,18 @@ namespace JetKarmaBot.Commands
                 var text = args.Message.Text;
                 var awardTypeText = cmd.Parameters.FirstOrDefault();
                 global::JetKarmaBot.Models.AwardType awardType = awardTypeText != null
-                    ? db.AwardTypes.First(at => at.CommandName == awardTypeText)
-                    : db.AwardTypes.Find((sbyte)1);
+                    ? await db.AwardTypes.FirstAsync(at => at.CommandName == awardTypeText)
+                    : await db.AwardTypes.FindAsync((sbyte)1);
                 DateTime cutoff = DateTime.Now - TimeSpan.FromMinutes(5);
-                if (db.Awards.Where(x => x.Date > cutoff && x.FromId == awarder.Id).Count() >= 10)
+                if (await db.Awards.Where(x => x.Date > cutoff && x.FromId == awarder.Id).CountAsync() >= 10)
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
                     currentLocale["jetkarmabot.award.ratelimit"],
                     replyToMessageId: args.Message.MessageId);
                     return true;
                 }
-                db.Awards.Add(new Models.Award()
+                await db.Awards.AddAsync(new Models.Award()
                 {
                     AwardTypeId = awardType.AwardTypeId,
                     Amount = (sbyte)(awarding ? 1 : -1),
@@ -75,21 +77,21 @@ namespace JetKarmaBot.Commands
                     ChatId = args.Message.Chat.Id
                 });
                 log.Debug($"Awarded {(awarding ? 1 : -1)}{awardType.Symbol} to {recipient.Username}");
-                db.SaveChanges();
-                
-                var recUserName = db.Users.Find(recipient.Id).Username;
+                await db.SaveChangesAsync();
+
+                var recUserName = (await db.Users.FindAsync(recipient.Id)).Username;
 
                 string message = awarding
                     ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], getLocalizedName(awardType, currentLocale), recUserName)
                     : string.Format(currentLocale["jetkarmabot.award.revokemessage"], getLocalizedName(awardType, currentLocale), recUserName);
 
-                var currentCount = db.Awards
+                var currentCount = await db.Awards
                     .Where(aw => aw.ToId == recipient.Id && aw.AwardTypeId == awardType.AwardTypeId && aw.ChatId == args.Message.Chat.Id)
-                    .Sum(aw => aw.Amount);
+                    .SumAsync(aw => aw.Amount);
 
                 var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, currentCount, awardType.Symbol);
 
-                Client.SendTextMessageAsync(
+                await Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
                     response,
                     replyToMessageId: args.Message.MessageId);

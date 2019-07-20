@@ -5,6 +5,8 @@ using JetKarmaBot.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace JetKarmaBot.Commands
 {
@@ -21,14 +23,14 @@ namespace JetKarmaBot.Commands
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
          };
 
-        public bool Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
-                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
                 string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",
-                db.AwardTypes.ToList().Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>"));
-                Client.SendTextMessageAsync(
+                (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>"));
+                await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         resp,
                         replyToMessageId: args.Message.MessageId,

@@ -55,22 +55,23 @@ namespace JetKarmaBot
             var message = messageEventArgs.Message;
             if (message == null || message.Type != MessageType.Text)
                 return;
-            using (KarmaContext db = Db.GetContext())
+
+            Task.Run(async () =>
             {
-                AddUserToDatabase(db, messageEventArgs.Message.From);
-                if (messageEventArgs.Message.ReplyToMessage != null)
-                    AddUserToDatabase(db, messageEventArgs.Message.ReplyToMessage.From);
-                if (!db.Chats.Any(x => x.ChatId == messageEventArgs.Message.Chat.Id))
-                    db.Chats.Add(new Models.Chat { ChatId = messageEventArgs.Message.Chat.Id });
-                db.SaveChanges();
-            }
-            string s = message.Text;
-            long id = message.Chat.Id;
-            long from = message.From.Id;
-            Task.Run(() => Commands.Execute(sender, messageEventArgs));
+                using (KarmaContext db = Db.GetContext())
+                {
+                    await AddUserToDatabase(db, messageEventArgs.Message.From);
+                    if (messageEventArgs.Message.ReplyToMessage != null)
+                        await AddUserToDatabase(db, messageEventArgs.Message.ReplyToMessage.From);
+                    if (!db.Chats.Any(x => x.ChatId == messageEventArgs.Message.Chat.Id))
+                        db.Chats.Add(new Models.Chat { ChatId = messageEventArgs.Message.Chat.Id });
+                    await db.SaveChangesAsync();
+                }
+                await Commands.Execute(sender, messageEventArgs);
+            });
         }
 
-        private void AddUserToDatabase(KarmaContext db, Telegram.Bot.Types.User u)
+        private async Task AddUserToDatabase(KarmaContext db, Telegram.Bot.Types.User u)
         {
             string un;
             if (u.Username == null)
@@ -78,9 +79,9 @@ namespace JetKarmaBot
             else
                 un = "@" + u.Username;
             if (!db.Users.Any(x => x.UserId == u.Id))
-                db.Users.Add(new Models.User { UserId = u.Id, Username = un});
-            else 
-                db.Users.Find(u.Id).Username = un;
+                await db.Users.AddAsync(new Models.User { UserId = u.Id, Username = un });
+            else
+                (await db.Users.FindAsync(u.Id)).Username = un;
         }
 
         void InitCommands(IContainer c)

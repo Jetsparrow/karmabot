@@ -1,10 +1,12 @@
 ﻿using JetKarmaBot.Commands;
 using JetKarmaBot.Services;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 using Perfusion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 
@@ -22,7 +24,7 @@ namespace JetKarmaBot
             BotUser = botUser;
         }
 
-        public bool Execute(object sender, MessageEventArgs args)
+        public async Task<bool> Execute(object sender, MessageEventArgs args)
         {
             log.Debug("Message received");
             var text = args.Message.Text;
@@ -40,27 +42,33 @@ namespace JetKarmaBot
                     if (commands.ContainsKey(cmd.Command))
                     {
                         log.Debug($"Handling message via {commands[cmd.Command].GetType().Name}");
-                        return commands[cmd.Command].Execute(cmd, args);
+                        return await commands[cmd.Command].Execute(cmd, args);
                     }
                 }
                 catch (Exception e)
                 {
                     log.Error($"Error while handling command {cmd.Command}!");
                     log.Error(e);
-                    ReportToAdministratorChats($"Error while handling command {cmd.Command}!\n{e.ToString()}");
+                    await ReportToAdministratorChats($"Error while handling command {cmd.Command}!\n{e.ToString()}");
                 }
             }
 
             return false;
         }
 
-        public void ReportToAdministratorChats(string text)
+        public async Task ReportToAdministratorChats(string text)
         {
             using (var db = Db.GetContext())
             {
+                await Task.WhenAll(
+                    (await db.Chats
+                        .Where(x => x.IsAdministrator)
+                        .Select(x => x.ChatId)
+                        .ToArrayAsync())
+                    .Select(x => Client.SendTextMessageAsync(x, text)));
                 foreach (long chatid in db.Chats.Where(x => x.IsAdministrator).Select(x => x.ChatId))
                 {
-                    Client.SendTextMessageAsync(chatid, text);
+                    await Client.SendTextMessageAsync(chatid, text);
                 }
             }
         }

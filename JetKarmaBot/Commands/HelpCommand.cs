@@ -4,6 +4,7 @@ using Perfusion;
 using JetKarmaBot.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using System.Threading.Tasks;
 
 namespace JetKarmaBot.Commands
 {
@@ -28,14 +29,14 @@ namespace JetKarmaBot.Commands
             }
          };
 
-        public bool Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
-                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
                 if (cmd.Parameters.Length < 1)
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
                             Router.GetHelpText(currentLocale),
                             replyToMessageId: args.Message.MessageId,
@@ -44,7 +45,7 @@ namespace JetKarmaBot.Commands
                 }
                 else
                 {
-                    Client.SendTextMessageAsync(
+                    await Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
                             Router.GetHelpTextFor(cmd.Parameters[0], currentLocale),
                             replyToMessageId: args.Message.MessageId,

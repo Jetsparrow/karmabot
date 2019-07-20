@@ -8,6 +8,8 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using JetKarmaBot.Models;
 using JetKarmaBot.Services;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace JetKarmaBot.Commands
 {
@@ -15,11 +17,11 @@ namespace JetKarmaBot.Commands
     {
         public IReadOnlyCollection<string> Names => new[] { "status" };
 
-        public bool Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
-                var currentLocale = Locale[db.Chats.Find(args.Message.Chat.Id).Locale];
+                var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
                 var asker = args.Message.From;
                 var awardTypeName = cmd.Parameters.FirstOrDefault();
 
@@ -38,9 +40,11 @@ namespace JetKarmaBot.Commands
                                           where award.ToId == asker.Id && award.ChatId == args.Message.Chat.Id
                                           group award by award.AwardTypeId into g
                                           select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
-                        var awardsByType = awardsQuery.ToList();
+                        var awardsByType = await awardsQuery.ToListAsync();
                         response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
-                             + string.Join("\n", awardsByType.Select(a => $" - {db.AwardTypes.Find(a.AwardTypeId).Symbol} {a.Amount}"));
+                             + string.Join("\n", await Task.WhenAll(
+                                 awardsByType.Select(async a => $" - {(await db.AwardTypes.FindAsync(a.AwardTypeId)).Symbol} {a.Amount}")
+                            ));
 
                     }
                 }
@@ -49,13 +53,13 @@ namespace JetKarmaBot.Commands
                     var awardTypeIdQuery = from awt in db.AwardTypes
                                            where awt.CommandName == awardTypeName
                                            select awt.AwardTypeId;
-                    var awardTypeId = awardTypeIdQuery.First();
-                    var awardType = db.AwardTypes.Find(awardTypeId);
+                    var awardTypeId = await awardTypeIdQuery.FirstAsync();
+                    var awardType = await db.AwardTypes.FindAsync(awardTypeId);
 
-                    response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], db.Awards.Where(x => x.AwardTypeId == awardTypeId && x.ToId == asker.Id && x.ChatId == args.Message.Chat.Id).Sum(x => x.Amount), awardType.Symbol);
+                    response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], await db.Awards.Where(x => x.AwardTypeId == awardTypeId && x.ToId == asker.Id && x.ChatId == args.Message.Chat.Id).SumAsync(x => x.Amount), awardType.Symbol);
                 }
 
-                Client.SendTextMessageAsync(
+                await Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
                     response,
                     replyToMessageId: args.Message.MessageId);

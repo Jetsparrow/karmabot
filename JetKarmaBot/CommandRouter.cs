@@ -14,14 +14,14 @@ namespace JetKarmaBot
 {
     public class ChatCommandRouter
     {
-        Telegram.Bot.Types.User BotUser { get; }
+        public Telegram.Bot.Types.User Me { get; private set; }
         [Inject] private Logger log;
         [Inject] private KarmaContextFactory Db;
         [Inject] private TelegramBotClient Client { get; set; }
 
-        public ChatCommandRouter(Telegram.Bot.Types.User botUser)
+        public async Task Start()
         {
-            BotUser = botUser;
+            Me = await Client.GetMeAsync();
         }
 
         public async Task<bool> Execute(object sender, MessageEventArgs args)
@@ -30,7 +30,7 @@ namespace JetKarmaBot
             var text = args.Message.Text;
             if (CommandString.TryParse(text, out var cmd))
             {
-                if (cmd.UserName != null && cmd.UserName != BotUser.Username)
+                if (cmd.UserName != null && cmd.UserName != Me.Username)
                 {
                     // directed not at us!
                     log.Debug("Message not directed at us");

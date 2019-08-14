@@ -22,7 +22,6 @@ namespace JetKarmaBot
 
         TelegramBotClient Client { get; set; }
         ChatCommandRouter Commands;
-        Telegram.Bot.Types.User Me { get; set; }
 
         public async Task Init()
         {
@@ -35,9 +34,8 @@ namespace JetKarmaBot
 
             Client = new TelegramBotClient(Config.ApiKey, httpProxy);
             Container.AddInstance(Client);
-            Me = await Client.GetMeAsync();
 
-            InitCommands(Container);
+            await InitCommands(Container);
 
             Client.OnMessage += BotOnMessageReceived;
             Client.StartReceiving();
@@ -84,15 +82,20 @@ namespace JetKarmaBot
                 (await db.Users.FindAsync(u.Id)).Username = un;
         }
 
-        void InitCommands(IContainer c)
+        async Task InitCommands(IContainer c)
         {
-            Commands = c.ResolveObject(new ChatCommandRouter(Me));
-            Commands.Add(c.ResolveObject(new HelpCommand(Commands)));
-            Commands.Add(c.ResolveObject(new AwardCommand(Me)));
-            Commands.Add(c.ResolveObject(new StatusCommand()));
-            Commands.Add(c.ResolveObject(new LocaleCommand()));
-            Commands.Add(c.ResolveObject(new CurrenciesCommand()));
-            Commands.Add(c.ResolveObject(new LeaderboardCommand()));
+            c.Add<HelpCommand>();
+            c.Add<AwardCommand>();
+            c.Add<StatusCommand>();
+            c.Add<LocaleCommand>();
+            c.Add<CurrenciesCommand>();
+            c.Add<LeaderboardCommand>();
+            Commands = c.GetInstance<ChatCommandRouter>();
+            await Commands.Start();
+            foreach (IChatCommand cmd in c.GetInstances<IChatCommand>())
+            {
+                Commands.Add(cmd);
+            }
         }
 
         #endregion

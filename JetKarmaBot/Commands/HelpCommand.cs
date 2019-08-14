@@ -13,7 +13,7 @@ namespace JetKarmaBot.Commands
         [Inject] KarmaContextFactory Db;
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
-        ChatCommandRouter Router;
+        [Inject] ChatCommandRouter Router;
         public IReadOnlyCollection<string> Names => new[] { "help" };
 
         public string Description => "Displays help text for all(one) command(s)";
@@ -53,10 +53,6 @@ namespace JetKarmaBot.Commands
                     return true;
                 }
             }
-        }
-        public HelpCommand(ChatCommandRouter router)
-        {
-            Router = router;
         }
     }
 }

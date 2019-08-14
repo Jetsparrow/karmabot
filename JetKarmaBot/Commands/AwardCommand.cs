@@ -43,7 +43,7 @@ namespace JetKarmaBot.Commands
                     return true;
                 }
 
-                if (Me.Id == recipient.Id)
+                if (CommandRouter.Me.Id == recipient.Id)
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
@@ -114,7 +114,7 @@ namespace JetKarmaBot.Commands
         [Inject] KarmaContextFactory Db { get; set; }
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
-        User Me { get; }
+        [Inject] ChatCommandRouter CommandRouter { get; set; }
 
         public string Description => "Awards/revokes an award to a user.";
         public string DescriptionID => "jetkarmabot.award.help";
@@ -128,10 +128,5 @@ namespace JetKarmaBot.Commands
                 DescriptionID="jetkarmabot.award.awardtypehelp"
             }
         };
-
-        public AwardCommand(User me)
-        {
-            Me = me;
-        }
     }
 }

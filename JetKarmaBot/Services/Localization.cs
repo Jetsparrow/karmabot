@@ -14,7 +14,6 @@ namespace JetKarmaBot
     {
         private Dictionary<string, Locale> locales = new Dictionary<string, Locale>();
 
-        [Inject]
         public Localization(IContainer c)
         {
             c.ResolveObject(this);

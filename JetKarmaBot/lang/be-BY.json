@@ -18,6 +18,7 @@
         "jetkarmabot.award.ratelimit": "Павольны, чувак!",
         "jetkarmabot.award.help": "Уручае ачко карыстачу (або адымае)",
         "jetkarmabot.award.awardtypehelp": "Тып ачкі",
+        "jetkarmabot.award.tohelp": "Карыстальнік, якога ўзнагародзіць",
         "jetkarmabot.status.listalltext": "У вас :",
         "jetkarmabot.status.listspecifictext": "У вас зараз {0}{1}.",
         "jetkarmabot.status.havenothing": "У вас пакуль нічога няма.",

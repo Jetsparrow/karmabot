@@ -1,17 +1,6 @@
 -- Example JetKarmaBot database
 -- (taken from mysqldump)
 
-DROP TABLE IF EXISTS `award`;
-CREATE TABLE `award` (
-  `awardid` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `chatid` bigint(20) NOT NULL REFERENCES `chat` (`chatid`),
-  `fromid` bigint(20) NOT NULL  REFERENCES `user` (`userid`),
-  `toid` bigint(20) NOT NULL REFERENCES `user` (`userid`),
-  `awardtypeid` tinyint(3) NOT NULL REFERENCES `awardtype` (`awardtypeid`),
-  `amount` tinyint(3) NOT NULL DEFAULT 1,
-  `date` datetime NOT NULL DEFAULT current_timestamp()
-);
-
 DROP TABLE IF EXISTS `awardtype`;
 CREATE TABLE `awardtype` (
   `awardtypeid` tinyint(3) NOT NULL PRIMARY KEY,
@@ -37,4 +26,15 @@ CREATE TABLE `user` (
   `userid` bigint(20) NOT NULL,
   `username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`userid`)
+);
+
+DROP TABLE IF EXISTS `award`;
+CREATE TABLE `award` (
+  `awardid` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `chatid` bigint(20) NOT NULL REFERENCES `chat` (`chatid`),
+  `fromid` bigint(20) NOT NULL  REFERENCES `user` (`userid`),
+  `toid` bigint(20) NOT NULL REFERENCES `user` (`userid`),
+  `awardtypeid` tinyint(3) NOT NULL REFERENCES `awardtype` (`awardtypeid`),
+  `amount` tinyint(3) NOT NULL DEFAULT 1,
+  `date` datetime NOT NULL DEFAULT current_timestamp()
 );

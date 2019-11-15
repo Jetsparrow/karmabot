@@ -136,7 +136,7 @@ namespace JetKarmaBot
 
         public int Count => ((IReadOnlyDictionary<string, string>)locale).Count;
 
-        public string this[string name] => locale.ContainsKey(name) ? locale[name] : "unknown";
+        public string this[string name] => locale.ContainsKey(name) ? locale[name] : "Unmapped locale key: " + name;
 
         public bool ContainsKey(string key)
         {

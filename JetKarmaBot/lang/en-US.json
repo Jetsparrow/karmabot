@@ -5,7 +5,9 @@
     "англійская"
   ],
   "strings": {
-    "jetkarmabot.award.errawardnoreply": "Please use this command in reply to another user.",
+    "jetkarmabot.award.errawardnoreply": "Who are you talking about?",
+    "jetkarmabot.award.errbadusername": "I don't know who that is.",
+    "jetkarmabot.award.errdup": "Please stop batching awards.",
     "jetkarmabot.award.errawardself": "Please stop playing with yourself.",
     "jetkarmabot.award.errawardbot": "I am a bot, and have no use for your foolish fake internet points.",
     "jetkarmabot.award.errrevokebot": "ಠ_ಠ",

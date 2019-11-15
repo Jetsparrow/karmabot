@@ -6,7 +6,9 @@
     ],
     "note": "This is a joke. And made with google translate.",
     "strings": {
-        "jetkarmabot.award.errawardnoreply": "Калі ласка выкарыстоўвайце гэтую каманду ў адказе іншаму карыстальніку.",
+        "jetkarmabot.award.errawardnoreply": "Пра каго ты кажаш?",
+        "jetkarmabot.award.errbadusername": "Хто гэта?",
+        "jetkarmabot.award.errdup": "Калі ласка, спыніце батчіць ўзнагароды.",
         "jetkarmabot.award.errawardself": "Хопіць з сабой гуляцца.",
         "jetkarmabot.award.errawardbot": "Я бот, і мяне вашы нікчэмныя пузамеркі не вабяць.",
         "jetkarmabot.award.errrevokebot": "ಠ_ಠ",

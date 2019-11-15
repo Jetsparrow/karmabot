@@ -5,7 +5,9 @@
     "руская"
   ],
   "strings": {
-    "jetkarmabot.award.errawardnoreply": "Пожалуйста используйте эту команду в ответе другому пользователю.",
+    "jetkarmabot.award.errawardnoreply": "О ком ты говоришь?",
+    "jetkarmabot.award.errbadusername": "Кто это?",
+    "jetkarmabot.award.errdup": "Пожалуйста, не батчайте награды.",
     "jetkarmabot.award.errawardself": "Хватит с собой играться.",
     "jetkarmabot.award.errawardbot": "Я бот, и меня ваши жалкие пузомерки не интересуют.",
     "jetkarmabot.award.errrevokebot": "ಠ_ಠ",

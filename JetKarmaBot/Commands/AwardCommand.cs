@@ -23,18 +23,53 @@ namespace JetKarmaBot.Commands
             using (var db = Db.GetContext())
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
-                if (args.Message.ReplyToMessage == null)
+
+                string awardTypeText = null;
+                int recipientId = default(int);
+                foreach (string arg in cmd.Parameters)
+                {
+                    if (arg.StartsWith('@'))
+                    {
+                        if (recipientId != default(int))
+                        {
+                            await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errdup"]);
+                            return true;
+                        }
+                        recipientId = await db.Users.Where(x => x.Username == arg).Select(x => x.UserId).FirstOrDefaultAsync();
+                        if (recipientId == default(int))
+                        {
+                            await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errbadusername"]);
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (awardTypeText == null)
+                            awardTypeText = arg;
+                        else
+                        {
+                            await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errdup"]);
+                            return true;
+                        }
+                    }
+                }
+
+                if (args.Message.ReplyToMessage != null && recipientId == default(int))
+                {
+                    recipientId = args.Message.ReplyToMessage.From.Id;
+                }
+
+                if (recipientId == default(int))
                 {
                     await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errawardnoreply"]);
                     return true;
                 }
 
                 var awarder = args.Message.From;
-                var recipient = args.Message.ReplyToMessage.From;
 
                 bool awarding = cmd.Command == "award";
 
-                if (awarder.Id == recipient.Id)
+                if (awarder.Id == recipientId)
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
@@ -43,7 +78,7 @@ namespace JetKarmaBot.Commands
                     return true;
                 }
 
-                if (CommandRouter.Me.Id == recipient.Id)
+                if (CommandRouter.Me.Id == recipientId)
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
@@ -55,7 +90,6 @@ namespace JetKarmaBot.Commands
                 }
 
                 var text = args.Message.Text;
-                var awardTypeText = cmd.Parameters.FirstOrDefault();
                 global::JetKarmaBot.Models.AwardType awardType = awardTypeText != null
                     ? await db.AwardTypes.FirstAsync(at => at.CommandName == awardTypeText)
                     : await db.AwardTypes.FindAsync((sbyte)1);
@@ -73,20 +107,21 @@ namespace JetKarmaBot.Commands
                     AwardTypeId = awardType.AwardTypeId,
                     Amount = (sbyte)(awarding ? 1 : -1),
                     FromId = awarder.Id,
-                    ToId = recipient.Id,
+                    ToId = recipientId,
                     ChatId = args.Message.Chat.Id
                 });
-                log.Debug($"Awarded {(awarding ? 1 : -1)}{awardType.Symbol} to {recipient.Username}");
                 await db.SaveChangesAsync();
 
-                var recUserName = (await db.Users.FindAsync(recipient.Id)).Username;
+                var recUserName = (await db.Users.FindAsync(recipientId)).Username;
+
+                log.Debug($"Awarded {(awarding ? 1 : -1)}{awardType.Symbol} to {recUserName}");
 
                 string message = awarding
                     ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], getLocalizedName(awardType, currentLocale), recUserName)
                     : string.Format(currentLocale["jetkarmabot.award.revokemessage"], getLocalizedName(awardType, currentLocale), recUserName);
 
                 var currentCount = await db.Awards
-                    .Where(aw => aw.ToId == recipient.Id && aw.AwardTypeId == awardType.AwardTypeId && aw.ChatId == args.Message.Chat.Id)
+                    .Where(aw => aw.ToId == recipientId && aw.AwardTypeId == awardType.AwardTypeId && aw.ChatId == args.Message.Chat.Id)
                     .SumAsync(aw => aw.Amount);
 
                 var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, currentCount, awardType.Symbol);
@@ -126,6 +161,13 @@ namespace JetKarmaBot.Commands
                 Type=ChatCommandArgumentType.String,
                 Description="The award to grant to/strip of the specified user",
                 DescriptionID="jetkarmabot.award.awardtypehelp"
+            },
+            new ChatCommandArgument() {
+                Name="to",
+                Required=false,
+                Type=ChatCommandArgumentType.String,
+                Description="The user to award it to (if not present, uses author of message replied to)",
+                DescriptionID="jetkarmabot.award.tohelp"
             }
         };
     }

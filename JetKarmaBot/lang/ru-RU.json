@@ -17,6 +17,7 @@
     "jetkarmabot.award.ratelimit": "Помедленней, чувак!",
     "jetkarmabot.award.help": "Вручает очко пользователю (или отнимает)",
     "jetkarmabot.award.awardtypehelp": "Тип очка",
+    "jetkarmabot.award.tohelp": "Пользователь, которого наградить",
     "jetkarmabot.status.listalltext": "У вас :",
     "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
     "jetkarmabot.status.havenothing": "У вас пока ничего нет.",

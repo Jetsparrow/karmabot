@@ -166,7 +166,7 @@ namespace JetKarmaBot.Commands
                 Name="to",
                 Required=false,
                 Type=ChatCommandArgumentType.String,
-                Description="The user to award it to (if not present, uses author of message replied to)",
+                Description="The user to award it to.",
                 DescriptionID="jetkarmabot.award.tohelp"
             }
         };

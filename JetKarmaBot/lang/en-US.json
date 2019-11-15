@@ -17,6 +17,7 @@
     "jetkarmabot.award.ratelimit": "Slow down there, turbo!",
     "jetkarmabot.award.help": "Awards/revokes an award to a user.",
     "jetkarmabot.award.awardtypehelp": "The award to grant to/strip of the specified user",
+    "jetkarmabot.award.tohelp": "The user to award",
     "jetkarmabot.status.listalltext": "Your badges report:",
     "jetkarmabot.status.listspecifictext": "You are at {0}{1} now.",
     "jetkarmabot.status.havenothing": "You don't have anything yet.",

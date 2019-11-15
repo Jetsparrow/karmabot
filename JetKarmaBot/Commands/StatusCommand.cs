@@ -24,6 +24,7 @@ namespace JetKarmaBot.Commands
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
                 var asker = args.Message.From;
                 var awardTypeName = cmd.Parameters.FirstOrDefault();
+                bool isPrivate = args.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private;
 
                 string response;
 
@@ -32,12 +33,12 @@ namespace JetKarmaBot.Commands
                     // var awards = db.Awards.Where(x => x.ToId == asker.Id)
                     // .GroupBy(x => x.AwardTypeId)
                     // .Select(x => new { AwardTypeId = x.Key, Amount = x.Sum(y => y.Amount) });
-                    if (!db.Awards.Any(x => x.ToId == asker.Id))
+                    if (!db.Awards.Any(x => x.ToId == asker.Id && (x.ChatId == args.Message.Chat.Id || isPrivate)))
                         response = currentLocale["jetkarmabot.status.havenothing"];
                     else
                     {
                         var awardsQuery = from award in db.Awards
-                                          where award.ToId == asker.Id && award.ChatId == args.Message.Chat.Id
+                                          where award.ToId == asker.Id && (award.ChatId == args.Message.Chat.Id || isPrivate)
                                           group award by award.AwardTypeId into g
                                           select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
                         var awardsByType = await awardsQuery.ToListAsync();

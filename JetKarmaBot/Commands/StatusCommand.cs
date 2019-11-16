@@ -40,12 +40,14 @@ namespace JetKarmaBot.Commands
                         var awardsQuery = from award in db.Awards
                                           where award.ToId == asker.Id && (award.ChatId == args.Message.Chat.Id || isPrivate)
                                           group award by award.AwardTypeId into g
-                                          select new { AwardTypeId = g.Key, Amount = g.Sum(x => x.Amount) };
+                                          join awardType in db.AwardTypes
+                                          on g.Key equals awardType.AwardTypeId
+                                          select new { AwardTypeId = g.Key, AwardTypeSymbol = awardType.Symbol, Amount = g.Sum(x => x.Amount) };
                         var awardsByType = await awardsQuery.ToListAsync();
                         response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
-                             + string.Join("\n", await Task.WhenAll(
-                                 awardsByType.Select(async a => $" - {(await db.AwardTypes.FindAsync(a.AwardTypeId)).Symbol} {a.Amount}")
-                            ));
+                             + string.Join("\n",
+                                 awardsByType.Select(a => $" - {a.AwardTypeSymbol} {a.Amount}")
+                            );
 
                     }
                 }
@@ -57,7 +59,12 @@ namespace JetKarmaBot.Commands
                     var awardTypeId = await awardTypeIdQuery.FirstAsync();
                     var awardType = await db.AwardTypes.FindAsync(awardTypeId);
 
-                    response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"], await db.Awards.Where(x => x.AwardTypeId == awardTypeId && x.ToId == asker.Id && x.ChatId == args.Message.Chat.Id).SumAsync(x => x.Amount), awardType.Symbol);
+                    response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"],
+                        await db.Awards.Where(
+                             x => x.AwardTypeId == awardTypeId
+                          && x.ToId == asker.Id
+                          && x.ChatId == args.Message.Chat.Id)
+                        .SumAsync(x => x.Amount), awardType.Symbol);
                 }
 
                 await Client.SendTextMessageAsync(

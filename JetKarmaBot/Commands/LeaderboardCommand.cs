@@ -27,16 +27,22 @@ namespace JetKarmaBot.Commands
 
                 string response;
 
-                if (string.IsNullOrWhiteSpace(awardTypeName))
-                    awardTypeName = "star";
+                string awardTypeSym;
+                sbyte awardTypeId;
+                if (string.IsNullOrWhiteSpace(awardTypeName) || awardTypeName == "star")
+                {
+                    awardTypeId = 0;
+                    awardTypeSym = "★";
+                }
+                else
+                {
+                    AwardType awardType = await db.AwardTypes.FirstAsync(x => x.CommandName == awardTypeName && x.ChatId == args.Message.Chat.Id);
+                    awardTypeSym = awardType.Symbol;
+                    awardTypeId = awardType.AwardTypeId;
+                }
 
-                var awardTypeIdQuery = from awt in db.AwardTypes
-                                       where awt.CommandName == awardTypeName
-                                       select awt.AwardTypeId;
-                var awardTypeId = await awardTypeIdQuery.FirstAsync();
-                var awardType = await db.AwardTypes.FindAsync(awardTypeId);
 
-                response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n',
+                response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardTypeSym) + "\n" + string.Join('\n',
                     await Task.WhenAll((await db.Awards
                         .Where(x => x.ChatId == args.Message.Chat.Id && x.AwardTypeId == awardTypeId)
                         .GroupBy(x => x.ToId)

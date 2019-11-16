@@ -38,17 +38,7 @@
     "jetkarmabot.leaderboard.help": "Shows the people with the most of a specific award.",
     "jetkarmabot.leaderboard.awardtypehelp": "The awardtype to show a leaderboard for.",
     "jetkarmabot.leaderboard.specifictext": "Leaderboard for {0}:",
-    "jetkarmabot.awardtypes.nominative.star": "star",
-    "jetkarmabot.awardtypes.nominative.pie": "pie from the shelf",
-    "jetkarmabot.awardtypes.nominative.dream": "dream",
-    "jetkarmabot.awardtypes.nominative.banana": "banana sticker",
-    "jetkarmabot.awardtypes.nominative.determination": "DETERMINATION",
-    "jetkarmabot.awardtypes.nominative.raisin": "raisin",
-    "jetkarmabot.awardtypes.accusative.star": "star",
-    "jetkarmabot.awardtypes.accusative.pie": "pie from the shelf",
-    "jetkarmabot.awardtypes.accusative.dream": "dream",
-    "jetkarmabot.awardtypes.accusative.banana": "banana sticker",
-    "jetkarmabot.awardtypes.accusative.determination": "DETERMINATION",
-    "jetkarmabot.awardtypes.accusative.raisin": "raisin"
+    "jetkarmabot.star.nominative": "star",
+    "jetkarmabot.star.accusative": "star"
   }
 }

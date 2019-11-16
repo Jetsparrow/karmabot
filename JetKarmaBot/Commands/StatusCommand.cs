@@ -41,8 +41,9 @@ namespace JetKarmaBot.Commands
                                           where award.ToId == asker.Id && (award.ChatId == args.Message.Chat.Id || isPrivate)
                                           group award by award.AwardTypeId into g
                                           join awardType in db.AwardTypes
-                                          on g.Key equals awardType.AwardTypeId
-                                          select new { AwardTypeId = g.Key, AwardTypeSymbol = awardType.Symbol, Amount = g.Sum(x => x.Amount) };
+                                          on g.Key equals awardType.AwardTypeId into awts
+                                          from awt in awts.DefaultIfEmpty()
+                                          select new { AwardTypeId = g.Key, AwardTypeSymbol = awt == null ? "★" : awt.Symbol, Amount = g.Sum(x => x.Amount) };
                         var awardsByType = await awardsQuery.ToListAsync();
                         response = currentLocale["jetkarmabot.status.listalltext"] + "\n"
                              + string.Join("\n",
@@ -53,18 +54,26 @@ namespace JetKarmaBot.Commands
                 }
                 else
                 {
-                    var awardTypeIdQuery = from awt in db.AwardTypes
-                                           where awt.CommandName == awardTypeName
-                                           select awt.AwardTypeId;
-                    var awardTypeId = await awardTypeIdQuery.FirstAsync();
-                    var awardType = await db.AwardTypes.FindAsync(awardTypeId);
+                    sbyte awardTypeId;
+                    string awardTypeSym;
+                    if (awardTypeName == "star")
+                    {
+                        awardTypeId = 0;
+                        awardTypeSym = "★";
+                    }
+                    else
+                    {
+                        AwardType awardType = await db.AwardTypes.FirstAsync(x => x.CommandName == awardTypeName);
+                        awardTypeId = awardType.AwardTypeId;
+                        awardTypeSym = awardType.Symbol;
+                    }
 
                     response = string.Format(currentLocale["jetkarmabot.status.listspecifictext"],
                         await db.Awards.Where(
                              x => x.AwardTypeId == awardTypeId
                           && x.ToId == asker.Id
                           && x.ChatId == args.Message.Chat.Id)
-                        .SumAsync(x => x.Amount), awardType.Symbol);
+                        .SumAsync(x => x.Amount), awardTypeSym);
                 }
 
                 await Client.SendTextMessageAsync(

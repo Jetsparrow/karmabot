@@ -90,9 +90,22 @@ namespace JetKarmaBot.Commands
                 }
 
                 var text = args.Message.Text;
-                global::JetKarmaBot.Models.AwardType awardType = awardTypeText != null
-                    ? await db.AwardTypes.FirstAsync(at => at.CommandName == awardTypeText)
-                    : await db.AwardTypes.FindAsync((sbyte)1);
+                string awardTypeAcc, awardTypeSym;
+                sbyte awardTypeId = 0;
+                if (awardTypeText == null || awardTypeText == "star")
+                {
+                    awardTypeAcc = currentLocale["jetkarmabot.star.accusative"];
+                    awardTypeSym = "★";
+                    awardTypeId = 0;
+                }
+                else
+                {
+                    var awardType = await db.AwardTypes.FirstAsync(at => at.CommandName == awardTypeText && at.ChatId == args.Message.Chat.Id);
+                    awardTypeAcc = awardType.AccusativeName;
+                    awardTypeSym = awardType.Symbol;
+                    awardTypeId = awardType.AwardTypeId;
+                }
+
                 DateTime cutoff = DateTime.Now - TimeSpan.FromMinutes(5);
                 if (await db.Awards.Where(x => x.Date > cutoff && x.FromId == awarder.Id).CountAsync() >= 10)
                 {
@@ -104,7 +117,7 @@ namespace JetKarmaBot.Commands
                 }
                 await db.Awards.AddAsync(new Models.Award()
                 {
-                    AwardTypeId = awardType.AwardTypeId,
+                    AwardTypeId = awardTypeId,
                     Amount = (sbyte)(awarding ? 1 : -1),
                     FromId = awarder.Id,
                     ToId = recipientId,
@@ -114,17 +127,16 @@ namespace JetKarmaBot.Commands
 
                 var recUserName = (await db.Users.FindAsync(recipientId)).Username;
 
-                log.Debug($"Awarded {(awarding ? 1 : -1)}{awardType.Symbol} to {recUserName}");
+                log.Debug($"Awarded {(awarding ? 1 : -1)}{awardTypeSym} to {recUserName}");
 
-                string message = awarding
-                    ? string.Format(currentLocale["jetkarmabot.award.awardmessage"], getLocalizedName(awardType, currentLocale), recUserName)
-                    : string.Format(currentLocale["jetkarmabot.award.revokemessage"], getLocalizedName(awardType, currentLocale), recUserName);
+                string message = string.Format(currentLocale[
+                  awarding ? "jetkarmabot.award.awardmessage" : "jetkarmabot.award.revokemessage"], awardTypeAcc, recUserName);
 
                 var currentCount = await db.Awards
-                    .Where(aw => aw.ToId == recipientId && aw.AwardTypeId == awardType.AwardTypeId && aw.ChatId == args.Message.Chat.Id)
+                    .Where(aw => aw.ToId == recipientId && aw.AwardTypeId == awardTypeId && aw.ChatId == args.Message.Chat.Id)
                     .SumAsync(aw => aw.Amount);
 
-                var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, currentCount, awardType.Symbol);
+                var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, currentCount, awardTypeSym);
 
                 await Client.SendTextMessageAsync(
                     args.Message.Chat.Id,

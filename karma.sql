@@ -7,6 +7,7 @@ CREATE TABLE `awardtype` (
   `commandname` varchar(35) NOT NULL,
   `chatid` bigint(20) NOT NULL REFERENCES `chat` (`chatid`),
   `name` varchar(32) NOT NULL,
+  `accname` varchar(32) NOT NULL,
   `symbol` varchar(16)  NOT NULL,
   `description` text NOT NULL,
   UNIQUE KEY `un_cnandchat` (`commandname`, `chatid`)

@@ -11,8 +11,8 @@
     "jetkarmabot.award.errawardself": "Хватит с собой играться.",
     "jetkarmabot.award.errawardbot": "Я бот, и меня ваши жалкие пузомерки не интересуют.",
     "jetkarmabot.award.errrevokebot": "ಠ_ಠ",
-    "jetkarmabot.award.awardmessage": "Вручил \"{0}\" {1}!",
-    "jetkarmabot.award.revokemessage": "Отнял \"{0}\" у {1}!",
+    "jetkarmabot.award.awardmessage": "Вручил {0} {1}!",
+    "jetkarmabot.award.revokemessage": "Отнял {0} у {1}!",
     "jetkarmabot.award.statustext": "У {0} теперь {1}{2}.",
     "jetkarmabot.award.ratelimit": "Помедленней, чувак!",
     "jetkarmabot.award.help": "Вручает очко пользователю (или отнимает)",
@@ -38,17 +38,7 @@
     "jetkarmabot.leaderboard.help": "Таблица лидеров по количеству наград",
     "jetkarmabot.leaderboard.awardtypehelp": "Тип награды, по которой покажется отчет.",
     "jetkarmabot.leaderboard.specifictext": "Передовики в номинации \"{0}\":",
-    "jetkarmabot.awardtypes.nominative.star": "звездочка",
-    "jetkarmabot.awardtypes.nominative.pie": "с полки пирожок",
-    "jetkarmabot.awardtypes.nominative.dream": "мечта",
-    "jetkarmabot.awardtypes.nominative.banana": "стикер-бананчик",
-    "jetkarmabot.awardtypes.nominative.determination": "РЕШИТЕЛЬНОСТЬ",
-    "jetkarmabot.awardtypes.nominative.raisin": "изюм",
-    "jetkarmabot.awardtypes.accusative.star": "звездочку",
-    "jetkarmabot.awardtypes.accusative.pie": "с полки пирожок",
-    "jetkarmabot.awardtypes.accusative.dream": "мечту",
-    "jetkarmabot.awardtypes.accusative.banana": "стикер-бананчик",
-    "jetkarmabot.awardtypes.accusative.determination": "РЕШИТЕЛЬНОСТЬ",
-    "jetkarmabot.awardtypes.accusative.raisin": "изюм"
+    "jetkarmabot.star.nominative": "звездочка",
+    "jetkarmabot.star.accusative": "звездочку"
   }
 }

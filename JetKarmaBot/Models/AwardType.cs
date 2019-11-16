@@ -15,6 +15,8 @@ namespace JetKarmaBot.Models
         public string CommandName { get; set; }
         public long ChatId { get; set; }
         public string Name { get; set; }
+        [Column("accname")]
+        public string AccusativeName { get; set; }
         public string Symbol { get; set; }
         public string Description { get; set; }
 

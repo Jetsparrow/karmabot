@@ -28,8 +28,10 @@ namespace JetKarmaBot.Commands
             using (var db = Db.GetContext())
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
-                string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",
-                (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>"));
+                string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n"
+                + $"★ (star) <i>{currentLocale["jetkarmabot.star.nominative"]}</i>\n"
+                + string.Join("\n",
+                (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{x.Name}</i>"));
                 await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         resp,

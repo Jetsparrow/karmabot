@@ -39,17 +39,7 @@
         "jetkarmabot.leaderboard.help": "<todo>",
         "jetkarmabot.leaderboard.awardtypehelp": "<todo>",
         "jetkarmabot.leaderboard.specifictext": "<todo>",
-        "jetkarmabot.awardtypes.nominative.star": "зорачка",
-        "jetkarmabot.awardtypes.nominative.pie": "з паліцы піражок",
-        "jetkarmabot.awardtypes.nominative.dream": "мара",
-        "jetkarmabot.awardtypes.nominative.banana": "стыкер-бананчык",
-        "jetkarmabot.awardtypes.nominative.determination": "DETERMINATION",
-        "jetkarmabot.awardtypes.nominative.raisin": "разынка",
-        "jetkarmabot.awardtypes.accusative.star": "зорачку",
-        "jetkarmabot.awardtypes.accusative.pie": "з паліцы піражкі",
-        "jetkarmabot.awardtypes.accusative.dream": "мары",
-        "jetkarmabot.awardtypes.accusative.banana": "стыкера-бананчыка",
-        "jetkarmabot.awardtypes.accusative.determination": "DETERMINATION",
-        "jetkarmabot.awardtypes.accusative.raisin": "разыначкі"
+        "jetkarmabot.star.nominative": "зорачка",
+        "jetkarmabot.star.accusative": "зорачку"
     }
 }

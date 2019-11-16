@@ -67,7 +67,7 @@ namespace JetKarmaBot
                 {
                     build = build + Prefix + names[i] + "\n";
                 }
-                build += Prefix + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
+                build += "<a href=\"http://example.com\">" + Prefix + names[names.Count - 1] + "</a> " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
                 pieces.Add(build);
             }
             return string.Join("\n", pieces);

@@ -38,6 +38,8 @@
     "jetkarmabot.leaderboard.help": "Таблица лидеров по количеству наград",
     "jetkarmabot.leaderboard.awardtypehelp": "Тип награды, по которой покажется отчет.",
     "jetkarmabot.leaderboard.specifictext": "Передовики в номинации \"{0}\":",
+    "jetkarmabot.at.help": "Управляет пользовательскими типами наград.",
+    "jetkarmabot.at.verbhelp": "Действие, которое выполнить.",
     "jetkarmabot.star.nominative": "звездочка",
     "jetkarmabot.star.accusative": "звездочку"
   }

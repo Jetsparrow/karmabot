@@ -84,18 +84,15 @@ namespace JetKarmaBot
 
         async Task InitCommands(IContainer c)
         {
-            c.Add<HelpCommand>();
-            c.Add<AwardCommand>();
-            c.Add<StatusCommand>();
-            c.Add<LocaleCommand>();
-            c.Add<CurrenciesCommand>();
-            c.Add<LeaderboardCommand>();
             Commands = c.GetInstance<ChatCommandRouter>();
             await Commands.Start();
-            foreach (IChatCommand cmd in c.GetInstances<IChatCommand>())
-            {
-                Commands.Add(cmd);
-            }
+            Commands.Add(c.GetInstance<HelpCommand>());
+            Commands.Add(c.GetInstance<AwardCommand>());
+            Commands.Add(c.GetInstance<StatusCommand>());
+            Commands.Add(c.GetInstance<LocaleCommand>());
+            Commands.Add(c.GetInstance<CurrenciesCommand>());
+            Commands.Add(c.GetInstance<LeaderboardCommand>());
+            Commands.Add(c.GetInstance<AwardTypeCommand>());
         }
 
         #endregion

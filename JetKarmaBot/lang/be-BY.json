@@ -39,6 +39,8 @@
         "jetkarmabot.leaderboard.help": "Табліца лідэраў па колькасці ўзнагарод",
         "jetkarmabot.leaderboard.awardtypehelp": "Тып ўзнагароды, па якой падасца справаздачу.",
         "jetkarmabot.leaderboard.specifictext": "Перадавікі ў намінацыі \"{0}\":",
+        "jetkarmabot.at.help": "Кіруе карыстацкімі тыпамі узнагарод.",
+        "jetkarmabot.at.verbhelp": "Дзеянне, якое выканаць.",
         "jetkarmabot.star.nominative": "зорачка",
         "jetkarmabot.star.accusative": "зорачку"
     }

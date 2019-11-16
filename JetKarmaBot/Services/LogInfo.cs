@@ -19,4 +19,13 @@ namespace JetKarmaBot
             + (t.GenericTypeArguments.Length > 0 ? "<" + string.Join(",", t.GenericTypeArguments.Select(getTypeName)) + ">" : "");
         }
     }
+    public class VerbInfo : ObjectInfo
+    {
+        public override ObjectInfo Clone() => new VerbInfo();
+
+        public override object GetInstance(IContainer c, Type requester = null)
+        {
+            return c.ResolveObject(new VerbCommandRouter(requester != null ? requester.Name : "<type unspecified>"));
+        }
+    }
 }

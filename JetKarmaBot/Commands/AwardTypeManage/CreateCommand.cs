@@ -6,6 +6,8 @@ using JetKarmaBot.Services;
 using Perfusion;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace JetKarmaBot.Commands.AwardTypeManage
 {
@@ -63,12 +65,24 @@ namespace JetKarmaBot.Commands.AwardTypeManage
             using (var db = Db.GetContext())
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
+
+                ChatMember cm = await Client.GetChatMemberAsync(args.Message.Chat.Id, args.Message.From.Id);
+                if (cm.Status != ChatMemberStatus.Administrator && cm.Status != ChatMemberStatus.Creator)
+                {
+                    await Client.SendTextMessageAsync(
+                        args.Message.Chat.Id,
+                        currentLocale["jetkarmabot.at.create.errperm"],
+                        replyToMessageId: args.Message.MessageId);
+                    return true;
+                }
+
                 if (cmd.Parameters.Length < 4 || cmd.Parameters.Length > 5)
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.at.create.errarg"],
                         replyToMessageId: args.Message.MessageId);
+                    return true;
                 }
 
                 string cmdname = cmd.Parameters[0];
@@ -91,7 +105,7 @@ namespace JetKarmaBot.Commands.AwardTypeManage
 
                 await Client.SendTextMessageAsync(
                     args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.at.create.success"],
+                    currentLocale[string.Format("jetkarmabot.at.create.success", cmdname)],
                     replyToMessageId: args.Message.MessageId);
 
                 return true;

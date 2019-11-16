@@ -154,7 +154,7 @@ namespace JetKarmaBot.Commands
             }
             else
             {
-                return awardType.Name;
+                return awardType.NominativeName;
             }
         }
 

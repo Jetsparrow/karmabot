@@ -130,7 +130,7 @@ namespace JetKarmaBot.Models
                     .HasColumnName("description")
                     .HasColumnType("text");
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.NominativeName)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasColumnType("varchar(32)");

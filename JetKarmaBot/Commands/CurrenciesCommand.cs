@@ -31,7 +31,7 @@ namespace JetKarmaBot.Commands
                 string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n"
                 + $"★ (star) <i>{currentLocale["jetkarmabot.star.nominative"]}</i>\n"
                 + string.Join("\n",
-                (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{x.Name}</i>"));
+                (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{x.NominativeName}</i>"));
                 await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
                         resp,

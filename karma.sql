@@ -3,16 +3,14 @@
 
 DROP TABLE IF EXISTS `awardtype`;
 CREATE TABLE `awardtype` (
-  `awardtypeid` tinyint(3) NOT NULL PRIMARY KEY,
-  `commandname` varchar(35) NOT NULL UNIQUE,
+  `awardtypeid` tinyint(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `commandname` varchar(35) NOT NULL,
+  `chatid` bigint(20) NOT NULL REFERENCES `chat` (`chatid`),
   `name` varchar(32) NOT NULL,
   `symbol` varchar(16)  NOT NULL,
-  `description` text NOT NULL
+  `description` text NOT NULL,
+  UNIQUE KEY `un_cnandchat` (`commandname`, `chatid`)
 );
-
-LOCK TABLES `awardtype` WRITE;
-INSERT INTO `awardtype` VALUES (1,'example','Example','Examples','An example');
-UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `chat`;
 CREATE TABLE `chat` (
@@ -23,9 +21,8 @@ CREATE TABLE `chat` (
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `userid` bigint(20) NOT NULL,
-  `username` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`userid`)
+  `userid` bigint(20) NOT NULL PRIMARY KEY,
+  `username` varchar(45) DEFAULT NULL
 );
 
 DROP TABLE IF EXISTS `award`;
@@ -34,7 +31,7 @@ CREATE TABLE `award` (
   `chatid` bigint(20) NOT NULL REFERENCES `chat` (`chatid`),
   `fromid` bigint(20) NOT NULL  REFERENCES `user` (`userid`),
   `toid` bigint(20) NOT NULL REFERENCES `user` (`userid`),
-  `awardtypeid` tinyint(3) NOT NULL REFERENCES `awardtype` (`awardtypeid`),
+  `awardtypeid` tinyint(3) REFERENCES `awardtype` (`awardtypeid`),
   `amount` tinyint(3) NOT NULL DEFAULT 1,
   `date` datetime NOT NULL DEFAULT current_timestamp()
 );

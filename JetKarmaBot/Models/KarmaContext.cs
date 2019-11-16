@@ -112,8 +112,8 @@ namespace JetKarmaBot.Models
                     .HasName("awardtypeid_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.CommandName)
-                    .HasName("commandname_UNIQUE")
+                entity.HasIndex(e => new { e.CommandName, e.ChatId })
+                    .HasName("un_cnandchat")
                     .IsUnique();
 
                 entity.Property(e => e.AwardTypeId)
@@ -139,6 +139,12 @@ namespace JetKarmaBot.Models
                     .IsRequired()
                     .HasColumnName("symbol")
                     .HasColumnType("varchar(16)");
+
+                entity.HasOne(d => d.Chat)
+                    .WithMany(p => p.AwardTypes)
+                    .HasForeignKey(d => d.ChatId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_chat");
             });
 
             modelBuilder.Entity<Chat>(entity =>

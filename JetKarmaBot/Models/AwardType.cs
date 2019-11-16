@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JetKarmaBot.Models
 {
@@ -12,10 +13,13 @@ namespace JetKarmaBot.Models
 
         public sbyte AwardTypeId { get; set; }
         public string CommandName { get; set; }
+        public long ChatId { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }
         public string Description { get; set; }
 
         public virtual ICollection<Award> Awards { get; set; }
+        [ForeignKey("ChatId")]
+        public virtual Chat Chat { get; set; }
     }
 }

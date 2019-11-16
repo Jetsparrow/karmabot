@@ -10,7 +10,7 @@ namespace JetKarmaBot.Models
         public long ChatId { get; set; }
         public int FromId { get; set; }
         public int ToId { get; set; }
-        public sbyte AwardTypeId { get; set; }
+        public sbyte? AwardTypeId { get; set; }
         public sbyte Amount { get; set; }
         public DateTime Date { get; set; }
         [ForeignKey("AwardTypeId")]

@@ -40,6 +40,7 @@
     "jetkarmabot.leaderboard.specifictext": "Leaderboard for {0}:",
     "jetkarmabot.at.help": "Manages custom award types.",
     "jetkarmabot.at.verbhelp": "The action to perform.",
+    "jetkarmabot.verbhelp": "Displays help text for all(one) verb(s)",
     "jetkarmabot.star.nominative": "star",
     "jetkarmabot.star.accusative": "star"
   }

@@ -11,7 +11,7 @@ namespace JetKarmaBot.Commands
         string DescriptionID { get; }
         IReadOnlyCollection<ChatCommandArgument> Arguments { get; }
 
-        Task<bool> Execute(CommandString cmd, MessageEventArgs messageEventArgs);
+        Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs messageEventArgs);
     }
 
     public struct ChatCommandArgument

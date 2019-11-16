@@ -23,7 +23,9 @@ namespace JetKarmaBot.Commands
         public AwardTypeCommand(IContainer c, VerbCommandRouter r)
         {
             Router = r;
+            Router.SuperCommand = "at";
             r.Add(c.GetInstance<AwardTypeManage.TestCommand>());
+            r.Add(c.GetInstance<HelpCommand>());
         }
 
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new[] {
@@ -36,12 +38,13 @@ namespace JetKarmaBot.Commands
             }
         };
 
-        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
         {
+            Router.SuperRouter = route;
             using (var db = Db.GetContext())
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
-                if (!await Router.Process(cmd, args))
+                if (!await Router.Process(route, cmd, args))
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,

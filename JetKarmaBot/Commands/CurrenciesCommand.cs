@@ -23,7 +23,7 @@ namespace JetKarmaBot.Commands
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
          };
 
-        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {

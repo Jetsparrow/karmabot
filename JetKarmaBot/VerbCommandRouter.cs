@@ -9,22 +9,20 @@ using Telegram.Bot.Args;
 
 namespace JetKarmaBot
 {
-    public class VerbCommandRouter
+    public class VerbCommandRouter : ICommandRouter
     {
         Dictionary<string, IChatCommand> commands = new Dictionary<string, IChatCommand>();
         [Inject] private Logger log;
-        string superCommand;
-        public VerbCommandRouter(string supercommand)
-        {
-            superCommand = supercommand;
-        }
+        public string SuperCommand { get; set; }
+        public string Prefix => SuperRouter.Prefix + SuperCommand + " ";
+        public ICommandRouter SuperRouter { get; set; }
 
-        public Task<bool> Process(CommandString cs, MessageEventArgs args)
+        public Task<bool> Process(ICommandRouter route, CommandString cs, MessageEventArgs args)
         {
-            log.Debug($"(verb for {superCommand}) Processing verb");
+            log.Debug($"(verb for {SuperCommand}) Processing verb");
             if (cs.Parameters.Length < 1)
             {
-                log.Debug($"(verb for {superCommand}) too few arguments");
+                log.Debug($"(verb for {SuperCommand}) too few arguments");
                 return Task.FromResult(false);
             }
             CommandString ncs = new CommandString(cs.Parameters[0], cs.Parameters.Skip(1).ToArray());
@@ -32,13 +30,13 @@ namespace JetKarmaBot
             {
                 if (commands.ContainsKey(ncs.Command))
                 {
-                    log.Debug($"(verb for {superCommand}) Handling via {commands[ncs.Command].GetType().Name}");
-                    return commands[ncs.Command].Execute(ncs, args);
+                    log.Debug($"(verb for {SuperCommand}) Handling via {commands[ncs.Command].GetType().Name}");
+                    return commands[ncs.Command].Execute(this, ncs, args);
                 }
             }
             catch (Exception e)
             {
-                log.Error($"(verb for {superCommand}) Error while handling verb {ncs.Command}!");
+                log.Error($"(verb for {SuperCommand}) Error while handling verb {ncs.Command}!");
                 log.Error(e);
                 return Task.FromResult(true); //Don't trigger message
             }
@@ -48,17 +46,17 @@ namespace JetKarmaBot
 
         public void Add(IChatCommand c)
         {
-            log.ConditionalTrace($"(verb for {superCommand}) Adding command {c.GetType().Name}");
+            log.ConditionalTrace($"(verb for {SuperCommand}) Adding command {c.GetType().Name}");
             foreach (var name in c.Names)
             {
-                log.ConditionalTrace($"(verb for {superCommand}) Mounting {c.GetType().Name} to {name}");
+                log.ConditionalTrace($"(verb for {SuperCommand}) Mounting {c.GetType().Name} to {name}");
                 if (commands.ContainsKey(name))
                     throw new Exception($"command collision for name {name}, commands {commands[name].GetType()} and {c.GetType()}");
                 commands[name] = c;
             }
         }
 
-        internal string GetHelpText(Locale loc)
+        public string GetHelpText(Locale loc)
         {
             List<string> pieces = new List<string>();
             foreach (IChatCommand c in commands.Values.Distinct())
@@ -67,24 +65,24 @@ namespace JetKarmaBot
                 List<string> names = c.Names.ToList();
                 for (int i = 0; i < names.Count - 1; i++)
                 {
-                    build = build + "/" + names[i] + "\n";
+                    build = build + Prefix + names[i] + "\n";
                 }
-                build += "/" + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
+                build += Prefix + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
                 pieces.Add(build);
             }
             return string.Join("\n", pieces);
         }
 
-        internal string GetHelpTextFor(string commandname, Locale loc)
+        public string GetHelpTextFor(string commandname, Locale loc)
         {
             IChatCommand c = commands[commandname];
             string build = "";
             List<string> names = c.Names.ToList();
             for (int i = 0; i < names.Count - 1; i++)
             {
-                build = build + "/" + names[i] + "\n";
+                build = build + Prefix + names[i] + "\n";
             }
-            build += "/" + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>\n";
+            build += Prefix + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>\n";
             build += string.Join("\n", c.Arguments.Select(ca => (!ca.Required ? "[" : "") + ca.Name + (!ca.Required ? "]" : "") + ": <i>" + getLocalizedCMDArgDesc(ca, loc) + "</i>"));
             return build;
         }

@@ -13,7 +13,6 @@ namespace JetKarmaBot.Commands
         [Inject] KarmaContextFactory Db;
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
-        [Inject] ChatCommandRouter Router;
         public IReadOnlyCollection<string> Names => new[] { "help" };
 
         public string Description => "Displays help text for all(one) command(s)";
@@ -29,7 +28,7 @@ namespace JetKarmaBot.Commands
             }
          };
 
-        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
@@ -38,7 +37,7 @@ namespace JetKarmaBot.Commands
                 {
                     await Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
-                            Router.GetHelpText(currentLocale),
+                            route.GetHelpText(currentLocale),
                             replyToMessageId: args.Message.MessageId,
                             parseMode: ParseMode.Html);
                     return true;
@@ -47,7 +46,7 @@ namespace JetKarmaBot.Commands
                 {
                     await Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
-                            Router.GetHelpTextFor(cmd.Parameters[0], currentLocale),
+                            route.GetHelpTextFor(cmd.Parameters[0], currentLocale),
                             replyToMessageId: args.Message.MessageId,
                             parseMode: ParseMode.Html);
                     return true;

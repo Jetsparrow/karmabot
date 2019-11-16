@@ -15,7 +15,7 @@ namespace JetKarmaBot.Commands.AwardTypeManage
 
         public IReadOnlyCollection<ChatCommandArgument> Arguments => Array.Empty<ChatCommandArgument>();
 
-        public Task<bool> Execute(CommandString cmd, MessageEventArgs messageEventArgs)
+        public Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs messageEventArgs)
         {
             throw new NotImplementedException();
         }

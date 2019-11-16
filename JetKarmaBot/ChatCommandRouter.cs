@@ -12,11 +12,13 @@ using Telegram.Bot.Args;
 
 namespace JetKarmaBot
 {
-    public class ChatCommandRouter
+    public class ChatCommandRouter : ICommandRouter
     {
         public Telegram.Bot.Types.User Me { get; private set; }
         [Inject] private Logger log;
         [Inject] private TelegramBotClient Client { get; set; }
+
+        public string Prefix => "/";
 
         public async Task Start()
         {
@@ -41,7 +43,7 @@ namespace JetKarmaBot
                     if (commands.ContainsKey(cmd.Command))
                     {
                         log.Debug($"Handling message via {commands[cmd.Command].GetType().Name}");
-                        return commands[cmd.Command].Execute(cmd, args);
+                        return commands[cmd.Command].Execute(this, cmd, args);
                     }
                 }
                 catch (Exception e)
@@ -66,7 +68,7 @@ namespace JetKarmaBot
             }
         }
 
-        internal string GetHelpText(Locale loc)
+        public string GetHelpText(Locale loc)
         {
             List<string> pieces = new List<string>();
             foreach (IChatCommand c in commands.Values.Distinct())
@@ -83,7 +85,7 @@ namespace JetKarmaBot
             return string.Join("\n", pieces);
         }
 
-        internal string GetHelpTextFor(string commandname, Locale loc)
+        public string GetHelpTextFor(string commandname, Locale loc)
         {
             IChatCommand c = commands[commandname];
             string build = "";

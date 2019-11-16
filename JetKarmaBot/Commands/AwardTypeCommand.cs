@@ -26,6 +26,7 @@ namespace JetKarmaBot.Commands
             Router.SuperCommand = "at";
             r.Add(c.GetInstance<AwardTypeManage.CreateCommand>());
             r.Add(c.GetInstance<AwardTypeManage.RemoveCommand>());
+            r.Add(c.GetInstance<AwardTypeManage.SetParameterCommand>());
             r.Add(c.GetInstance<HelpCommand>());
         }
 

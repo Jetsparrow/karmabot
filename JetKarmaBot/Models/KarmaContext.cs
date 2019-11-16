@@ -89,7 +89,7 @@ namespace JetKarmaBot.Models
                     .WithMany(p => p.Awards)
                     .HasForeignKey(d => d.ChatId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_chat");
+                    .HasConstraintName("a_fk_chat");
 
                 entity.HasOne(d => d.From)
                     .WithMany(p => p.AwardsFrom)
@@ -109,7 +109,7 @@ namespace JetKarmaBot.Models
                 entity.ToTable("awardtype");
 
                 entity.HasIndex(e => e.AwardTypeId)
-                    .HasName("awardtypeid_UNIQUE")
+                    .HasName("at_awardtypeid_UNIQUE")
                     .IsUnique();
 
                 entity.HasIndex(e => new { e.CommandName, e.ChatId })
@@ -144,7 +144,7 @@ namespace JetKarmaBot.Models
                     .WithMany(p => p.AwardTypes)
                     .HasForeignKey(d => d.ChatId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_chat");
+                    .HasConstraintName("at_fk_chat");
             });
 
             modelBuilder.Entity<Chat>(entity =>

@@ -29,7 +29,7 @@ namespace JetKarmaBot.Commands.AwardTypeManage
                 Required=true,
                 Type=ChatCommandArgumentType.String,
                 Description="The award to remove",
-                DescriptionID="jetkarmabot.award.cmdnamehelp"
+                DescriptionID="jetkarmabot.at.remove.awardhelp"
             }
         };
 
@@ -49,7 +49,7 @@ namespace JetKarmaBot.Commands.AwardTypeManage
                     return true;
                 }
 
-                if (cmd.Parameters.Length < 1 || cmd.Parameters.Length > 1)
+                if (cmd.Parameters.Length != 1)
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
@@ -58,7 +58,7 @@ namespace JetKarmaBot.Commands.AwardTypeManage
                     return true;
                 }
 
-                AwardType awardType = await db.AwardTypes.FirstAsync(x => x.CommandName == cmd.Parameters[0]);
+                AwardType awardType = await db.AwardTypes.FirstOrDefaultAsync(x => x.CommandName == cmd.Parameters[0]);
 
                 if (awardType == null)
                 {

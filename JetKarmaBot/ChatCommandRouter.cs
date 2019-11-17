@@ -26,32 +26,23 @@ namespace JetKarmaBot
         {
             log.Debug("Message received");
             var text = args.Message.Text;
-            CommandString ncs;
-            if (cs == null)
+            if (cs.UserName != null && cs.UserName != Me.Username)
             {
-                if (!CommandString.TryParse(text, out ncs))
-                    return Task.FromResult(false);
-                if (ncs.UserName != null && ncs.UserName != Me.Username)
-                {
-                    // directed not at us!
-                    log.Debug("Message not directed at us");
-                    return Task.FromResult(false);
-                }
+                // directed not at us!
+                log.Debug("Message not directed at us");
+                return Task.FromResult(false);
             }
-            else
-                ncs = new CommandString(cs.Parameters[0], cs.Parameters.Skip(1).ToArray());
-
             try
             {
-                if (commands.ContainsKey(ncs.Command))
+                if (commands.ContainsKey(cs.Command))
                 {
-                    log.Debug($"Handling message via {commands[ncs.Command].GetType().Name}");
-                    return commands[ncs.Command].Execute(ncs, args);
+                    log.Debug($"Handling message via {commands[cs.Command].GetType().Name}");
+                    return commands[cs.Command].Execute(cs, args);
                 }
             }
             catch (Exception e)
             {
-                log.Error($"Error while handling command {ncs.Command}!");
+                log.Error($"Error while handling command {cs.Command}!");
                 log.Error(e);
             }
 

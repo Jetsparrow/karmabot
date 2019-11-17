@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JetKarmaBot.Services;
 using Perfusion;
@@ -51,7 +52,7 @@ namespace JetKarmaBot.Commands
             using (var db = Db.GetContext())
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
-                if (!await VerbRouter.Execute(cmd, args))
+                if (!await VerbRouter.Execute(new CommandString(cmd.Parameters[0], cmd.Parameters.Skip(1).ToArray()), args))
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,

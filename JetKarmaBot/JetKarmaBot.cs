@@ -65,7 +65,8 @@ namespace JetKarmaBot
                         db.Chats.Add(new Models.Chat { ChatId = messageEventArgs.Message.Chat.Id });
                     await db.SaveChangesAsync();
                 }
-                await Commands.Execute(null, messageEventArgs);
+                if (CommandString.TryParse(message.Text, out var cmd))
+                    await Commands.Execute(cmd, messageEventArgs);
             });
         }
 

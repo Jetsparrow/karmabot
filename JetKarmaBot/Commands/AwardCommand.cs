@@ -91,12 +91,12 @@ namespace JetKarmaBot.Commands
 
                 var text = args.Message.Text;
                 string awardTypeAcc, awardTypeSym;
-                sbyte awardTypeId = 0;
+                sbyte? awardTypeId;
                 if (awardTypeText == null || awardTypeText == "star")
                 {
                     awardTypeAcc = currentLocale["jetkarmabot.star.accusative"];
                     awardTypeSym = "★";
-                    awardTypeId = 0;
+                    awardTypeId = null;
                 }
                 else
                 {

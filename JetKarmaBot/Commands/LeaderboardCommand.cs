@@ -28,10 +28,10 @@ namespace JetKarmaBot.Commands
                 string response;
 
                 string awardTypeSym;
-                sbyte awardTypeId;
+                sbyte? awardTypeId;
                 if (string.IsNullOrWhiteSpace(awardTypeName) || awardTypeName == "star")
                 {
-                    awardTypeId = 0;
+                    awardTypeId = null;
                     awardTypeSym = "★";
                 }
                 else

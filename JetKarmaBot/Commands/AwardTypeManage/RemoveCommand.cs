@@ -58,7 +58,7 @@ namespace JetKarmaBot.Commands.AwardTypeManage
                     return true;
                 }
 
-                AwardType awardType = await db.AwardTypes.FirstOrDefaultAsync(x => x.CommandName == cmd.Parameters[0]);
+                AwardType awardType = await db.AwardTypes.FirstOrDefaultAsync(x => x.CommandName == cmd.Parameters[0] && x.ChatId == args.Message.Chat.Id);
 
                 if (awardType == null)
                 {

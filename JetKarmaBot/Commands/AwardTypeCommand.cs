@@ -30,7 +30,7 @@ namespace JetKarmaBot.Commands
             VerbRouter.Add(C.GetInstance<AwardTypeManage.CreateCommand>());
             VerbRouter.Add(C.GetInstance<AwardTypeManage.RemoveCommand>());
             VerbRouter.Add(C.GetInstance<AwardTypeManage.SetParameterCommand>());
-            VerbRouter.Add(C.GetInstance<HelpCommand>());
+            VerbRouter.Add(C.ResolveObject(new HelpCommand()));
         }
 
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new[] {

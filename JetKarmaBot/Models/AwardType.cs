@@ -11,7 +11,7 @@ namespace JetKarmaBot.Models
             Awards = new HashSet<Award>();
         }
 
-        public sbyte AwardTypeId { get; set; }
+        public int AwardTypeId { get; set; }
         public string CommandName { get; set; }
         public long ChatId { get; set; }
         public string NominativeName { get; set; }

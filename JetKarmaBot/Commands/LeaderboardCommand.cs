@@ -28,7 +28,7 @@ namespace JetKarmaBot.Commands
                 string response;
 
                 string awardTypeSym;
-                sbyte? awardTypeId;
+                int? awardTypeId;
                 if (string.IsNullOrWhiteSpace(awardTypeName) || awardTypeName == "star")
                 {
                     awardTypeId = null;

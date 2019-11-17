@@ -54,7 +54,7 @@ namespace JetKarmaBot.Commands
                 }
                 else
                 {
-                    sbyte? awardTypeId;
+                    int? awardTypeId;
                     string awardTypeSym;
                     if (awardTypeName == "star")
                     {

@@ -60,7 +60,7 @@ namespace JetKarmaBot.Models
 
                 entity.Property(e => e.AwardTypeId)
                     .HasColumnName("awardtypeid")
-                    .HasColumnType("tinyint(3)");
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.ChatId)
                     .HasColumnName("chatid")
@@ -118,7 +118,7 @@ namespace JetKarmaBot.Models
 
                 entity.Property(e => e.AwardTypeId)
                     .HasColumnName("awardtypeid")
-                    .HasColumnType("tinyint(3)");
+                    .HasColumnType("int(11)");
 
                 entity.Property(e => e.CommandName)
                     .IsRequired()

@@ -18,7 +18,7 @@ namespace JetKarmaBot.Commands
         [Inject]
         private Logger log;
 
-        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
@@ -78,7 +78,7 @@ namespace JetKarmaBot.Commands
                     return true;
                 }
 
-                if (CommandRouter.Me.Id == recipientId)
+                if (Router.Me.Id == recipientId)
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,
@@ -161,7 +161,6 @@ namespace JetKarmaBot.Commands
         [Inject] KarmaContextFactory Db { get; set; }
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
-        [Inject] ChatCommandRouter CommandRouter { get; set; }
 
         public string Description => "Awards/revokes an award to a user.";
         public string DescriptionID => "jetkarmabot.award.help";
@@ -182,5 +181,7 @@ namespace JetKarmaBot.Commands
                 DescriptionID="jetkarmabot.award.tohelp"
             }
         };
+
+        public ICommandRouter Router { get; set; }
     }
 }

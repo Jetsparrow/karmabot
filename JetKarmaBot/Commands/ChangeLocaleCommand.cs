@@ -15,7 +15,7 @@ namespace JetKarmaBot.Commands
         [Inject]
         private Logger log;
 
-        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
@@ -92,5 +92,7 @@ namespace JetKarmaBot.Commands
                 DescriptionID="jetkarmabot.changelocale.localehelp"
             }
         };
+
+        public ICommandRouter Router { get; set; }
     }
 }

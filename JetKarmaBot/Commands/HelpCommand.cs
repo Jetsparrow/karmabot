@@ -28,7 +28,9 @@ namespace JetKarmaBot.Commands
             }
          };
 
-        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
+        public ICommandRouter Router { get; set; }
+
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
@@ -37,7 +39,7 @@ namespace JetKarmaBot.Commands
                 {
                     await Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
-                            route.GetHelpText(currentLocale),
+                            Router.GetHelpText(currentLocale),
                             replyToMessageId: args.Message.MessageId,
                             parseMode: ParseMode.Html);
                     return true;
@@ -46,7 +48,7 @@ namespace JetKarmaBot.Commands
                 {
                     await Client.SendTextMessageAsync(
                             args.Message.Chat.Id,
-                            route.GetHelpTextFor(cmd.Parameters[0], currentLocale),
+                            Router.GetHelpTextFor(cmd.Parameters[0], currentLocale),
                             replyToMessageId: args.Message.MessageId,
                             parseMode: ParseMode.Html);
                     return true;

@@ -15,19 +15,22 @@ namespace JetKarmaBot.Commands
 
         public string DescriptionID => "jetkarmabot.at.help";
 
-        public VerbCommandRouter Router;
+        public ChatCommandRouter VerbRouter;
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
         [Inject] KarmaContextFactory Db { get; set; }
+        [Inject] IContainer C { get; set; }
 
-        public AwardTypeCommand(IContainer c, VerbCommandRouter r)
+        public void OnMount()
         {
-            Router = r;
-            Router.SuperCommand = "at";
-            r.Add(c.GetInstance<AwardTypeManage.CreateCommand>());
-            r.Add(c.GetInstance<AwardTypeManage.RemoveCommand>());
-            r.Add(c.GetInstance<AwardTypeManage.SetParameterCommand>());
-            r.Add(c.GetInstance<HelpCommand>());
+            VerbRouter = C.ResolveObject(new ChatCommandRouter());
+            VerbRouter.SuperCommand = "at";
+            VerbRouter.SuperRouter = Router;
+            VerbRouter.Me = Router.Me;
+            VerbRouter.Add(C.GetInstance<AwardTypeManage.CreateCommand>());
+            VerbRouter.Add(C.GetInstance<AwardTypeManage.RemoveCommand>());
+            VerbRouter.Add(C.GetInstance<AwardTypeManage.SetParameterCommand>());
+            VerbRouter.Add(C.GetInstance<HelpCommand>());
         }
 
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new[] {
@@ -40,13 +43,15 @@ namespace JetKarmaBot.Commands
             }
         };
 
-        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
+        public ICommandRouter Router { get; set; }
+
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
-            Router.SuperRouter = route;
+            VerbRouter.SuperRouter = Router;
             using (var db = Db.GetContext())
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
-                if (!await Router.Process(route, cmd, args))
+                if (!await VerbRouter.Execute(cmd, args))
                 {
                     await Client.SendTextMessageAsync(
                         args.Message.Chat.Id,

@@ -17,7 +17,7 @@ namespace JetKarmaBot.Commands
     {
         public IReadOnlyCollection<string> Names => new[] { "leaderboard" };
 
-        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {
@@ -77,5 +77,7 @@ namespace JetKarmaBot.Commands
                 DescriptionID= "jetkarmabot.leaderboard.awardtypehelp"
             }
         };
+
+        public ICommandRouter Router { get; set; }
     }
 }

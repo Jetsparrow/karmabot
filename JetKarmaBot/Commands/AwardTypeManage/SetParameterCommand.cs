@@ -46,7 +46,10 @@ namespace JetKarmaBot.Commands.AwardTypeManage
                 DescriptionID="jetkarmabot.at.set.valuehelp"
             }
         };
-        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
+
+        public ICommandRouter Router { get; set; }
+
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {

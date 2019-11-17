@@ -65,7 +65,7 @@ namespace JetKarmaBot
                         db.Chats.Add(new Models.Chat { ChatId = messageEventArgs.Message.Chat.Id });
                     await db.SaveChangesAsync();
                 }
-                await Commands.Execute(sender, messageEventArgs);
+                await Commands.Execute(null, messageEventArgs);
             });
         }
 
@@ -84,8 +84,8 @@ namespace JetKarmaBot
 
         async Task InitCommands(IContainer c)
         {
-            Commands = c.GetInstance<ChatCommandRouter>();
-            await Commands.Start();
+            Commands = c.ResolveObject(new ChatCommandRouter());
+            Commands.Me = await Client.GetMeAsync();
             Commands.Add(c.GetInstance<HelpCommand>());
             Commands.Add(c.GetInstance<AwardCommand>());
             Commands.Add(c.GetInstance<StatusCommand>());

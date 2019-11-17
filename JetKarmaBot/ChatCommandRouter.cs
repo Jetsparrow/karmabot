@@ -14,43 +14,45 @@ namespace JetKarmaBot
 {
     public class ChatCommandRouter : ICommandRouter
     {
-        public Telegram.Bot.Types.User Me { get; private set; }
+        public Telegram.Bot.Types.User Me { get; set; }
         [Inject] private Logger log;
         [Inject] private TelegramBotClient Client { get; set; }
 
-        public string Prefix => "/";
+        public string Prefix => SuperRouter == null ? "/" : SuperRouter.Prefix + SuperCommand + " ";
+        public ICommandRouter SuperRouter { get; set; }
+        public string SuperCommand { get; set; }
 
-        public async Task Start()
-        {
-            Me = await Client.GetMeAsync();
-        }
-
-        public Task<bool> Execute(object sender, MessageEventArgs args)
+        public Task<bool> Execute(CommandString cs, MessageEventArgs args)
         {
             log.Debug("Message received");
             var text = args.Message.Text;
-            if (CommandString.TryParse(text, out var cmd))
+            CommandString ncs;
+            if (cs == null)
             {
-                if (cmd.UserName != null && cmd.UserName != Me.Username)
+                if (!CommandString.TryParse(text, out ncs))
+                    return Task.FromResult(false);
+                if (ncs.UserName != null && ncs.UserName != Me.Username)
                 {
                     // directed not at us!
                     log.Debug("Message not directed at us");
                     return Task.FromResult(false);
                 }
+            }
+            else
+                ncs = new CommandString(cs.Parameters[0], cs.Parameters.Skip(1).ToArray());
 
-                try
+            try
+            {
+                if (commands.ContainsKey(ncs.Command))
                 {
-                    if (commands.ContainsKey(cmd.Command))
-                    {
-                        log.Debug($"Handling message via {commands[cmd.Command].GetType().Name}");
-                        return commands[cmd.Command].Execute(this, cmd, args);
-                    }
+                    log.Debug($"Handling message via {commands[ncs.Command].GetType().Name}");
+                    return commands[ncs.Command].Execute(ncs, args);
                 }
-                catch (Exception e)
-                {
-                    log.Error($"Error while handling command {cmd.Command}!");
-                    log.Error(e);
-                }
+            }
+            catch (Exception e)
+            {
+                log.Error($"Error while handling command {ncs.Command}!");
+                log.Error(e);
             }
 
             return Task.FromResult(false);
@@ -59,6 +61,8 @@ namespace JetKarmaBot
         public void Add(IChatCommand c)
         {
             log.ConditionalTrace($"Adding command {c.GetType().Name}");
+            c.Router = this;
+            c.OnMount();
             foreach (var name in c.Names)
             {
                 log.ConditionalTrace($"Mounting {c.GetType().Name} to {name}");
@@ -77,9 +81,9 @@ namespace JetKarmaBot
                 List<string> names = c.Names.ToList();
                 for (int i = 0; i < names.Count - 1; i++)
                 {
-                    build = build + "/" + names[i] + "\n";
+                    build = build + Prefix + names[i] + "\n";
                 }
-                build += "/" + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
+                build += Prefix + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>";
                 pieces.Add(build);
             }
             return string.Join("\n", pieces);
@@ -92,9 +96,9 @@ namespace JetKarmaBot
             List<string> names = c.Names.ToList();
             for (int i = 0; i < names.Count - 1; i++)
             {
-                build = build + "/" + names[i] + "\n";
+                build = build + Prefix + names[i] + "\n";
             }
-            build += "/" + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>\n";
+            build += Prefix + names[names.Count - 1] + " " + string.Join(" ", c.Arguments.Select(x => (!x.Required ? "[" : "") + x.Name + (!x.Required ? "]" : ""))) + " <i>" + getLocalizedCMDDesc(c, loc) + "</i>\n";
             build += string.Join("\n", c.Arguments.Select(ca => (!ca.Required ? "[" : "") + ca.Name + (!ca.Required ? "]" : "") + ": <i>" + getLocalizedCMDArgDesc(ca, loc) + "</i>"));
             return build;
         }

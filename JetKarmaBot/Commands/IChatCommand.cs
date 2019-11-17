@@ -10,8 +10,10 @@ namespace JetKarmaBot.Commands
         string Description { get; }
         string DescriptionID { get; }
         IReadOnlyCollection<ChatCommandArgument> Arguments { get; }
+        ICommandRouter Router { get; set; }
 
-        Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs messageEventArgs);
+        Task<bool> Execute(CommandString cmd, MessageEventArgs messageEventArgs);
+        void OnMount() { }
     }
 
     public struct ChatCommandArgument

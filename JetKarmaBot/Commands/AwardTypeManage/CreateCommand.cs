@@ -60,7 +60,9 @@ namespace JetKarmaBot.Commands.AwardTypeManage
             }
         };
 
-        public async Task<bool> Execute(ICommandRouter route, CommandString cmd, MessageEventArgs args)
+        public ICommandRouter Router { get; set; }
+
+        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             using (var db = Db.GetContext())
             {

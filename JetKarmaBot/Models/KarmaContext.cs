@@ -135,6 +135,11 @@ namespace JetKarmaBot.Models
                     .HasColumnName("name")
                     .HasColumnType("varchar(32)");
 
+                entity.Property(e => e.AccusativeName)
+                    .IsRequired()
+                    .HasColumnName("accname")
+                    .HasColumnType("varchar(32)");
+
                 entity.Property(e => e.Symbol)
                     .IsRequired()
                     .HasColumnName("symbol")

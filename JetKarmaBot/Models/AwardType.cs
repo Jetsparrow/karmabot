@@ -14,9 +14,7 @@ namespace JetKarmaBot.Models
         public sbyte AwardTypeId { get; set; }
         public string CommandName { get; set; }
         public long ChatId { get; set; }
-        [Column("name")]
         public string NominativeName { get; set; }
-        [Column("accname")]
         public string AccusativeName { get; set; }
         public string Symbol { get; set; }
         public string Description { get; set; }

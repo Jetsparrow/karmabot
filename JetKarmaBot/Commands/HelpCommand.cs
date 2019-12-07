@@ -13,6 +13,7 @@ namespace JetKarmaBot.Commands
         [Inject] KarmaContextFactory Db;
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
+        [Inject] TimeoutManager Timeout { get; set; }
         [Inject] ChatCommandRouter Router;
         public IReadOnlyCollection<string> Names => new[] { "help" };
 
@@ -34,6 +35,7 @@ namespace JetKarmaBot.Commands
             using (var db = Db.GetContext())
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
+                await Timeout.ApplyCost("Help", args.Message.From.Id, db);
                 if (cmd.Parameters.Length < 1)
                 {
                     await Client.SendTextMessageAsync(

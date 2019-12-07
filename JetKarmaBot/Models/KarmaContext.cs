@@ -172,6 +172,10 @@ namespace JetKarmaBot.Models
                 entity.Property(e => e.Username)
                     .HasColumnName("username")
                     .HasColumnType("varchar(45)");
+
+                entity.Property(e => e.CooldownDate)
+                    .HasColumnName("cooldowndate")
+                    .HasColumnType("datetime");
             });
         }
     }

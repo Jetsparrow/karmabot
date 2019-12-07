@@ -15,8 +15,8 @@ namespace JetKarmaBot.Commands
     class AwardCommand : IChatCommand
     {
         public IReadOnlyCollection<string> Names => new[] { "award", "revoke" };
-        [Inject]
-        private Logger log;
+        [Inject] private Logger log;
+        [Inject] private TimeoutManager Timeout;
 
         public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
@@ -24,6 +24,7 @@ namespace JetKarmaBot.Commands
             {
                 var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
 
+                var awarder = args.Message.From;
                 string awardTypeText = null;
                 int recipientId = default(int);
                 foreach (string arg in cmd.Parameters)
@@ -33,12 +34,14 @@ namespace JetKarmaBot.Commands
                         if (recipientId != default(int))
                         {
                             await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errdup"]);
+                            await Timeout.ApplyCost("AwardFailure", awarder.Id, db);
                             return true;
                         }
                         recipientId = await db.Users.Where(x => x.Username == arg).Select(x => x.UserId).FirstOrDefaultAsync();
                         if (recipientId == default(int))
                         {
                             await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errbadusername"]);
+                            await Timeout.ApplyCost("AwardFailure", awarder.Id, db);
                             return true;
                         }
                     }
@@ -49,6 +52,7 @@ namespace JetKarmaBot.Commands
                         else
                         {
                             await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errdup"]);
+                            await Timeout.ApplyCost("AwardFailure", awarder.Id, db);
                             return true;
                         }
                     }
@@ -62,10 +66,10 @@ namespace JetKarmaBot.Commands
                 if (recipientId == default(int))
                 {
                     await Client.SendTextMessageAsync(args.Message.Chat.Id, currentLocale["jetkarmabot.award.errawardnoreply"]);
+                    await Timeout.ApplyCost("AwardFailure", awarder.Id, db);
                     return true;
                 }
 
-                var awarder = args.Message.From;
 
                 bool awarding = cmd.Command == "award";
 
@@ -75,6 +79,7 @@ namespace JetKarmaBot.Commands
                         args.Message.Chat.Id,
                         currentLocale["jetkarmabot.award.errawardself"],
                         replyToMessageId: args.Message.MessageId);
+                    await Timeout.ApplyCost("AwardFailure", awarder.Id, db);
                     return true;
                 }
 
@@ -86,6 +91,7 @@ namespace JetKarmaBot.Commands
                         ? currentLocale["jetkarmabot.award.errawardbot"]
                         : currentLocale["jetkarmabot.award.errrevokebot"],
                         replyToMessageId: args.Message.MessageId);
+                    await Timeout.ApplyCost("AwardFailure", awarder.Id, db);
                     return true;
                 }
 
@@ -93,15 +99,6 @@ namespace JetKarmaBot.Commands
                 global::JetKarmaBot.Models.AwardType awardType = awardTypeText != null
                     ? await db.AwardTypes.FirstAsync(at => at.CommandName == awardTypeText)
                     : await db.AwardTypes.FindAsync((sbyte)1);
-                DateTime cutoff = DateTime.Now - TimeSpan.FromMinutes(5);
-                if (await db.Awards.Where(x => x.Date > cutoff && x.FromId == awarder.Id).CountAsync() >= 10)
-                {
-                    await Client.SendTextMessageAsync(
-                    args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.award.ratelimit"],
-                    replyToMessageId: args.Message.MessageId);
-                    return true;
-                }
                 await db.Awards.AddAsync(new Models.Award()
                 {
                     AwardTypeId = awardType.AwardTypeId,
@@ -130,6 +127,7 @@ namespace JetKarmaBot.Commands
                     args.Message.Chat.Id,
                     response,
                     replyToMessageId: args.Message.MessageId);
+                await Timeout.ApplyCost("AwardSuccess", awarder.Id, db);
                 return true;
             }
         }

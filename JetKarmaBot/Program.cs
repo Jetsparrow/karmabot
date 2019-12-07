@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
 using JetKarmaBot.Models;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +58,11 @@ namespace JetKarmaBot
                 {
                     eArgs.Cancel = true;
                     quitEvent.Set();
+                };
+                AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+                {
+                    log.Info("Received stop request, waiting for exit...");
+                    bot?.Stop()?.Wait();
                 };
             }
             catch { }

@@ -23,32 +23,22 @@ namespace JetKarmaBot
             Me = await Client.GetMeAsync();
         }
 
-        public Task<bool> Execute(object sender, MessageEventArgs args)
+        public Task<bool> Execute(CommandString cmd, MessageEventArgs args)
         {
             log.Debug("Message received");
-            var text = args.Message.Text;
-            if (CommandString.TryParse(text, out var cmd))
-            {
-                if (cmd.UserName != null && cmd.UserName != Me.Username)
-                {
-                    // directed not at us!
-                    log.Debug("Message not directed at us");
-                    return Task.FromResult(false);
-                }
 
-                try
+            try
+            {
+                if (commands.ContainsKey(cmd.Command))
                 {
-                    if (commands.ContainsKey(cmd.Command))
-                    {
-                        log.Debug($"Handling message via {commands[cmd.Command].GetType().Name}");
-                        return commands[cmd.Command].Execute(cmd, args);
-                    }
+                    log.Debug($"Handling message via {commands[cmd.Command].GetType().Name}");
+                    return commands[cmd.Command].Execute(cmd, args);
                 }
-                catch (Exception e)
-                {
-                    log.Error($"Error while handling command {cmd.Command}!");
-                    log.Error(e);
-                }
+            }
+            catch (Exception e)
+            {
+                log.Error($"Error while handling command {cmd.Command}!");
+                log.Error(e);
             }
 
             return Task.FromResult(false);

@@ -5,6 +5,7 @@
     "англійская"
   ],
   "strings": {
+    "jetkarmabot.ratelimit": "Slow down there, turbo!",
     "jetkarmabot.award.errawardnoreply": "Who are you talking about?",
     "jetkarmabot.award.errbadusername": "I don't know who that is.",
     "jetkarmabot.award.errdup": "Please stop batching awards.",
@@ -14,7 +15,6 @@
     "jetkarmabot.award.awardmessage": "Awarded a {0} to {1}!",
     "jetkarmabot.award.revokemessage": "Revoked a {0} from {1}!",
     "jetkarmabot.award.statustext": "{0} is at {1}{2} now.",
-    "jetkarmabot.award.ratelimit": "Slow down there, turbo!",
     "jetkarmabot.award.help": "Awards/revokes an award to a user.",
     "jetkarmabot.award.awardtypehelp": "The award to grant to/strip of the specified user",
     "jetkarmabot.award.tohelp": "The user to award",

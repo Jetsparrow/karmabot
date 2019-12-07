@@ -77,7 +77,7 @@ namespace JetKarmaBot.Services
         }
         public async Task SaveLoop(CancellationToken ct = default(CancellationToken))
         {
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 await Task.Delay(cfg.Timeout.SaveIntervalSeconds * 1000, ct);
                 await Save(ct);

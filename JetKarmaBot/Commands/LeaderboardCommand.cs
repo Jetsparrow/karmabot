@@ -51,12 +51,14 @@ namespace JetKarmaBot.Commands
                     args.Message.Chat.Id,
                     response,
                     replyToMessageId: args.Message.MessageId);
+                await Timeout.ApplyCost("Leaderboard", args.Message.From.Id, db);
                 return true;
             }
         }
 
         [Inject] KarmaContextFactory Db { get; set; }
         [Inject] TelegramBotClient Client { get; set; }
+        [Inject] TimeoutManager Timeout { get; set; }
         [Inject] Localization Locale { get; set; }
 
         public string Description => "Shows the people with the most of a specific award.";

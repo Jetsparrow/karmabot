@@ -15,6 +15,7 @@ namespace JetKarmaBot.Commands
         [Inject] KarmaContextFactory Db;
         [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
+        [Inject] TimeoutManager Timeout { get; set; }
         public IReadOnlyCollection<string> Names => new[] { "currencies", "awardtypes" };
 
         public string Description => "Shows all award types";
@@ -35,6 +36,7 @@ namespace JetKarmaBot.Commands
                         resp,
                         replyToMessageId: args.Message.MessageId,
                         parseMode: ParseMode.Html);
+                await Timeout.ApplyCost("Currencies", args.Message.From.Id, db);
                 return true;
             }
         }

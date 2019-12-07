@@ -6,6 +6,7 @@
     ],
     "note": "This is a joke. And made with google translate.",
     "strings": {
+        "jetkarmabot.ratelimit": "Павольны, чувак!",
         "jetkarmabot.award.errawardnoreply": "Пра каго ты кажаш?",
         "jetkarmabot.award.errbadusername": "Хто гэта?",
         "jetkarmabot.award.errdup": "Калі ласка, спыніце батчіць ўзнагароды.",
@@ -15,7 +16,6 @@
         "jetkarmabot.award.awardmessage": "Ўручыў \"{0}\" {1}!",
         "jetkarmabot.award.revokemessage": "Адабраў \"{0}\" у {1}!",
         "jetkarmabot.award.statustext": "У {0} цяпер {1}{2}.",
-        "jetkarmabot.award.ratelimit": "Павольны, чувак!",
         "jetkarmabot.award.help": "Уручае ачко карыстачу (або адымае)",
         "jetkarmabot.award.awardtypehelp": "Тып ачкі",
         "jetkarmabot.award.tohelp": "Карыстальнік, якога ўзнагародзіць",

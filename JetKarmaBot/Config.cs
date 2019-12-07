@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using JsonNet.PrivateSettersContractResolvers;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace JetKarmaBot
 {
@@ -21,7 +22,19 @@ namespace JetKarmaBot
         }
 
         public ProxySettings Proxy { get; private set; }
-        public bool SqlDebug { get; private set; }
+        public class TimeoutConfig
+        {
+            public int DebtLimitSeconds { get; private set; } = 60 * 60 * 2;
+            public Dictionary<string, int> CommandCostsSeconds { get; private set; } = new Dictionary<string, int>()
+            {
+                {"AwardSuccessful", 60*15},
+                {"AwardFailed", 60*5},
+                {"Default", 60*5}
+            };
+            public int SaveIntervalSeconds { get; private set; } = 60 * 5;
+        }
+        public TimeoutConfig Timeout { get; private set; } = new TimeoutConfig();
+        public bool SqlDebug { get; private set; } = false;
     }
 
     public abstract class ConfigBase

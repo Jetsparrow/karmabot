@@ -81,6 +81,7 @@ namespace JetKarmaBot
                 {
                     RequestContext ctx = new RequestContext(Client, args, cmd, db);
                     await Chain.Handle(ctx);
+                    await db.SaveChangesAsync();
                 }
             });
         }
@@ -104,9 +105,8 @@ namespace JetKarmaBot
         void InitChain(IContainer c)
         {
             Chain = new RequestChain();
-            Chain.Add(new DbHandler(DbHandler.SaveType.From | DbHandler.SaveType.LateDbChanges));
             Chain.Add(Timeout);
-            Chain.Add(new DbHandler(DbHandler.SaveType.To | DbHandler.SaveType.Chat));
+            Chain.Add(new SaveData());
             Chain.Add(Commands);
         }
 

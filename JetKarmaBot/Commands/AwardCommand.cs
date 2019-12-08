@@ -28,13 +28,13 @@ namespace JetKarmaBot.Commands
                 {
                     if (recipientId != default(int))
                     {
-                        await ctx.Client.SendTextMessageAsync(ctx.EventArgs.Message.Chat.Id, currentLocale["jetkarmabot.award.errdup"]);
+                        await ctx.SendMessage(currentLocale["jetkarmabot.award.errdup"]);
                         return false;
                     }
                     recipientId = await db.Users.Where(x => x.Username == arg).Select(x => x.UserId).FirstOrDefaultAsync();
                     if (recipientId == default(int))
                     {
-                        await ctx.Client.SendTextMessageAsync(ctx.EventArgs.Message.Chat.Id, currentLocale["jetkarmabot.award.errbadusername"]);
+                        await ctx.SendMessage(currentLocale["jetkarmabot.award.errbadusername"]);
                         return false;
                     }
                 }
@@ -44,7 +44,7 @@ namespace JetKarmaBot.Commands
                         awardTypeText = arg;
                     else
                     {
-                        await ctx.Client.SendTextMessageAsync(ctx.EventArgs.Message.Chat.Id, currentLocale["jetkarmabot.award.errdup"]);
+                        await ctx.SendMessage(currentLocale["jetkarmabot.award.errdup"]);
                         return false;
                     }
                 }
@@ -57,7 +57,7 @@ namespace JetKarmaBot.Commands
 
             if (recipientId == default(int))
             {
-                await ctx.Client.SendTextMessageAsync(ctx.EventArgs.Message.Chat.Id, currentLocale["jetkarmabot.award.errawardnoreply"]);
+                await ctx.SendMessage(currentLocale["jetkarmabot.award.errawardnoreply"]);
                 return false;
             }
 
@@ -66,21 +66,15 @@ namespace JetKarmaBot.Commands
 
             if (awarder.Id == recipientId)
             {
-                await ctx.Client.SendTextMessageAsync(
-                    ctx.EventArgs.Message.Chat.Id,
-                    currentLocale["jetkarmabot.award.errawardself"],
-                    replyToMessageId: ctx.EventArgs.Message.MessageId);
+                await ctx.SendMessage(currentLocale["jetkarmabot.award.errawardself"]);
                 return false;
             }
 
             if (ctx.GetFeature<ChatCommandRouter.Feature>().Router.Me.Id == recipientId)
             {
-                await ctx.Client.SendTextMessageAsync(
-                    ctx.EventArgs.Message.Chat.Id,
-                    awarding
+                await ctx.SendMessage(awarding
                     ? currentLocale["jetkarmabot.award.errawardbot"]
-                    : currentLocale["jetkarmabot.award.errrevokebot"],
-                    replyToMessageId: ctx.EventArgs.Message.MessageId);
+                    : currentLocale["jetkarmabot.award.errrevokebot"]);
                 return false;
             }
 
@@ -113,10 +107,7 @@ namespace JetKarmaBot.Commands
 
             var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, prevCount + (awarding ? 1 : -1), awardType.Symbol);
 
-            await ctx.Client.SendTextMessageAsync(
-                ctx.EventArgs.Message.Chat.Id,
-                response,
-                replyToMessageId: ctx.EventArgs.Message.MessageId);
+            await ctx.SendMessage(response);
             return true;
         }
 

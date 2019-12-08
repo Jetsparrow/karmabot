@@ -18,8 +18,6 @@ namespace JetKarmaBot.Commands
             var asker = ctx.EventArgs.Message.From;
             var awardTypeName = ctx.Command.Parameters.FirstOrDefault();
 
-            string response;
-
             if (string.IsNullOrWhiteSpace(awardTypeName))
                 awardTypeName = "star";
 
@@ -29,7 +27,7 @@ namespace JetKarmaBot.Commands
             var awardTypeId = await awardTypeIdQuery.FirstAsync();
             var awardType = await db.AwardTypes.FindAsync(awardTypeId);
 
-            response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n',
+            await ctx.SendMessage(string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n',
                 await Task.WhenAll((await db.Awards
                     .Where(x => x.ChatId == ctx.EventArgs.Message.Chat.Id && x.AwardTypeId == awardTypeId)
                     .GroupBy(x => x.ToId)
@@ -38,12 +36,7 @@ namespace JetKarmaBot.Commands
                     .Take(5)
                     .ToListAsync())
                     .Select(async (x, index) => $"{index + 1}. {(await db.Users.FindAsync(x.UserId)).Username} - {x.Amount}"))
-            );
-
-            await ctx.Client.SendTextMessageAsync(
-                ctx.EventArgs.Message.Chat.Id,
-                response,
-                replyToMessageId: ctx.EventArgs.Message.MessageId);
+            ));
             return true;
         }
 

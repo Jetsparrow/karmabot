@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using JetKarmaBot.Commands;
 using JetKarmaBot.Models;
 using Telegram.Bot;
@@ -24,5 +25,13 @@ namespace JetKarmaBot.Services.Handling
         }
         public object GetService(Type serviceType) => Features.First(x => x.GetType() == serviceType);
         public T GetFeature<T>() => (T)Features.First(x => x is T);
+
+        //Method to reduce WET in commands
+        public Task SendMessage(string text) => Client.SendTextMessageAsync(
+                                                    EventArgs.Message.Chat.Id,
+                                                    text,
+                                                    replyToMessageId: EventArgs.Message.MessageId,
+                                                    disableNotification: true,
+                                                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
     }
 }

@@ -31,20 +31,12 @@ namespace JetKarmaBot.Commands
             var router = ctx.GetFeature<ChatCommandRouter.Feature>().Router;
             if (ctx.Command.Parameters.Length < 1)
             {
-                await ctx.Client.SendTextMessageAsync(
-                        ctx.EventArgs.Message.Chat.Id,
-                        router.GetHelpText(currentLocale),
-                        replyToMessageId: ctx.EventArgs.Message.MessageId,
-                        parseMode: ParseMode.Html);
+                await ctx.SendMessage(router.GetHelpText(currentLocale));
                 return true;
             }
             else
             {
-                await ctx.Client.SendTextMessageAsync(
-                        ctx.EventArgs.Message.Chat.Id,
-                        router.GetHelpTextFor(ctx.Command.Parameters[0], currentLocale),
-                        replyToMessageId: ctx.EventArgs.Message.MessageId,
-                        parseMode: ParseMode.Html);
+                await ctx.SendMessage(router.GetHelpTextFor(ctx.Command.Parameters[0], currentLocale));
                 return true;
             }
         }

@@ -47,7 +47,7 @@ namespace JetKarmaBot.Services.Handling
             {
                 TimeoutCache[uid] = new TimeoutStats()
                 {
-                    CooldownDate = (await db.Users.FindAsync(uid)).CooldownDate
+                    CooldownDate = (await db.Users.FindAsync(uid))?.CooldownDate ?? DateTime.Now
                 };
             }
         }

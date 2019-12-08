@@ -1,6 +1,4 @@
 ﻿using JetKarmaBot.Commands;
-using JetKarmaBot.Services;
-using Microsoft.EntityFrameworkCore;
 using NLog;
 using Perfusion;
 using System;
@@ -8,12 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Args;
 
-namespace JetKarmaBot
+namespace JetKarmaBot.Services.Handling
 {
-    public class ChatCommandRouter
+    public class ChatCommandRouter : IRequestHandler
     {
+        public class Feature
+        {
+            public Type CommandType;
+            public ChatCommandRouter Router;
+            public bool Succeded;
+        }
         public Telegram.Bot.Types.User Me { get; private set; }
         [Inject] private Logger log;
         [Inject] private TelegramBotClient Client { get; set; }
@@ -23,16 +26,21 @@ namespace JetKarmaBot
             Me = await Client.GetMeAsync();
         }
 
-        public Task<bool> Execute(CommandString cmd, MessageEventArgs args)
+        public Task Handle(RequestContext ctx, Func<RequestContext, Task> next)
         {
             log.Debug("Message received");
+            CommandString cmd = ctx.Command;
+            Feature feature = new Feature() { Router = this };
+            ctx.Features.Add(feature);
 
             try
             {
                 if (commands.ContainsKey(cmd.Command))
                 {
-                    log.Debug($"Handling message via {commands[cmd.Command].GetType().Name}");
-                    return commands[cmd.Command].Execute(cmd, args);
+                    feature.CommandType = commands[cmd.Command].GetType();
+                    log.Debug($"Handling message via {feature.CommandType.Name}");
+                    async Task processCommand() => feature.Succeded = await commands[cmd.Command].Execute(ctx);
+                    return processCommand();
                 }
             }
             catch (Exception e)
@@ -41,7 +49,7 @@ namespace JetKarmaBot
                 log.Error(e);
             }
 
-            return Task.FromResult(false);
+            return next(ctx);
         }
 
         public void Add(IChatCommand c)

@@ -1,16 +1,15 @@
 using JetKarmaBot.Commands;
 using JetKarmaBot.Models;
 using JetKarmaBot.Services;
+using JetKarmaBot.Services.Handling;
 using Perfusion;
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace JetKarmaBot
@@ -25,6 +24,7 @@ namespace JetKarmaBot
 
         TelegramBotClient Client { get; set; }
         ChatCommandRouter Commands;
+        RequestChain Chain;
         Task timeoutWaitTask;
         CancellationTokenSource timeoutWaitTaskToken;
 
@@ -44,6 +44,7 @@ namespace JetKarmaBot
             timeoutWaitTask = Timeout.SaveLoop(timeoutWaitTaskToken.Token);
 
             await InitCommands(Container);
+            InitChain(Container);
 
             Client.OnMessage += BotOnMessageReceived;
             Client.StartReceiving();
@@ -78,46 +79,11 @@ namespace JetKarmaBot
             {
                 using (KarmaContext db = Db.GetContext())
                 {
-                    await AddUserToDatabase(db, args.Message.From);
-                    var checkResult = await Timeout.Check(args.Message.From.Id, db);
-                    if (checkResult == TimeoutManager.CheckResult.Limited)
-                    {
-                        Locale currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
-                        await Client.SendTextMessageAsync(
-                            args.Message.Chat.Id,
-                            currentLocale["jetkarmabot.ratelimit"],
-                            replyToMessageId: args.Message.MessageId);
-                        await Timeout.SetMessaged(args.Message.From.Id, db);
-                        return;
-                    }
-                    else if (checkResult != TimeoutManager.CheckResult.NonLimited)
-                    {
-                        return;
-                    }
-                    if (args.Message.ReplyToMessage != null)
-                        await AddUserToDatabase(db, args.Message.ReplyToMessage.From);
-                    if (!db.Chats.Any(x => x.ChatId == args.Message.Chat.Id))
-                        db.Chats.Add(new Models.Chat
-                        {
-                            ChatId = args.Message.Chat.Id
-                        });
+                    RequestContext ctx = new RequestContext(Client, args, cmd, db);
+                    await Chain.Handle(ctx);
                     await db.SaveChangesAsync();
                 }
-                await Commands.Execute(cmd, args);
             });
-        }
-
-        private async Task AddUserToDatabase(KarmaContext db, Telegram.Bot.Types.User u)
-        {
-            string un;
-            if (u.Username == null)
-                un = u.FirstName + (u.LastName != null ? " " + u.LastName : "");
-            else
-                un = "@" + u.Username;
-            if (!db.Users.Any(x => x.UserId == u.Id))
-                await db.Users.AddAsync(new Models.User { UserId = u.Id, Username = un });
-            else
-                (await db.Users.FindAsync(u.Id)).Username = un;
         }
 
         async Task InitCommands(IContainer c)
@@ -134,6 +100,14 @@ namespace JetKarmaBot
             {
                 Commands.Add(cmd);
             }
+        }
+
+        void InitChain(IContainer c)
+        {
+            Chain = new RequestChain();
+            Chain.Add(Timeout);
+            Chain.Add(new SaveData());
+            Chain.Add(Commands);
         }
 
         #endregion

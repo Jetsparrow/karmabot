@@ -27,8 +27,8 @@ namespace JetKarmaBot
             public int DebtLimitSeconds { get; private set; } = 60 * 60 * 2;
             public Dictionary<string, int> CommandCostsSeconds { get; private set; } = new Dictionary<string, int>()
             {
-                {"AwardSuccessful", 60*15},
-                {"AwardFailed", 60*5},
+                {"JetKarmaBot.Commands.AwardCommand (OK)", 60*15},
+                {"JetKarmaBot.Commands.AwardCommand (ERR)", 60*5},
                 {"Default", 60*5}
             };
             public int SaveIntervalSeconds { get; private set; } = 60 * 5;

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Telegram.Bot.Args;
 using Perfusion;
-using JetKarmaBot.Services;
-using Telegram.Bot;
+using JetKarmaBot.Services.Handling;
 using Telegram.Bot.Types.Enums;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +10,7 @@ namespace JetKarmaBot.Commands
 {
     public class CurrenciesCommand : IChatCommand
     {
-        [Inject] KarmaContextFactory Db;
-        [Inject] TelegramBotClient Client { get; set; }
         [Inject] Localization Locale { get; set; }
-        [Inject] TimeoutManager Timeout { get; set; }
         public IReadOnlyCollection<string> Names => new[] { "currencies", "awardtypes" };
 
         public string Description => "Shows all award types";
@@ -24,21 +19,18 @@ namespace JetKarmaBot.Commands
         public IReadOnlyCollection<ChatCommandArgument> Arguments => new ChatCommandArgument[] {
          };
 
-        public async Task<bool> Execute(CommandString cmd, MessageEventArgs args)
+        public async Task<bool> Execute(RequestContext ctx)
         {
-            using (var db = Db.GetContext())
-            {
-                var currentLocale = Locale[(await db.Chats.FindAsync(args.Message.Chat.Id)).Locale];
-                string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",
-                (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>"));
-                await Client.SendTextMessageAsync(
-                        args.Message.Chat.Id,
-                        resp,
-                        replyToMessageId: args.Message.MessageId,
-                        parseMode: ParseMode.Html);
-                await Timeout.ApplyCost("Currencies", args.Message.From.Id, db);
-                return true;
-            }
+            var db = ctx.Database;
+            var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
+            string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",
+            (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>"));
+            await ctx.Client.SendTextMessageAsync(
+                ctx.EventArgs.Message.Chat.Id,
+                resp,
+                replyToMessageId: ctx.EventArgs.Message.MessageId,
+                parseMode: ParseMode.Html);
+            return true;
         }
     }
 }

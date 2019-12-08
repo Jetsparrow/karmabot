@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace JetKarmaBot.Commands
@@ -40,7 +38,7 @@ namespace JetKarmaBot.Commands
             string username = match.Groups["name"].Captures.Count > 0 ? match.Groups["name"].Captures[0].Value : null;
             string[] parameters = words.Skip(1).ToArray();
 
-            result = new CommandString(cmd, parameters) { UserName = username};
+            result = new CommandString(cmd, parameters) { UserName = username };
             return true;
         }
 

@@ -23,13 +23,10 @@ namespace JetKarmaBot.Commands
         {
             var db = ctx.Database;
             var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
-            string resp = currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",
-            (await db.AwardTypes.ToListAsync()).Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>"));
-            await ctx.Client.SendTextMessageAsync(
-                ctx.EventArgs.Message.Chat.Id,
-                resp,
-                replyToMessageId: ctx.EventArgs.Message.MessageId,
-                parseMode: ParseMode.Html);
+            await ctx.SendMessage(
+                currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",
+                    (await db.AwardTypes.ToListAsync())
+                        .Select(x => $"{x.Symbol} ({x.CommandName}) <i>{currentLocale["jetkarmabot.awardtypes.nominative." + x.CommandName]}</i>")));
             return true;
         }
     }

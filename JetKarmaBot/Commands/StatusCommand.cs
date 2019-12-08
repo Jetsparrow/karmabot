@@ -60,10 +60,7 @@ namespace JetKarmaBot.Commands
                     .SumAsync(x => x.Amount), awardType.Symbol);
             }
 
-            await ctx.Client.SendTextMessageAsync(
-                ctx.EventArgs.Message.Chat.Id,
-                response,
-                replyToMessageId: ctx.EventArgs.Message.MessageId);
+            await ctx.SendMessage(response);
             return true;
         }
 

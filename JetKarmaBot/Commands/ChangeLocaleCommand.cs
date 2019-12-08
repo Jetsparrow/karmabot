@@ -21,27 +21,18 @@ namespace JetKarmaBot.Commands
             var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
             if (cmd.Parameters.Length < 1)
             {
-                await ctx.Client.SendTextMessageAsync(
-                    args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelocale.getlocale"],
-                    replyToMessageId: args.Message.MessageId);
+                await ctx.SendMessage(currentLocale["jetkarmabot.changelocale.getlocale"]);
                 return false;
             }
             else if (cmd.Parameters[0] == "list")
             {
-                await ctx.Client.SendTextMessageAsync(
-                    args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelocale.listalltext"] + "\n"
-                         + string.Join("\n", Locale.Select(a => a.Key)),
-                    replyToMessageId: args.Message.MessageId);
+                await ctx.SendMessage(currentLocale["jetkarmabot.changelocale.listalltext"] + "\n"
+                                        + string.Join("\n", Locale.Select(a => a.Key)));
                 return false;
             }
             else if (cmd.Parameters[0] == "all")
             {
-                await ctx.Client.SendTextMessageAsync(
-                    args.Message.Chat.Id,
-                    currentLocale["jetkarmabot.changelocale.errorall"],
-                    replyToMessageId: args.Message.MessageId);
+                await ctx.SendMessage(currentLocale["jetkarmabot.changelocale.errorall"]);
                 return false;
             }
             string localeId;
@@ -54,10 +45,9 @@ namespace JetKarmaBot.Commands
                 }
                 catch (LocalizationException e)
                 {
-                    await ctx.Client.SendTextMessageAsync(
-                        args.Message.Chat.Id,
-                        currentLocale["jetkarmabot.changelocale.toomany"] + "\n" + string.Join("\n", (e.Data["LocaleNames"] as Locale[]).Select(x => x.Name)),
-                        replyToMessageId: args.Message.MessageId);
+                    await ctx.SendMessage(
+                        currentLocale["jetkarmabot.changelocale.toomany"] + "\n"
+                         + string.Join("\n", (e.Data["LocaleNames"] as Locale[]).Select(x => x.Name)));
                     return false;
                 }
             (await db.Chats.FindAsync(args.Message.Chat.Id)).Locale = localeId;
@@ -65,11 +55,9 @@ namespace JetKarmaBot.Commands
 
             currentLocale = Locale[localeId];
 
-            await ctx.Client.SendTextMessageAsync(
-                    args.Message.Chat.Id,
-(currentLocale.HasNote ? currentLocale["jetkarmabot.changelocale.beforenote"] + currentLocale.Note + "\n" : "")
-                    + currentLocale["jetkarmabot.changelocale.justchanged"],
-                    replyToMessageId: args.Message.MessageId);
+            await ctx.SendMessage(
+                (currentLocale.HasNote ? currentLocale["jetkarmabot.changelocale.beforenote"] + currentLocale.Note + "\n" : "")
+                 + currentLocale["jetkarmabot.changelocale.justchanged"]);
             return true;
         }
 

@@ -175,7 +175,8 @@ namespace JetKarmaBot.Models
 
                 entity.Property(e => e.CooldownDate)
                     .HasColumnName("cooldowndate")
-                    .HasColumnType("datetime");
+                    .HasColumnType("timestamp")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
         }
     }

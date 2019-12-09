@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JetKarmaBot.Models;
 using System.Threading;
 using System.Linq;
+using NLog;
 
 namespace JetKarmaBot.Services.Handling
 {
@@ -39,6 +40,7 @@ namespace JetKarmaBot.Services.Handling
         [Inject] private KarmaContextFactory Db;
         [Inject] private Config cfg;
         [Inject] private Localization Locale;
+        [Inject] private Logger log;
         public Dictionary<int, TimeoutStats> TimeoutCache = new Dictionary<int, TimeoutStats>();
         private async Task ApplyCost(string name, bool succeded, int uid, KarmaContext db)
         {
@@ -65,6 +67,7 @@ namespace JetKarmaBot.Services.Handling
         {
             if (!TimeoutCache.ContainsKey(uid))
             {
+                log.ConditionalTrace($"User {uid} not present: saving to cache");
                 TimeoutCache[uid] = new TimeoutStats()
                 {
                     CooldownDate = (await db.Users.FindAsync(uid))?.CooldownDate ?? DateTime.Now
@@ -73,6 +76,7 @@ namespace JetKarmaBot.Services.Handling
         }
         public async Task Save(CancellationToken ct = default(CancellationToken))
         {
+            log.Info("Saving timeout info to database");
             using (KarmaContext db = Db.GetContext())
             {
                 foreach (int i in TimeoutCache.Keys)
@@ -81,6 +85,7 @@ namespace JetKarmaBot.Services.Handling
                 }
                 await db.SaveChangesAsync(ct);
             }
+            log.Info("Saved");
         }
         public async Task SaveLoop(CancellationToken ct = default(CancellationToken))
         {

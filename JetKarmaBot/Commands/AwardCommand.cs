@@ -21,6 +21,16 @@ namespace JetKarmaBot.Commands
             var currentLocale = ctx.GetFeature<Locale>();
 
             var awarder = ctx.EventArgs.Message.From;
+
+            if (Timeout.TimeoutCache[awarder.Id].PreviousAwardDate.AddSeconds(Config.Timeout.AwardTimeSeconds) > DateTime.Now)
+            {
+                ctx.GetFeature<TimeoutManager.Feature>().Multiplier = 0; // Doesn't count as success or failure
+                if (!Timeout.TimeoutCache[awarder.Id].TimeoutMessaged)
+                    await ctx.SendMessage(currentLocale["jetkarmabot.ratelimit"]);
+                Timeout.TimeoutCache[awarder.Id].TimeoutMessaged = true;
+                return false;
+            }
+
             string awardTypeText = null;
             int recipientId = default(int);
             foreach (string arg in ctx.Command.Parameters)
@@ -109,6 +119,7 @@ namespace JetKarmaBot.Commands
             var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, prevCount + (awarding ? 1 : -1), awardType.Symbol);
 
             await ctx.SendMessage(response);
+            Timeout.TimeoutCache[awarder.Id].PreviousAwardDate = DateTime.Now;
             return true;
         }
 
@@ -125,6 +136,8 @@ namespace JetKarmaBot.Commands
         }
 
         [Inject] Localization Locale { get; set; }
+        [Inject] TimeoutManager Timeout { get; set; }
+        [Inject] Config Config { get; set; }
 
         public string Description => "Awards/revokes an award to a user.";
         public string DescriptionID => "jetkarmabot.award.help";

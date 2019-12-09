@@ -12,6 +12,10 @@ namespace JetKarmaBot.Services.Handling
     [Singleton]
     public class TimeoutManager : IRequestHandler
     {
+        public class Feature
+        {
+            public double Multiplier = 1;
+        }
         public class PreDbThrowout : IRequestHandler
         {
             public TimeoutManager Timeout { get; }
@@ -32,18 +36,21 @@ namespace JetKarmaBot.Services.Handling
                 await next(ctx);
             }
         }
-        public struct TimeoutStats
+        public class TimeoutStats
         {
             public DateTime CooldownDate;
             public bool TimeoutMessaged;
+            public DateTime PreviousAwardDate;
         }
         [Inject] private KarmaContextFactory Db;
         [Inject] private Config cfg;
         [Inject] private Localization Locale;
         [Inject] private Logger log;
         public Dictionary<int, TimeoutStats> TimeoutCache = new Dictionary<int, TimeoutStats>();
-        private async Task ApplyCost(string name, bool succeded, int uid, KarmaContext db)
+        private async Task ApplyCost(string name, bool succeded, int uid, KarmaContext db, Feature feature)
         {
+            if (feature.Multiplier == 0)
+                return;
             if (!cfg.Timeout.CommandCostsSeconds.TryGetValue(name + (succeded ? " (OK)" : "(ERR)"), out var costSeconds))
                 if (!cfg.Timeout.CommandCostsSeconds.TryGetValue(name, out costSeconds))
                     if (!cfg.Timeout.CommandCostsSeconds.TryGetValue("Default", out costSeconds))
@@ -55,12 +62,9 @@ namespace JetKarmaBot.Services.Handling
             if (TimeoutCache[uid].CooldownDate >= debtLimit)
                 //Programming error
                 throw new NotImplementedException();
-            TimeoutCache[uid] = new TimeoutStats()
-            {
-                CooldownDate = (TimeoutCache[uid].CooldownDate <= DateTime.Now ? DateTime.Now : TimeoutCache[uid].CooldownDate).AddSeconds(costSeconds),
-                TimeoutMessaged = false
-            };
-            TimeoutCache[uid] = TimeoutCache[uid];
+            TimeoutCache[uid].CooldownDate = (TimeoutCache[uid].CooldownDate <= DateTime.Now ? DateTime.Now : TimeoutCache[uid].CooldownDate)
+                                   .AddSeconds(feature.Multiplier * costSeconds);
+            TimeoutCache[uid].TimeoutMessaged = false;
         }
 
         private async Task PopulateStats(int uid, KarmaContext db)
@@ -108,15 +112,17 @@ namespace JetKarmaBot.Services.Handling
                 {
                     Locale currentLocale = ctx.GetFeature<Locale>();
                     await ctx.SendMessage(currentLocale["jetkarmabot.ratelimit"]);
-                    TimeoutCache[uid] = new TimeoutStats() { TimeoutMessaged = true, CooldownDate = TimeoutCache[uid].CooldownDate };
+                    TimeoutCache[uid].TimeoutMessaged = true;
                 }
                 return;
             }
+            Feature feature = new Feature();
+            ctx.Features.Add(feature);
 
             await next(ctx);
 
             var routerFeature = ctx.GetFeature<ChatCommandRouter.Feature>();
-            await ApplyCost(getTypeName(routerFeature.CommandType), routerFeature.Succeded, uid, db);
+            await ApplyCost(getTypeName(routerFeature.CommandType), routerFeature.Succeded, uid, db, feature);
         }
         private string getTypeName(Type t)
         {

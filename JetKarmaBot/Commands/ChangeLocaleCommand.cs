@@ -4,6 +4,7 @@ using JetKarmaBot.Services.Handling;
 using NLog;
 using System.Linq;
 using System.Threading.Tasks;
+using JetKarmaBot.Models;
 
 namespace JetKarmaBot.Commands
 {
@@ -14,7 +15,7 @@ namespace JetKarmaBot.Commands
 
         public async Task<bool> Execute(RequestContext ctx)
         {
-            var db = ctx.Database;
+            var db = ctx.GetFeature<KarmaContext>();
             var cmd = ctx.Command;
             var args = ctx.EventArgs;
 

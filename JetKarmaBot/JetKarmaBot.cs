@@ -75,15 +75,8 @@ namespace JetKarmaBot
             if (cmd.UserName != null && cmd.UserName != Commands.Me.Username)
                 return;
 
-            Task.Run(async () =>
-            {
-                using (KarmaContext db = Db.GetContext())
-                {
-                    RequestContext ctx = new RequestContext(Client, args, cmd, db);
-                    await Chain.Handle(ctx);
-                    await db.SaveChangesAsync();
-                }
-            });
+            RequestContext ctx = new RequestContext(Client, args, cmd);
+            _ = Chain.Handle(ctx);
         }
 
         async Task InitCommands(IContainer c)
@@ -105,6 +98,7 @@ namespace JetKarmaBot
         void InitChain(IContainer c)
         {
             Chain = new RequestChain();
+            Chain.Add(c.GetInstance<DatabaseHandler>());
             Chain.Add(Timeout);
             Chain.Add(new SaveData());
             Chain.Add(Commands);

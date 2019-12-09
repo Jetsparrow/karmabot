@@ -9,7 +9,7 @@ namespace JetKarmaBot.Services.Handling
     {
         public async Task Handle(RequestContext ctx, Func<RequestContext, Task> next)
         {
-            KarmaContext db = ctx.Database;
+            KarmaContext db = ctx.GetFeature<KarmaContext>();
             await AddUserToDatabase(db, ctx.EventArgs.Message.From);
             if (ctx.EventArgs.Message.ReplyToMessage != null)
                 await AddUserToDatabase(db, ctx.EventArgs.Message.ReplyToMessage.From);

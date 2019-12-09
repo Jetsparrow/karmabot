@@ -11,6 +11,26 @@ namespace JetKarmaBot.Services.Handling
     [Singleton]
     public class TimeoutManager : IRequestHandler
     {
+        public class PreDbThrowout : IRequestHandler
+        {
+            public TimeoutManager Timeout { get; }
+            public PreDbThrowout(TimeoutManager timeout)
+            {
+                Timeout = timeout;
+            }
+
+            public async Task Handle(RequestContext ctx, Func<RequestContext, Task> next)
+            {
+                int uid = ctx.EventArgs.Message.From.Id;
+                if (Timeout.TimeoutCache.TryGetValue(uid, out var stats))
+                {
+                    DateTime debtLimit = DateTime.Now.AddSeconds(Timeout.cfg.Timeout.DebtLimitSeconds);
+                    if (debtLimit < stats.CooldownDate && stats.TimeoutMessaged)
+                        return;
+                }
+                await next(ctx);
+            }
+        }
         public struct TimeoutStats
         {
             public DateTime CooldownDate;

@@ -16,10 +16,10 @@ namespace JetKarmaBot.Commands
         public async Task<bool> Execute(RequestContext ctx)
         {
             var db = ctx.GetFeature<KarmaContext>();
+            var currentLocale = ctx.GetFeature<Locale>();
             var cmd = ctx.Command;
             var args = ctx.EventArgs;
 
-            var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
             if (cmd.Parameters.Length < 1)
             {
                 await ctx.SendMessage(currentLocale["jetkarmabot.changelocale.getlocale"]);

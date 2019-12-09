@@ -27,8 +27,7 @@ namespace JetKarmaBot.Commands
 
         public async Task<bool> Execute(RequestContext ctx)
         {
-            var db = ctx.GetFeature<KarmaContext>();
-            var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
+            var currentLocale = ctx.GetFeature<Locale>();
             var router = ctx.GetFeature<ChatCommandRouter.Feature>().Router;
             if (ctx.Command.Parameters.Length < 1)
             {

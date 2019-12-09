@@ -32,6 +32,7 @@ namespace JetKarmaBot
                 {"Default", 60*5}
             };
             public int SaveIntervalSeconds { get; private set; } = 60 * 5;
+            public double AwardTimeSeconds { get; private set; } = 60;
         }
         public TimeoutConfig Timeout { get; private set; } = new TimeoutConfig();
         public bool SqlDebug { get; private set; } = false;

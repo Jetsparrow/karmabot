@@ -15,7 +15,7 @@ namespace JetKarmaBot.Commands
         public async Task<bool> Execute(RequestContext ctx)
         {
             var db = ctx.GetFeature<KarmaContext>();
-            var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
+            var currentLocale = ctx.GetFeature<Locale>();
             var asker = ctx.EventArgs.Message.From;
             var awardTypeName = ctx.Command.Parameters.FirstOrDefault();
             bool isPrivate = ctx.EventArgs.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private;

@@ -101,7 +101,7 @@ namespace JetKarmaBot.Services.Handling
             {
                 if (!TimeoutCache[uid].TimeoutMessaged)
                 {
-                    Locale currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
+                    Locale currentLocale = ctx.GetFeature<Locale>();
                     await ctx.SendMessage(currentLocale["jetkarmabot.ratelimit"]);
                     TimeoutCache[uid] = new TimeoutStats() { TimeoutMessaged = true, CooldownDate = TimeoutCache[uid].CooldownDate };
                 }

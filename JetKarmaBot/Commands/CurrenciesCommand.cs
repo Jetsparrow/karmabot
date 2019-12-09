@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Perfusion;
 using JetKarmaBot.Services.Handling;
-using Telegram.Bot.Types.Enums;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using JetKarmaBot.Models;
 
 namespace JetKarmaBot.Commands
 {
@@ -21,7 +21,7 @@ namespace JetKarmaBot.Commands
 
         public async Task<bool> Execute(RequestContext ctx)
         {
-            var db = ctx.Database;
+            var db = ctx.GetFeature<KarmaContext>();
             var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
             await ctx.SendMessage(
                 currentLocale["jetkarmabot.currencies.listtext"] + "\n" + string.Join("\n",

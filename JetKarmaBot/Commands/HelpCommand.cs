@@ -3,6 +3,7 @@ using Perfusion;
 using JetKarmaBot.Services.Handling;
 using Telegram.Bot.Types.Enums;
 using System.Threading.Tasks;
+using JetKarmaBot.Models;
 
 namespace JetKarmaBot.Commands
 {
@@ -26,7 +27,7 @@ namespace JetKarmaBot.Commands
 
         public async Task<bool> Execute(RequestContext ctx)
         {
-            var db = ctx.Database;
+            var db = ctx.GetFeature<KarmaContext>();
             var currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
             var router = ctx.GetFeature<ChatCommandRouter.Feature>().Router;
             if (ctx.Command.Parameters.Length < 1)

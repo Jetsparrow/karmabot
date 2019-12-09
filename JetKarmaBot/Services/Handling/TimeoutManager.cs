@@ -74,13 +74,14 @@ namespace JetKarmaBot.Services.Handling
         public async Task Handle(RequestContext ctx, Func<RequestContext, Task> next)
         {
             int uid = ctx.EventArgs.Message.From.Id;
-            await PopulateStats(uid, ctx.Database);
+            KarmaContext db = ctx.GetFeature<KarmaContext>();
+            await PopulateStats(uid, db);
             DateTime debtLimit = DateTime.Now.AddSeconds(cfg.Timeout.DebtLimitSeconds);
             if (debtLimit < TimeoutCache[uid].CooldownDate)
             {
                 if (!TimeoutCache[uid].TimeoutMessaged)
                 {
-                    Locale currentLocale = Locale[(await ctx.Database.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
+                    Locale currentLocale = Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale];
                     await ctx.SendMessage(currentLocale["jetkarmabot.ratelimit"]);
                     TimeoutCache[uid] = new TimeoutStats() { TimeoutMessaged = true, CooldownDate = TimeoutCache[uid].CooldownDate };
                 }
@@ -90,7 +91,7 @@ namespace JetKarmaBot.Services.Handling
             await next(ctx);
 
             var routerFeature = ctx.GetFeature<ChatCommandRouter.Feature>();
-            await ApplyCost(getTypeName(routerFeature.CommandType), routerFeature.Succeded, uid, ctx.Database);
+            await ApplyCost(getTypeName(routerFeature.CommandType), routerFeature.Succeded, uid, db);
         }
         private string getTypeName(Type t)
         {

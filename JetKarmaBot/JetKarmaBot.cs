@@ -97,7 +97,7 @@ namespace JetKarmaBot
 
         void InitChain(IContainer c)
         {
-            Chain = new RequestChain();
+            Chain = c.ResolveObject(new RequestChain());
             Chain.Add(c.GetInstance<TimeoutManager.PreDbThrowout>());
             Chain.Add(c.GetInstance<DatabaseHandler>());
             Chain.Add(Timeout);

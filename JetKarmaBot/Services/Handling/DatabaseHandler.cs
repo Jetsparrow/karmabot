@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Perfusion;
 
 namespace JetKarmaBot.Services.Handling
@@ -13,7 +14,7 @@ namespace JetKarmaBot.Services.Handling
             using (var db = Db.GetContext())
             {
                 ctx.Features.Add(db); // KarmaContext
-                ctx.Features.Add(Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id)).Locale]); // Locale
+                ctx.Features.Add(Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id))?.Locale ?? "ru-ru"]); // Locale
                 await next(ctx);
                 await db.SaveChangesAsync();
             }

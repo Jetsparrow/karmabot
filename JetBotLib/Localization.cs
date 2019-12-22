@@ -5,43 +5,25 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
-using NLog;
-using Perfusion;
 
-namespace JetKarmaBot
+namespace JetBotLib
 {
     public class Localization : IReadOnlyDictionary<string, Locale>
     {
         private Dictionary<string, Locale> locales = new Dictionary<string, Locale>();
 
-        public Localization(IContainer c)
+        public Localization()
         {
-            c.ResolveObject(this);
-            log.Info("Initializing...");
             string langsFolder = "lang";
             if (!Directory.Exists(langsFolder))
                 Directory.CreateDirectory(langsFolder);
 
             foreach (string langFilePath in Directory.EnumerateFiles(langsFolder, "*.json"))
             {
-                try
-                {
-                    string langName = Path.GetFileNameWithoutExtension(langFilePath);
-                    string langKey = langName.ToLowerInvariant();
-                    locales[langKey] = new Locale(JObject.Parse(File.ReadAllText(langFilePath)), langKey);
-                    log.Debug("Found " + langName);
-                }
-                catch (Exception e)
-                {
-                    log.Error($"Error while parsing {langFilePath}!");
-                    log.Error(e);
-                }
+                string langName = Path.GetFileNameWithoutExtension(langFilePath);
+                string langKey = langName.ToLowerInvariant();
+                locales[langKey] = new Locale(JObject.Parse(File.ReadAllText(langFilePath)), langKey);
             }
-
-            if (locales.Any())
-                log.Info("Initialized!");
-            else
-                throw new FileNotFoundException($"No locales found in {langsFolder}!");
         }
 
         public Locale this[string locale]
@@ -53,17 +35,15 @@ namespace JetKarmaBot
             }
         }
 
-        [Inject]
-        private Logger log;
 
         public Locale FindByCommonName(string name)
         {
-            log.ConditionalTrace("Trying to find locale " + name);
+            // log.ConditionalTrace("Trying to find locale " + name);
             foreach (Locale l in locales.Values)
             {
                 if (l.CommonNames.Contains(name))
                 {
-                    log.ConditionalTrace("Found locale " + l.Name);
+                    // log.ConditionalTrace("Found locale " + l.Name);
                     return l;
                 }
             }
@@ -77,7 +57,7 @@ namespace JetKarmaBot
             }
             else if (matchinglocales.Count() == 1)
                 return matchinglocales.First();
-            log.Warn("Failed to find locale " + name);
+            // log.Warn("Failed to find locale " + name);
             return null;
         }
         public bool ContainsLocale(string locale)

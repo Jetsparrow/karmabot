@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NLog;
-using Perfusion;
 
-namespace JetKarmaBot.Services.Handling
+namespace JetBotLib
 {
     public interface IRequestHandler
     {
@@ -12,7 +10,6 @@ namespace JetKarmaBot.Services.Handling
     }
     public class RequestChain : IRequestHandler
     {
-        [Inject] private Logger log;
         List<IRequestHandler> handlerStack = new List<IRequestHandler>();
         public async Task Handle(RequestContext ctx, Func<RequestContext, Task> next = null)
         {
@@ -22,11 +19,9 @@ namespace JetKarmaBot.Services.Handling
             {
                 if (i == handlerStack.Count)
                 {
-                    log.ConditionalTrace("(next) End of request chain");
                     return Task.CompletedTask;
                 }
                 IRequestHandler handler = handlerStack[i++];
-                log.ConditionalTrace($"(next) Executing handler {handler.GetType().Name}");
                 return handler.Handle(newCtx, chainNext);
             };
             await chainNext(ctx);
@@ -35,7 +30,6 @@ namespace JetKarmaBot.Services.Handling
         }
         public void Add(IRequestHandler handler)
         {
-            log.ConditionalTrace($"Adding {handler.GetType().Name} to reqchain");
             handlerStack.Add(handler);
         }
     }

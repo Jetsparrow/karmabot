@@ -4,6 +4,7 @@ using JetKarmaBot.Services.Handling;
 using Telegram.Bot.Types.Enums;
 using System.Threading.Tasks;
 using JetKarmaBot.Models;
+using JetBotLib;
 
 namespace JetKarmaBot.Commands
 {

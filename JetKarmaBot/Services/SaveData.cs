@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using JetBotLib;
 using JetKarmaBot.Models;
 using Microsoft.EntityFrameworkCore;
 

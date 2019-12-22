@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using JetBotLib;
 using Perfusion;
 
-namespace JetKarmaBot.Services.Handling
+namespace JetKarmaBot.Services
 {
     public class DatabaseHandler : IRequestHandler
     {

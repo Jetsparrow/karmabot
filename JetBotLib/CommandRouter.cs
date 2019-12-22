@@ -1,13 +1,10 @@
-﻿using JetKarmaBot.Commands;
-using NLog;
-using Perfusion;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
 
-namespace JetKarmaBot.Services.Handling
+namespace JetBotLib
 {
     public class ChatCommandRouter : IRequestHandler
     {
@@ -17,36 +14,19 @@ namespace JetKarmaBot.Services.Handling
             public ChatCommandRouter Router;
             public bool Succeded;
         }
-        public Telegram.Bot.Types.User Me { get; private set; }
-        [Inject] private Logger log;
-        [Inject] private TelegramBotClient Client { get; set; }
 
-        public async Task Start()
-        {
-            Me = await Client.GetMeAsync();
-        }
 
         public Task Handle(RequestContext ctx, Func<RequestContext, Task> next)
         {
-            log.Debug("Message received");
             CommandString cmd = ctx.Command;
             Feature feature = new Feature() { Router = this };
             ctx.Features.Add(feature);
 
-            try
+            if (commands.ContainsKey(cmd.Command))
             {
-                if (commands.ContainsKey(cmd.Command))
-                {
-                    feature.CommandType = commands[cmd.Command].GetType();
-                    log.Debug($"Handling message via {feature.CommandType.Name}");
-                    async Task processCommand() => feature.Succeded = await commands[cmd.Command].Execute(ctx);
-                    return processCommand();
-                }
-            }
-            catch (Exception e)
-            {
-                log.Error($"Error while handling command {cmd.Command}!");
-                log.Error(e);
+                feature.CommandType = commands[cmd.Command].GetType();
+                async Task processCommand() => feature.Succeded = await commands[cmd.Command].Execute(ctx);
+                return processCommand();
             }
 
             return next(ctx);
@@ -54,17 +34,15 @@ namespace JetKarmaBot.Services.Handling
 
         public void Add(IChatCommand c)
         {
-            log.ConditionalTrace($"Adding command {c.GetType().Name}");
             foreach (var name in c.Names)
             {
-                log.ConditionalTrace($"Mounting {c.GetType().Name} to {name}");
                 if (commands.ContainsKey(name))
                     throw new Exception($"command collision for name {name}, commands {commands[name].GetType()} and {c.GetType()}");
                 commands[name] = c;
             }
         }
 
-        internal string GetHelpText(Locale loc)
+        public string GetHelpText(Locale loc)
         {
             List<string> pieces = new List<string>();
             foreach (IChatCommand c in commands.Values.Distinct())
@@ -81,7 +59,7 @@ namespace JetKarmaBot.Services.Handling
             return string.Join("\n", pieces);
         }
 
-        internal string GetHelpTextFor(string commandname, Locale loc)
+        public string GetHelpTextFor(string commandname, Locale loc)
         {
             IChatCommand c = commands[commandname];
             string build = "";

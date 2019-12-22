@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Perfusion;
 using JetKarmaBot.Services.Handling;
 using JetKarmaBot.Models;
+using JetBotLib;
 
 namespace JetKarmaBot.Commands
 {

@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetKarmaBot.Commands;
-using JetKarmaBot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 
-namespace JetKarmaBot.Services.Handling
+namespace JetBotLib
 {
     public class RequestContext : IServiceProvider
     {

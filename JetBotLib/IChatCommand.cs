@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using JetKarmaBot.Services.Handling;
 
-namespace JetKarmaBot.Commands
+namespace JetBotLib
 {
     public interface IChatCommand
     {

@@ -32,4 +32,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JetBotLib\JetBotLib.csproj" />
+  </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ using NLog;
 using System.Linq;
 using System.Threading.Tasks;
 using JetKarmaBot.Models;
+using JetBotLib;
 
 namespace JetKarmaBot.Commands
 {

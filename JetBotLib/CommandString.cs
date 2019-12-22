@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace JetKarmaBot.Commands
+namespace JetBotLib
 {
     public class CommandString
     {

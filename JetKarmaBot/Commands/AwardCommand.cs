@@ -7,11 +7,16 @@ using NLog;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using JetKarmaBot.Models;
+using JetBotLib;
 
 namespace JetKarmaBot.Commands
 {
     class AwardCommand : IChatCommand
     {
+        public class TimeoutFeature
+        {
+            public DateTime PreviousAwardDate;
+        }
         public IReadOnlyCollection<string> Names => new[] { "award", "revoke" };
         [Inject] private Logger log;
 
@@ -21,8 +26,9 @@ namespace JetKarmaBot.Commands
             var currentLocale = ctx.GetFeature<Locale>();
 
             var awarder = ctx.EventArgs.Message.From;
+            var timeoutFeature = Timeout.TimeoutCache[awarder.Id].GetFeature<TimeoutFeature>();
 
-            if (Timeout.TimeoutCache[awarder.Id].PreviousAwardDate.AddSeconds(Config.Timeout.AwardTimeSeconds) > DateTime.Now)
+            if (timeoutFeature.PreviousAwardDate.AddSeconds(Config.Timeout.AwardTimeSeconds) > DateTime.Now)
             {
                 ctx.GetFeature<TimeoutManager.Feature>().Multiplier = 0; // Doesn't count as success or failure
                 if (!Timeout.TimeoutCache[awarder.Id].TimeoutMessaged)
@@ -81,7 +87,7 @@ namespace JetKarmaBot.Commands
                 return false;
             }
 
-            if (ctx.GetFeature<ChatCommandRouter.Feature>().Router.Me.Id == recipientId)
+            if (ctx.GetFeature<JetKarmaBot>().Me.Id == recipientId)
             {
                 await ctx.SendMessage(awarding
                     ? currentLocale["jetkarmabot.award.errawardbot"]
@@ -119,7 +125,7 @@ namespace JetKarmaBot.Commands
             var response = message + "\n" + String.Format(currentLocale["jetkarmabot.award.statustext"], recUserName, prevCount + (awarding ? 1 : -1), awardType.Symbol);
 
             await ctx.SendMessage(response);
-            Timeout.TimeoutCache[awarder.Id].PreviousAwardDate = DateTime.Now;
+            timeoutFeature.PreviousAwardDate = DateTime.Now;
             return true;
         }
 

@@ -45,11 +45,15 @@
         "jetkarmabot.awardtypes.nominative.banana": "стыкер-бананчык",
         "jetkarmabot.awardtypes.nominative.determination": "DETERMINATION",
         "jetkarmabot.awardtypes.nominative.raisin": "разынка",
+        "jetkarmabot.awardtypes.nominative.touche": "touché",
+        "jetkarmabot.awardtypes.nominative.covid": "каронавірус",
         "jetkarmabot.awardtypes.accusative.star": "зорачку",
         "jetkarmabot.awardtypes.accusative.pie": "з паліцы піражкі",
         "jetkarmabot.awardtypes.accusative.dream": "мары",
         "jetkarmabot.awardtypes.accusative.banana": "стыкера-бананчыка",
         "jetkarmabot.awardtypes.accusative.determination": "DETERMINATION",
-        "jetkarmabot.awardtypes.accusative.raisin": "разыначкі"
+        "jetkarmabot.awardtypes.accusative.raisin": "разыначкі",
+        "jetkarmabot.awardtypes.accusative.touche": "touché",
+        "jetkarmabot.awardtypes.accusative.covid": "каронавірус"
     }
 }

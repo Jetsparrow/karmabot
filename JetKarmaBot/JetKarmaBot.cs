@@ -27,6 +27,7 @@ namespace JetKarmaBot
         RequestChain Chain;
         Task timeoutWaitTask;
         CancellationTokenSource timeoutWaitTaskToken;
+        private bool stopped = false;
 
         public async Task Init()
         {
@@ -52,6 +53,7 @@ namespace JetKarmaBot
 
         public async Task Stop()
         {
+            if (stopped) return;
             Client.StopReceiving();
             timeoutWaitTaskToken.Cancel();
             try
@@ -61,6 +63,7 @@ namespace JetKarmaBot
             catch (OperationCanceledException) { }
             await Timeout.Save();
             Dispose();
+            stopped = true;
         }
 
         #region service

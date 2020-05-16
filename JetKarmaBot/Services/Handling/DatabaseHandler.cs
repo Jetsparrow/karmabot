@@ -13,8 +13,8 @@ namespace JetKarmaBot.Services.Handling
         {
             using (var db = Db.GetContext())
             {
-                ctx.Features.Add(db); // KarmaContext
-                ctx.Features.Add(Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id))?.Locale ?? "ru-ru"]); // Locale
+                ctx.AddFeature(db); // KarmaContext
+                ctx.AddFeature(Locale[(await db.Chats.FindAsync(ctx.EventArgs.Message.Chat.Id))?.Locale ?? "ru-ru"]); // Locale
                 await next(ctx);
                 await db.SaveChangesAsync();
             }

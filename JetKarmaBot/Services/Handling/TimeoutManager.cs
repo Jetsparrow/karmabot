@@ -117,7 +117,7 @@ namespace JetKarmaBot.Services.Handling
                 return;
             }
             Feature feature = new Feature();
-            ctx.Features.Add(feature);
+            ctx.AddFeature(feature);
 
             await next(ctx);
 

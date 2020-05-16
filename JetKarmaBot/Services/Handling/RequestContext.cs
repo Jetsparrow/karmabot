@@ -14,15 +14,16 @@ namespace JetKarmaBot.Services.Handling
         public ITelegramBotClient Client { get; }
         public MessageEventArgs EventArgs { get; }
         public CommandString Command { get; }
-        public ICollection<object> Features { get; } = new List<object>();
+        public Dictionary<Type, object> Features { get; } = new Dictionary<Type, object>();
         public RequestContext(ITelegramBotClient client, MessageEventArgs args, CommandString cmd)
         {
             Client = client;
             EventArgs = args;
             Command = cmd;
         }
-        public object GetService(Type serviceType) => Features.First(x => x.GetType() == serviceType);
-        public T GetFeature<T>() => (T)Features.First(x => x is T);
+        public object GetService(Type serviceType) => Features[serviceType];
+        public T GetFeature<T>() => (T)Features[typeof(T)];
+        public void AddFeature<T>(T feat) => Features[typeof(T)] = feat;
 
         //Method to reduce WET in commands
         public Task SendMessage(string text) => Client.SendTextMessageAsync(

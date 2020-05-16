@@ -31,7 +31,7 @@ namespace JetKarmaBot.Services.Handling
             log.Debug("Message received");
             CommandString cmd = ctx.Command;
             Feature feature = new Feature() { Router = this };
-            ctx.Features.Add(feature);
+            ctx.AddFeature(feature);
 
             try
             {

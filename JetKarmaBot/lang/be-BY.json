@@ -47,6 +47,7 @@
         "jetkarmabot.awardtypes.nominative.raisin": "разынка",
         "jetkarmabot.awardtypes.nominative.touche": "touché",
         "jetkarmabot.awardtypes.nominative.covid": "каронавірус",
+        "jetkarmabot.awardtypes.nominative.pony": "поніс",
         "jetkarmabot.awardtypes.accusative.star": "зорачку",
         "jetkarmabot.awardtypes.accusative.pie": "з паліцы піражкі",
         "jetkarmabot.awardtypes.accusative.dream": "мары",
@@ -54,6 +55,7 @@
         "jetkarmabot.awardtypes.accusative.determination": "DETERMINATION",
         "jetkarmabot.awardtypes.accusative.raisin": "разыначкі",
         "jetkarmabot.awardtypes.accusative.touche": "touché",
-        "jetkarmabot.awardtypes.accusative.covid": "каронавірус"
+        "jetkarmabot.awardtypes.accusative.covid": "каронавірус",
+        "jetkarmabot.awardtypes.accusative.pony": "поніса"
     }
 }

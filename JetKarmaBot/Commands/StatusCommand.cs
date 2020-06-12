@@ -57,7 +57,7 @@ namespace JetKarmaBot.Commands
                     await db.Awards.Where(
                          x => x.AwardTypeId == awardTypeId
                       && x.ToId == asker.Id
-                      && x.ChatId == ctx.EventArgs.Message.Chat.Id)
+                      && (x.ChatId == ctx.EventArgs.Message.Chat.Id || isPrivate))
                     .SumAsync(x => x.Amount), awardType.Symbol);
             }
 

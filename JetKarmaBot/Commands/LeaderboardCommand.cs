@@ -18,6 +18,7 @@ namespace JetKarmaBot.Commands
             var currentLocale = ctx.GetFeature<Locale>();
             var asker = ctx.EventArgs.Message.From;
             var awardTypeName = ctx.Command.Parameters.FirstOrDefault();
+            bool isPrivate = ctx.EventArgs.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private;
 
             if (string.IsNullOrWhiteSpace(awardTypeName))
                 awardTypeName = "star";
@@ -30,7 +31,7 @@ namespace JetKarmaBot.Commands
 
             await ctx.SendMessage(string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n',
                 await Task.WhenAll((await db.Awards
-                    .Where(x => x.ChatId == ctx.EventArgs.Message.Chat.Id && x.AwardTypeId == awardTypeId)
+                    .Where(x => (x.ChatId == ctx.EventArgs.Message.Chat.Id || isPrivate) && x.AwardTypeId == awardTypeId)
                     .GroupBy(x => x.ToId)
                     .Select(x => new { UserId = x.Key, Amount = x.Sum(y => y.Amount) })
                     .OrderByDescending(x => x.Amount)

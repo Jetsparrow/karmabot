@@ -48,6 +48,9 @@
         "jetkarmabot.awardtypes.nominative.touche": "touché",
         "jetkarmabot.awardtypes.nominative.covid": "каронавірус",
         "jetkarmabot.awardtypes.nominative.pony": "поніс",
+        "jetkarmabot.awardtypes.nominative.belissimo": "беліссімо",
+        "jetkarmabot.awardtypes.nominative.based": "сярдзіта",
+        "jetkarmabot.awardtypes.nominative.redpill": "пілюля",
         "jetkarmabot.awardtypes.accusative.star": "зорачку",
         "jetkarmabot.awardtypes.accusative.pie": "з паліцы піражкі",
         "jetkarmabot.awardtypes.accusative.dream": "мары",
@@ -56,6 +59,9 @@
         "jetkarmabot.awardtypes.accusative.raisin": "разыначкі",
         "jetkarmabot.awardtypes.accusative.touche": "touché",
         "jetkarmabot.awardtypes.accusative.covid": "каронавірус",
-        "jetkarmabot.awardtypes.accusative.pony": "поніса"
+        "jetkarmabot.awardtypes.accusative.pony": "поніса",
+        "jetkarmabot.awardtypes.accusative.belissimo": "беліссімо",
+        "jetkarmabot.awardtypes.accusative.based": "сярдзіта",
+        "jetkarmabot.awardtypes.accusative.redpill": "пілюлю"
     }
 }

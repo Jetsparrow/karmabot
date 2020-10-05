@@ -47,6 +47,9 @@
     "jetkarmabot.awardtypes.nominative.touche": "touché",
     "jetkarmabot.awardtypes.nominative.covid": "coronavirus",
     "jetkarmabot.awardtypes.nominative.pony": "pony",
+    "jetkarmabot.awardtypes.nominative.belissimo": "belissimo",
+    "jetkarmabot.awardtypes.nominative.based": "based",
+    "jetkarmabot.awardtypes.nominative.redpill": "redpill",
     "jetkarmabot.awardtypes.accusative.star": "star",
     "jetkarmabot.awardtypes.accusative.pie": "pie from the shelf",
     "jetkarmabot.awardtypes.accusative.dream": "dream",
@@ -55,6 +58,9 @@
     "jetkarmabot.awardtypes.accusative.raisin": "raisin",
     "jetkarmabot.awardtypes.accusative.touche": "touché",
     "jetkarmabot.awardtypes.accusative.covid": "coronavirus",
-    "jetkarmabot.awardtypes.accusative.pony": "pony"
+    "jetkarmabot.awardtypes.accusative.pony": "pony",
+    "jetkarmabot.awardtypes.accusative.belissimo": "belissimo",
+    "jetkarmabot.awardtypes.accusative.based": "based",
+    "jetkarmabot.awardtypes.accusative.redpill": "redpill"
   }
 }

@@ -33,12 +33,17 @@ namespace JetKarmaBot
         {
             using (KarmaContext db = Db.GetContext())
                 await db.Database.EnsureCreatedAsync();
-            var httpProxy = new WebProxy($"{Config.Proxy.Url}:{Config.Proxy.Port}")
+            if (Config.Proxy?.Url == null)
+                Client = new TelegramBotClient(Config.ApiKey);
+            else
             {
-                Credentials = new NetworkCredential(Config.Proxy.Login, Config.Proxy.Password)
-            };
+                var httpProxy = new WebProxy($"{Config.Proxy.Url}:{Config.Proxy.Port}")
+                {
+                    Credentials = new NetworkCredential(Config.Proxy.Login, Config.Proxy.Password)
+                };
 
-            Client = new TelegramBotClient(Config.ApiKey, httpProxy);
+                Client = new TelegramBotClient(Config.ApiKey, httpProxy);
+            }
             Container.AddInstance(Client);
 
             timeoutWaitTaskToken = new CancellationTokenSource();

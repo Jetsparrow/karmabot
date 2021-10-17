@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `userid` bigint(20) NOT NULL,
   `username` varchar(45) DEFAULT NULL,
+  `cooldowndate` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`userid`)
 );
 

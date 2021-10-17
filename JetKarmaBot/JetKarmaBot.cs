@@ -59,14 +59,15 @@ namespace JetKarmaBot
         public async Task Stop()
         {
             if (stopped) return;
-            Client.StopReceiving();
-            timeoutWaitTaskToken.Cancel();
+            Client?.StopReceiving();
+            timeoutWaitTaskToken?.Cancel();
             try
             {
-                await timeoutWaitTask;
+                if (timeoutWaitTask != null)
+                    await timeoutWaitTask;
             }
             catch (OperationCanceledException) { }
-            await Timeout.Save();
+            await Timeout?.Save();
             Dispose();
             stopped = true;
         }
@@ -119,8 +120,8 @@ namespace JetKarmaBot
 
         public void Dispose()
         {
-            timeoutWaitTaskToken.Dispose();
-            timeoutWaitTask.Dispose();
+            timeoutWaitTaskToken?.Dispose();
+            timeoutWaitTask?.Dispose();
         }
 
         #endregion

@@ -42,14 +42,13 @@ namespace JetKarmaBot
 
             try
             {
-                bot.Init().Wait();
+                bot.Init().GetAwaiter().GetResult();
                 log.Info("JetKarmaBot started. Press Ctrl-C to exit...");
-                Environment.ExitCode = (int)ExitCode.ErrorRunning;
             }
             catch (Exception ex)
             {
                 log.Error(ex);
-                Environment.ExitCode = (int)ExitCode.ErrorException;
+                return (int)ExitCode.ErrorException;
             }
             ManualResetEvent quitEvent = new ManualResetEvent(false);
             try
@@ -62,14 +61,14 @@ namespace JetKarmaBot
                 AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
                 {
                     log.Info("Received stop request, waiting for exit...");
-                    bot?.Stop()?.Wait();
+                    bot?.Stop()?.GetAwaiter().GetResult();
                 };
             }
             catch { }
 
             quitEvent.WaitOne(Timeout.Infinite);
             log.Info("Waiting for exit...");
-            bot?.Stop()?.Wait();
+            bot?.Stop()?.GetAwaiter().GetResult();
 
             return (int)ExitCode.Ok;
         }

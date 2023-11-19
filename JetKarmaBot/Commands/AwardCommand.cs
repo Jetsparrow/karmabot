@@ -32,7 +32,7 @@ namespace JetKarmaBot.Commands
             }
 
             string awardTypeText = null;
-            int recipientId = default(int);
+            long recipientId = default;
             foreach (string arg in ctx.Command.Parameters)
             {
                 if (arg.StartsWith('@'))
@@ -61,7 +61,7 @@ namespace JetKarmaBot.Commands
                 }
             }
 
-            if (ctx.EventArgs.Message.ReplyToMessage != null && recipientId == default(int))
+            if (ctx.EventArgs.Message.ReplyToMessage != null && recipientId == default)
             {
                 recipientId = ctx.EventArgs.Message.ReplyToMessage.From.Id;
             }

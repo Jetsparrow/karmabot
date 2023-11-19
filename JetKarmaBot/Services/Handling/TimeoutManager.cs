@@ -26,7 +26,7 @@ namespace JetKarmaBot.Services.Handling
 
             public async Task Handle(RequestContext ctx, Func<RequestContext, Task> next)
             {
-                int uid = ctx.EventArgs.Message.From.Id;
+                var uid = ctx.EventArgs.Message.From.Id;
                 if (Timeout.TimeoutCache.TryGetValue(uid, out var stats))
                 {
                     DateTime debtLimit = DateTime.Now.AddSeconds(Timeout.cfg.Timeout.DebtLimitSeconds);
@@ -46,8 +46,8 @@ namespace JetKarmaBot.Services.Handling
         [Inject] private Config cfg;
         [Inject] private Localization Locale;
         [Inject] private Logger log;
-        public Dictionary<int, TimeoutStats> TimeoutCache = new Dictionary<int, TimeoutStats>();
-        private async Task ApplyCost(string name, bool succeded, int uid, KarmaContext db, Feature feature)
+        public Dictionary<long, TimeoutStats> TimeoutCache = new ();
+        private async Task ApplyCost(string name, bool succeded, long uid, KarmaContext db, Feature feature)
         {
             if (feature.Multiplier == 0)
                 return;
@@ -67,7 +67,7 @@ namespace JetKarmaBot.Services.Handling
             TimeoutCache[uid].TimeoutMessaged = false;
         }
 
-        private async Task PopulateStats(int uid, KarmaContext db)
+        private async Task PopulateStats(long uid, KarmaContext db)
         {
             if (!TimeoutCache.ContainsKey(uid))
             {
@@ -83,7 +83,7 @@ namespace JetKarmaBot.Services.Handling
             log.Info("Saving timeout info to database");
             using (KarmaContext db = Db.GetContext())
             {
-                foreach (int i in TimeoutCache.Keys)
+                foreach (var i in TimeoutCache.Keys)
                 {
                     (await db.Users.FindAsync(new object[] { i }, ct)).CooldownDate = TimeoutCache[i].CooldownDate;
                 }
@@ -102,7 +102,7 @@ namespace JetKarmaBot.Services.Handling
 
         public async Task Handle(RequestContext ctx, Func<RequestContext, Task> next)
         {
-            int uid = ctx.EventArgs.Message.From.Id;
+            var uid = ctx.EventArgs.Message.From.Id;
             KarmaContext db = ctx.GetFeature<KarmaContext>();
             await PopulateStats(uid, db);
             DateTime debtLimit = DateTime.Now.AddSeconds(cfg.Timeout.DebtLimitSeconds);

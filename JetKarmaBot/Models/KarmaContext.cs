@@ -34,20 +34,20 @@ namespace JetKarmaBot.Models
                 entity.ToTable("award");
 
                 entity.HasIndex(e => e.AwardId)
-                    .HasName("awardid_UNIQUE")
+                    .HasDatabaseName("awardid_UNIQUE")
                     .IsUnique();
 
                 entity.HasIndex(e => e.AwardTypeId)
-                    .HasName("fk_awardtype_idx");
+                    .HasDatabaseName("fk_awardtype_idx");
 
                 entity.HasIndex(e => e.ChatId)
-                    .HasName("fk_chat_idx");
+                    .HasDatabaseName("fk_chat_idx");
 
                 entity.HasIndex(e => e.FromId)
-                    .HasName("fk_from_idx");
+                    .HasDatabaseName("fk_from_idx");
 
                 entity.HasIndex(e => e.ToId)
-                    .HasName("fk_to_idx");
+                    .HasDatabaseName("fk_to_idx");
 
                 entity.Property(e => e.AwardId)
                     .HasColumnName("awardid")
@@ -109,11 +109,11 @@ namespace JetKarmaBot.Models
                 entity.ToTable("awardtype");
 
                 entity.HasIndex(e => e.AwardTypeId)
-                    .HasName("awardtypeid_UNIQUE")
+                    .HasDatabaseName("awardtypeid_UNIQUE")
                     .IsUnique();
 
                 entity.HasIndex(e => e.CommandName)
-                    .HasName("commandname_UNIQUE")
+                    .HasDatabaseName("commandname_UNIQUE")
                     .IsUnique();
 
                 entity.Property(e => e.AwardTypeId)

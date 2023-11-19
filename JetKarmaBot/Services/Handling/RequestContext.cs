@@ -6,16 +6,17 @@ using JetKarmaBot.Commands;
 using JetKarmaBot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 
 namespace JetKarmaBot.Services.Handling
 {
     public class RequestContext : IServiceProvider
     {
         public ITelegramBotClient Client { get; }
-        public MessageEventArgs EventArgs { get; }
+        public Update EventArgs { get; }
         public CommandString Command { get; }
         public Dictionary<Type, object> Features { get; } = new Dictionary<Type, object>();
-        public RequestContext(ITelegramBotClient client, MessageEventArgs args, CommandString cmd)
+        public RequestContext(ITelegramBotClient client, Update args, CommandString cmd)
         {
             Client = client;
             EventArgs = args;

@@ -12,7 +12,7 @@ namespace JetKarmaBot.Models
             AwardsTo = new HashSet<Award>();
         }
 
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public string Username { get; set; }
         public DateTime CooldownDate { get; set; }
         [InverseProperty("From")]

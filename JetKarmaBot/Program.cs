@@ -28,8 +28,11 @@ namespace JetKarmaBot
             var cfg = new Config("karma.cfg.json");
             c.AddInstance(cfg);
 
+            var connStr = cfg.ConnectionString + (cfg.ConnectionString.EndsWith(";") ? "" : ";") + "TreatTinyAsBoolean=false";
+            var serverVersion = ServerVersion.AutoDetect(connStr);
+
             var dbOptions = new DbContextOptionsBuilder<KarmaContext>()
-                .UseMySql(cfg.ConnectionString + (cfg.ConnectionString.EndsWith(";") ? "" : ";") + "TreatTinyAsBoolean=false");
+                .UseMySql(connStr, serverVersion);
             c.AddInfo<Logger>(new LogInfo());
             if (cfg.SqlDebug)
             {

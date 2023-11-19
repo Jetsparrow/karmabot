@@ -2,14 +2,15 @@ using JetKarmaBot.Commands;
 using JetKarmaBot.Models;
 using JetKarmaBot.Services;
 using JetKarmaBot.Services.Handling;
+using NLog;
 using Perfusion;
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Telegram.Bot;
-using Telegram.Bot.Args;
+using Telegram.Bot.Polling;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace JetKarmaBot
@@ -21,6 +22,8 @@ namespace JetKarmaBot
         [Inject] KarmaContextFactory Db { get; set; }
         [Inject] TimeoutManager Timeout { get; set; }
         [Inject] Localization Locale { get; set; }
+        [Inject] Logger Log { get; set; }
+
 
         TelegramBotClient Client { get; set; }
         ChatCommandRouter Commands;
@@ -33,17 +36,8 @@ namespace JetKarmaBot
         {
             using (KarmaContext db = Db.GetContext())
                 await db.Database.EnsureCreatedAsync();
-            if (Config.Proxy?.Url == null)
-                Client = new TelegramBotClient(Config.ApiKey);
-            else
-            {
-                var httpProxy = new WebProxy($"{Config.Proxy.Url}:{Config.Proxy.Port}")
-                {
-                    Credentials = new NetworkCredential(Config.Proxy.Login, Config.Proxy.Password)
-                };
-
-                Client = new TelegramBotClient(Config.ApiKey, httpProxy);
-            }
+            
+            Client = new TelegramBotClient(Config.ApiKey);
             Container.AddInstance(Client);
 
             timeoutWaitTaskToken = new CancellationTokenSource();
@@ -52,14 +46,17 @@ namespace JetKarmaBot
             await InitCommands(Container);
             InitChain(Container);
 
-            Client.OnMessage += BotOnMessageReceived;
-            Client.StartReceiving();
+            var receiverOptions = new ReceiverOptions { AllowedUpdates = new[] { UpdateType.Message } };
+            Client.StartReceiving(
+                HandleUpdateAsync,
+                HandleErrorAsync,
+                receiverOptions);
         }
 
         public async Task Stop()
         {
             if (stopped) return;
-            Client?.StopReceiving();
+            Client?.CloseAsync();
             timeoutWaitTaskToken?.Cancel();
             try
             {
@@ -74,18 +71,34 @@ namespace JetKarmaBot
 
         #region service
 
-        void BotOnMessageReceived(object sender, MessageEventArgs args)
+        Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
-            var message = args.Message;
-            if (message == null || message.Type != MessageType.Text)
-                return;
-            if (!CommandString.TryParse(args.Message.Text, out var cmd))
-                return;
-            if (cmd.UserName != null && cmd.UserName != Commands.Me.Username)
-                return;
+            Log.Error(exception, "Exception while handling API message");
+            return Task.CompletedTask;
+        }
 
-            RequestContext ctx = new RequestContext(Client, args, cmd);
-            _ = Chain.Handle(ctx);
+        async Task HandleUpdateAsync(ITelegramBotClient sender, Update update, CancellationToken cancellationToken)
+        {
+            if (update.Type != UpdateType.Message || update?.Message?.Type != MessageType.Text)
+                return;
+            var message = update.Message!;
+
+            try
+            {
+                if (message == null || message.Type != MessageType.Text)
+                    return;
+                if (!CommandString.TryParse(message.Text, out var cmd))
+                    return;
+                if (cmd.UserName != null && cmd.UserName != Commands.Me.Username)
+                    return;
+
+                RequestContext ctx = new RequestContext(Client, update, cmd);
+                await Chain.Handle(ctx);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Exception while handling message {0}", message);
+            }
         }
 
         async Task InitCommands(IContainer c)

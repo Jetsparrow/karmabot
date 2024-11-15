@@ -80,7 +80,7 @@ namespace JetKarmaBot.Services.Handling
         }
         public async Task Save(CancellationToken ct = default(CancellationToken))
         {
-            log.Info("Saving timeout info to database");
+            log.Debug("Saving timeout info to database");
             using (KarmaContext db = Db.GetContext())
             {
                 foreach (var i in TimeoutCache.Keys)
@@ -89,7 +89,7 @@ namespace JetKarmaBot.Services.Handling
                 }
                 await db.SaveChangesAsync(ct);
             }
-            log.Info("Saved");
+            log.Debug("Saved timeout info to database");
         }
         public async Task SaveLoop(CancellationToken ct = default(CancellationToken))
         {

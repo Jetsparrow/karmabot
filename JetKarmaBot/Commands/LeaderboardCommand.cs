@@ -14,11 +14,17 @@ namespace JetKarmaBot.Commands
 
         public async Task<bool> Execute(RequestContext ctx)
         {
-            var db = ctx.GetFeature<KarmaContext>();
+            bool isPrivate = ctx.EventArgs.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private;
             var currentLocale = ctx.GetFeature<Locale>();
+            if (isPrivate)
+            {
+                await ctx.SendMessage(currentLocale["jetkarmabot.award.errawardself"]);
+                return true;
+            }
+
+            var db = ctx.GetFeature<KarmaContext>();
             var asker = ctx.EventArgs.Message.From;
             var awardTypeName = ctx.Command.Parameters.FirstOrDefault();
-            bool isPrivate = ctx.EventArgs.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private;
 
             if (string.IsNullOrWhiteSpace(awardTypeName))
                 awardTypeName = "star";
@@ -29,16 +35,20 @@ namespace JetKarmaBot.Commands
             var awardTypeId = await awardTypeIdQuery.FirstAsync();
             var awardType = await db.AwardTypes.FindAsync(awardTypeId);
 
-            await ctx.SendMessage(string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" + string.Join('\n',
-                await Task.WhenAll((await db.Awards
-                    .Where(x => (x.ChatId == ctx.EventArgs.Message.Chat.Id || isPrivate) && x.AwardTypeId == awardTypeId)
-                    .GroupBy(x => x.ToId)
-                    .Select(x => new { UserId = x.Key, Amount = x.Sum(y => y.Amount) })
+            var topEarners = await db.Awards
+                    .Where(x => x.ChatId == ctx.EventArgs.Message.Chat.Id && x.AwardTypeId == awardTypeId)
+                    .GroupBy(x => x.To)
+                    .Select(x => new { User = x.Key,  Amount = x.Sum(y => y.Amount) })
                     .OrderByDescending(x => x.Amount)
                     .Take(5)
-                    .ToListAsync())
-                    .Select(async (x, index) => $"{index + 1}. {(await db.Users.FindAsync(x.UserId)).Username} - {x.Amount}"))
-            ));
+                    .ToListAsync();
+
+            var response = string.Format(currentLocale["jetkarmabot.leaderboard.specifictext"], awardType.Symbol) + "\n" 
+                + string.Join('\n', topEarners.Select((x, index) 
+                => $"{index + 1}. {x.User.Username} - {x.Amount}")
+            );
+
+            await ctx.SendMessage(response);
             return true;
         }
 

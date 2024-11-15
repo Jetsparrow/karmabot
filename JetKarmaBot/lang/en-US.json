@@ -22,7 +22,6 @@
     "jetkarmabot.status.listspecifictext": "You are at {0}{1} now.",
     "jetkarmabot.status.havenothing": "You don't have anything yet.",
     "jetkarmabot.status.help": "Shows the amount of awards that you have",
-    "jetkarmabot.status.awardtypehelp": "The awardtype to show. If empty shows everything.",
     "jetkarmabot.changelocale.justchanged": "Roger that.",
     "jetkarmabot.changelocale.getlocale": "I'm currently speaking English.",
     "jetkarmabot.changelocale.listalltext": "I know:",

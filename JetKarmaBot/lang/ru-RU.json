@@ -22,7 +22,6 @@
     "jetkarmabot.status.listspecifictext": "У вас сейчас {0}{1}.",
     "jetkarmabot.status.havenothing": "У вас пока ничего нет.",
     "jetkarmabot.status.help": "Показывает отчет по наградам.",
-    "jetkarmabot.status.awardtypehelp": "Тип награды, по которой покажется отчет. Если пусто, то покажется сводный отчет.",
     "jetkarmabot.changelocale.justchanged": "Так точно.",
     "jetkarmabot.changelocale.getlocale": "Я сейчас говорю по-русски.",
     "jetkarmabot.changelocale.listalltext": "Я знаю:",

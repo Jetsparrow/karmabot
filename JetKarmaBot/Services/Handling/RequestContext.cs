@@ -27,11 +27,13 @@ namespace JetKarmaBot.Services.Handling
         public void AddFeature<T>(T feat) => Features[typeof(T)] = feat;
 
         //Method to reduce WET in commands
-        public Task SendMessage(string text) => Client.SendTextMessageAsync(
-                                                    EventArgs.Message.Chat.Id,
-                                                    text,
-                                                    replyToMessageId: EventArgs.Message.MessageId,
-                                                    disableNotification: true,
-                                                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
+        public Task SendMessage(string text) 
+            => Client.SendMessage(
+                chatId: EventArgs.Message.Chat.Id,
+                text: text,
+                disableNotification: true,
+                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html,
+                replyParameters: new ReplyParameters { MessageId = EventArgs.Message.MessageId }
+            );
     }
 }

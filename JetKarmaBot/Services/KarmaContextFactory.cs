@@ -1,12 +1,10 @@
 ﻿using JetKarmaBot.Models;
-using Perfusion;
 
-namespace JetKarmaBot.Services
+namespace JetKarmaBot.Services;
+
+public class KarmaContextFactory
 {
-    public class KarmaContextFactory
-    {
-        [Inject] IContainer C { get; set; }
+    [Inject] IContainer C { get; set; }
 
-        public KarmaContext GetContext() => C.GetInstance<KarmaContext>();
-    }
+    public KarmaContext GetContext() => C.GetInstance<KarmaContext>();
 }

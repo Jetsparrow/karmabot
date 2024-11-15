@@ -3,43 +3,42 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 // ReSharper disable once CheckNamespace
-namespace JsonNet.PrivateSettersContractResolvers
+namespace JsonNet.PrivateSettersContractResolvers;
+
+public class PrivateSetterContractResolver : DefaultContractResolver
 {
-    public class PrivateSetterContractResolver : DefaultContractResolver
+    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
     {
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
-            var jProperty = base.CreateProperty(member, memberSerialization);
-            if (jProperty.Writable)
-                return jProperty;
-
-            jProperty.Writable = member.IsPropertyWithSetter();
-
+        var jProperty = base.CreateProperty(member, memberSerialization);
+        if (jProperty.Writable)
             return jProperty;
-        }
+
+        jProperty.Writable = member.IsPropertyWithSetter();
+
+        return jProperty;
     }
+}
 
-    public class PrivateSetterCamelCasePropertyNamesContractResolver : CamelCasePropertyNamesContractResolver
+public class PrivateSetterCamelCasePropertyNamesContractResolver : CamelCasePropertyNamesContractResolver
+{
+    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
     {
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
-            var jProperty = base.CreateProperty(member, memberSerialization);
-            if (jProperty.Writable)
-                return jProperty;
-
-            jProperty.Writable = member.IsPropertyWithSetter();
-
+        var jProperty = base.CreateProperty(member, memberSerialization);
+        if (jProperty.Writable)
             return jProperty;
-        }
+
+        jProperty.Writable = member.IsPropertyWithSetter();
+
+        return jProperty;
     }
+}
 
-    internal static class MemberInfoExtensions
+internal static class MemberInfoExtensions
+{
+    internal static bool IsPropertyWithSetter(this MemberInfo member)
     {
-        internal static bool IsPropertyWithSetter(this MemberInfo member)
-        {
-            var property = member as PropertyInfo;
+        var property = member as PropertyInfo;
 
-            return property?.GetSetMethod(true) != null;
-        }
+        return property?.GetSetMethod(true) != null;
     }
 }

@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace JetKarmaBot.Models
+namespace JetKarmaBot.Models;
+
+public partial class Award
 {
-    public partial class Award
-    {
-        public int AwardId { get; set; }
-        public long ChatId { get; set; }
-        public long FromId { get; set; }
-        public long ToId { get; set; }
-        public sbyte AwardTypeId { get; set; }
-        public sbyte Amount { get; set; }
-        public DateTime Date { get; set; }
-        [ForeignKey("AwardTypeId")]
-        public virtual AwardType AwardType { get; set; }
-        [ForeignKey("ChatId")]
-        public virtual Chat Chat { get; set; }
-        [ForeignKey("FromId")]
-        public virtual User From { get; set; }
-        [ForeignKey("ToId")]
-        public virtual User To { get; set; }
-    }
+    public int AwardId { get; set; }
+    public long ChatId { get; set; }
+    public long FromId { get; set; }
+    public long ToId { get; set; }
+    public sbyte AwardTypeId { get; set; }
+    public sbyte Amount { get; set; }
+    public DateTime Date { get; set; }
+    [ForeignKey("AwardTypeId")]
+    public virtual AwardType AwardType { get; set; }
+    [ForeignKey("ChatId")]
+    public virtual Chat Chat { get; set; }
+    [ForeignKey("FromId")]
+    public virtual User From { get; set; }
+    [ForeignKey("ToId")]
+    public virtual User To { get; set; }
 }

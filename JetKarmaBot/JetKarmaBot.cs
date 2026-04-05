@@ -3,7 +3,8 @@ using JetKarmaBot.Models;
 using JetKarmaBot.Services;
 using JetKarmaBot.Services.Handling;
 using NLog;
-
+using System.Net;
+using System.Net.Http;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -32,8 +33,17 @@ public class JetKarmaBot : IDisposable
     {
         using (KarmaContext db = Db.GetContext())
             await db.Database.EnsureCreatedAsync();
-        
-        Client = new TelegramBotClient(Config.ApiKey);
+
+        var httpClientHandler = new HttpClientHandler();
+
+        if (Config.Proxy is string url)
+        {
+            httpClientHandler.Proxy = new WebProxy(url);
+            httpClientHandler.UseProxy = true;
+        }
+        var httpClient = new HttpClient(httpClientHandler);
+
+        Client = new TelegramBotClient(Config.ApiKey, httpClient);
         Container.AddInstance(Client);
 
         timeoutWaitTaskToken = new CancellationTokenSource();

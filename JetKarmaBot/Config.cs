@@ -12,15 +12,7 @@ public class Config : ConfigBase
     public string ApiKey { get; private set; }
     public string ConnectionString { get; private set; }
 
-    public class ProxySettings
-    {
-        public string Url { get; private set; }
-        public int Port { get; private set; }
-        public string Login { get; private set; }
-        public string Password { get; private set; }
-    }
-
-    public ProxySettings Proxy { get; private set; }
+    public string Proxy { get; private set; }
     public class TimeoutConfig
     {
         public int DebtLimitSeconds { get; private set; } = 60 * 60 * 2;

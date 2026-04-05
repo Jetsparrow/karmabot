@@ -18,7 +18,7 @@ public class ChatCommandRouter : IRequestHandler
 
     public async Task Start()
     {
-        Me = await Client.GetMeAsync();
+        Me = await Client.GetMe();
     }
 
     public Task Handle(RequestContext ctx, Func<RequestContext, Task> next)

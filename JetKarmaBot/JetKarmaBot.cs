@@ -62,7 +62,7 @@ public class JetKarmaBot : IDisposable
     public async Task Stop()
     {
         if (stopped) return;
-        Client?.CloseAsync();
+        Client?.Close();
         timeoutWaitTaskToken?.Cancel();
         try
         {
